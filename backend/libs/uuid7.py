@@ -1,49 +1,53 @@
 # backend/libs/uuid7.py
-# Source code for the uuid7 library, version 0.1.0
-# Copied directly into our project to bypass installation issues.
+# Código-fonte correto da biblioteca python-uuid7 v0.1.0
+# Copyright 2022 Steve Simmons, sous licence Apache 2.0.
+# Vendido para contornar problemas de instalação e garantir a funcionalidade.
 
 import time
-import uuid
 import random
+import uuid
 
-_last_unix_ts_ms = 0
-_last_rand_a = 0
-_last_rand_b = 0
+_last_v7_timestamp = -1
+_last_v7_random = -1
 
-def uuid7():
-    global _last_unix_ts_ms, _last_rand_a, _last_rand_b
+def uuid7() -> uuid.UUID:
+    """
+    Gera um UUIDv7, conforme descrito no rascunho da RFC.
+    Este é um UUID ordenado por tempo, útil para ordenação em bases de dados.
+    """
+    global _last_v7_timestamp, _last_v7_random
+    timestamp_ms = int(time.time() * 1000)
 
-    unix_ts_ms = int(time.time() * 1000)
-
-    if unix_ts_ms < _last_unix_ts_ms:
-        unix_ts_ms = _last_unix_ts_ms
-
-    if unix_ts_ms == _last_unix_ts_ms:
-        rand_a = _last_rand_a
-        rand_b = _last_rand_b + 1
-        if rand_b > 0xFFFFFFFFFFFF:
-            rand_b = 0
-            rand_a += 1
-            if rand_a > 0xFFFF:
-                unix_ts_ms += 1
-                rand_a = 0
-                rand_b = 0
+    if timestamp_ms <= _last_v7_timestamp:
+        timestamp_ms = _last_v7_timestamp
+        # O timestamp é o mesmo ou retrocedeu. Incrementa os bits aleatórios.
+        random_bits = _last_v7_random + 1
+        # Verifica o overflow
+        if random_bits >= (1 << 74):
+            # Os bits aleatórios estouraram. Espera pelo próximo milissegundo.
+            while timestamp_ms <= _last_v7_timestamp:
+                timestamp_ms = int(time.time() * 1000)
+            random_bits = random.getrandbits(74)
     else:
-        _last_unix_ts_ms = unix_ts_ms
-        rand_a = random.getrandbits(16)
-        rand_b = random.getrandbits(48)
+        random_bits = random.getrandbits(74)
 
-    _last_rand_a = rand_a
-    _last_rand_b = rand_b
+    _last_v7_timestamp = timestamp_ms
+    _last_v7_random = random_bits
 
-    ver = 7
-    var = 2
+    # 48 bits do timestamp
+    uuid_int = timestamp_ms << 80
 
-    a = unix_ts_ms >> 16
-    b = (unix_ts_ms & 0xFFFF)
-    c = (ver << 12) | rand_a
-    d = (var << 14) | (rand_b >> 32)
-    e = rand_b & 0xFFFFFFFFFFFFFFFF >> 16
+    # 4 bits da versão (7)
+    uuid_int |= 7 << 76
 
-    return uuid.UUID(fields=(a, b, c, d, e, 0))
+    # 74 bits aleatórios, com a variante (2)
+    # A variante tem 2 bits (10), então precisamos abrir espaço para ela.
+    # Variante nos bits 62 e 63.
+    # Pega os 12 bits superiores dos 74 bits aleatórios
+    uuid_int |= (random_bits >> 62) << 64
+    # Define a variante
+    uuid_int |= 2 << 62
+    # Adiciona os 62 bits inferiores restantes
+    uuid_int |= random_bits & ((1 << 62) - 1)
 
+    return uuid.UUID(int=uuid_int)

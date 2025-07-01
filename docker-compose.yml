@@ -1,4 +1,7 @@
+# docker-compose.yml
+
 services:
+  # Serviço do Backend (Django)
   backend:
     build: ./backend
     container_name: dojo_backend
@@ -12,7 +15,9 @@ services:
       - ./backend/.env
     depends_on:
       - db
+      - redis
 
+  # Serviço do Frontend (React)
   frontend:
     build: ./frontend
     container_name: dojo_frontend
@@ -24,8 +29,10 @@ services:
     environment:
       - CHOKIDAR_USEPOLLING=true
 
+  # Serviço do Banco de Dados (PostgreSQL)
   db:
-    image: postgres:alpine
+    image: postgres:16-alpine
+    container_name: dojo_db
     environment:
       - POSTGRES_USER=dojouemura
       - POSTGRES_PASSWORD=senha_segura
@@ -35,9 +42,10 @@ services:
     volumes:
       - dbdata:/var/lib/postgresql/data
 
+  # Serviço do pgAdmin (Gerenciador de BD)
   pgadmin:
     image: dpage/pgadmin4
-    container_name: pgadmin
+    container_name: dojo_pgadmin
     restart: always
     environment:
       PGADMIN_DEFAULT_EMAIL: admin@dojouemura.com
@@ -49,7 +57,26 @@ services:
     depends_on:
       - db
 
+  # NOVO: Serviço do Redis (Gestor de Fila)
+  redis:
+    image: redis:7-alpine
+    container_name: dojo_redis
+    restart: always
+
+  # NOVO: Serviço do Celery Worker (Trabalhador de Segundo Plano)
+  celery_worker:
+    build: ./backend # Usa a mesma imagem do backend
+    container_name: dojo_celery_worker
+    command: celery -A core worker -l info # Comando para iniciar o worker
+    volumes:
+      - ./backend:/app
+    env_file:
+      - ./backend/.env
+    depends_on:
+      - backend
+      - redis
+
 volumes:
   dbdata:
   pgadmin_data:
-  media_data:
+  media_data: {}

@@ -1,0 +1,76 @@
+Plano de Execução: API de Inscrição com Tarefas Assíncronas
+Este plano detalha os passos necessários para implementar a API de inscrição, utilizando Celery e Redis para processar a geração de PDFs e o envio de e-mails em segundo plano.
+
+Fase 1: Configuração do Ambiente e da Base de Dados
+
+Atualizar Dependências:
+
+Adicionar celery, redis e Pillow (se ainda não estiver lá) ao ficheiro backend/requirements.txt.
+
+Configurar o Django (settings.py):
+
+Definir as configurações do Broker do Celery para apontar para o nosso serviço Redis.
+
+Configurar o backend de e-mail do Django (para desenvolvimento, podemos usar o console.EmailBackend que imprime os e-mails no terminal).
+
+Criar o Modelo TextoTermo:
+
+Na app students, criar o novo modelo TextoTermo para armazenar o conteúdo dos termos.
+
+Gerar e Aplicar Migrações:
+
+Executar makemigrations e migrate para criar a nova tabela no banco de dados.
+
+Popular os Termos:
+
+Através da Área de Administração do Django, criar os três registos iniciais na tabela TextoTermo com o conteúdo dos ficheiros .md.
+
+Fase 2: Implementação das Tarefas Assíncronas (Celery)
+
+Criar Instância do Celery:
+
+Criar um ficheiro backend/core/celery.py para configurar e definir a aplicação Celery.
+
+Definir as Tarefas:
+
+Criar um ficheiro backend/inscription/tasks.py.
+
+Implementar a tarefa gerar_pdf_termo_task(dependente_id, termo_id, evidencias): esta tarefa será responsável por gerar um PDF e salvar o registo TermoAceite.
+
+Implementar a tarefa enviar_email_confirmacao_task(responsavel_id): esta tarefa irá buscar todos os PDFs de uma inscrição e enviá-los por e-mail para o responsável.
+
+Fase 3: Construção da API de Inscrição
+
+Criar os Serializers:
+
+Criar o ficheiro backend/inscription/serializers.py.
+
+Desenvolver os serializers para validar e processar o JSON recebido do frontend, incluindo os dados do responsável, endereço e a lista de dependentes.
+
+Criar a API View:
+
+Criar o ficheiro backend/inscription/views.py.
+
+Implementar a view que irá receber o POST do frontend.
+
+A view irá usar os serializers para criar os registos no banco de dados e, em seguida, chamar as tarefas do Celery (.delay()) para o trabalho pesado.
+
+Definir as URLs da API:
+
+Criar o ficheiro backend/inscription/urls.py para definir o endpoint (ex: /inscricoes/).
+
+Atualizar o backend/core/urls.py principal para incluir as URLs da app de inscrição sob o prefixo /api/v1/.
+
+Fase 4: Teste e Validação
+
+Testar o Endpoint:
+
+Usar uma ferramenta como o Postman ou o Insomnia para enviar um JSON de teste (como o que você forneceu) para o nosso novo endpoint e verificar se a resposta é um sucesso imediato.
+
+Verificar os Logs:
+
+Acompanhar os logs do celery_worker para garantir que as tarefas de geração de PDF e envio de e-mail estão a ser executadas sem erros.
+
+Verificar o Banco de Dados e Mídia:
+
+Confirmar através do pgAdmin e da pasta de mídia que os registos e os ficheiros PDF foram criados corretamente.
