@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'rest_framework',
     
     # Nossas apps locais
+    'common',
     'inscription',
     'users',
     'students',
@@ -132,3 +133,18 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# --- CONFIGURAÇÕES DO CELERY ---
+# URL para o nosso gestor de fila (Redis).
+# 'redis://redis:6379/0' significa: use o serviço 'redis', na porta '6379', base de dados '0'.
+CELERY_BROKER_URL = 'redis://redis:6379/0'
+# Onde o Celery irá guardar os resultados das tarefas.
+CELERY_RESULT_BACKEND = 'redis://redis:6379/0'
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+
+# --- CONFIGURAÇÕES DE E-MAIL (PARA DESENVOLVIMENTO) ---
+# Em vez de enviar e-mails reais, o Django irá imprimi-los no console/terminal.
+# Isto é perfeito para testar o conteúdo dos e-mails sem precisar de um servidor de SMTP.
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'

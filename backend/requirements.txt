@@ -1,7 +1,15 @@
 # backend/requirements.txt
 
+# Core
 django
 djangorestframework
 psycopg2-binary
 python-dotenv
-pillow
+Pillow
+
+# Tarefas Assíncronas
+celery
+redis
+
+# Geração de PDF
+weasyprint
