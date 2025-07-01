@@ -1,0 +1,7 @@
+# backend/requirements.txt
+
+django
+djangorestframework
+psycopg2-binary
+python-dotenv
+pillow
