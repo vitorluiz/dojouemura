@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ titulo_termo }}</title>
+    <style>
+        @page {
+            size: A4;
+            margin: 2.5cm 2cm;
+        }
+        body {
+            font-family: 'Times New Roman', Times, serif;
+            font-size: 12pt;
+            line-height: 1.5;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .logo {
+            max-width: 150px;
+            max-height: 75px;
+        }
+        h1 {
+            text-align: center;
+            font-size: 16pt;
+            margin-bottom: 40px;
+        }
+        p {
+            text-align: justify;
+            margin-bottom: 12px;
+        }
+        .assinatura {
+            margin-top: 60px;
+            text-align: center;
+        }
+        .assinatura-linha {
+            border-top: 1px solid #000;
+            width: 300px;
+            margin: 0 auto;
+            padding-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <img src="{{ logo_base64_data_uri }}" alt="Logo do Dojô" class="logo">
+    </div>
+
+    <h1>{{ titulo_termo }}</h1>
+
+    <!-- Substitui as variáveis no conteúdo do termo -->
+    <div class="conteudo">
+        {% autoescape off %}
+        {{ conteudo_termo|linebreaksbr
+            |replace:"[NOME_DO_RESPONSAVEL]", nome_responsavel
+            |replace:"[CPF_DO_RESPONSAVEL]", cpf_responsavel
+            |replace:"[RG_DO_RESPONSAVEL]", rg_responsavel
+            |replace:"[ENDERECO_COMPLETO_DO_RESPONSAVEL]", endereco_completo_responsavel
+            |replace:"[NOME_DO_DEPENDENTE]", nome_dependente
+            |replace:"[DATA_NASCIMENTO_DEPENDENTE]", data_nascimento_dependente
+            |replace:"[CPF_DEPENDENTE]", cpf_dependente
+            |replace:"[DESCREVER_CONDICOES_MEDICAS]", descrever_condicoes_medicas
+            |replace:"[TELEFONE_EMERGENCIA]", telefone_emergencia
+            |replace:"[NOME_CONTATO_EMERGENCIA]", nome_contato_emergencia
+            |replace:"[PARENTESCO_CONTATO_EMERGENCIA]", parentesco_contato_emergencia
+            |replace:"[LOCALIDADE]", localidade
+            |replace:"[DATA_ATUAL]", data_atual
+        }}
+        {% endautoescape %}
+    </div>
+
+    <div class="assinatura">
+        <div class="assinatura-linha">
+            {{ nome_responsavel }}<br>
+            CPF: {{ cpf_responsavel }}
+        </div>
+    </div>
+</body>
+</html>

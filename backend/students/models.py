@@ -49,8 +49,9 @@ class Dependente(models.Model):
     
     # --- Dados Escolares (Atualizado para corresponder ao frontend) ---
     escola_nome = models.CharField(max_length=255, blank=True, null=True)
-    escola_serie_periodo = models.CharField(max_length=100, blank=True, null=True, help_text="Combinação de série e período, ex: '9º ano - Tarde'")
-
+    escola_serie = models.CharField(max_length=50, blank=True, null=True)
+    escola_periodo = models.CharField(max_length=50, blank=True, null=True)
+    
     # --- Dados de Saúde e Emergência (Atualizado para corresponder ao frontend) ---
     plano_saude_qual = models.CharField(max_length=255, blank=True, null=True, help_text="Nome do plano de saúde, se houver.")
     alergias_quais = models.CharField(max_length=255, blank=True, null=True, help_text="Descrição das alergias, se houver.")
