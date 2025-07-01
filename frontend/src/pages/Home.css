@@ -1,0 +1,94 @@
+/* src/pages/Home.css */
+
+/* O container principal do banner */
+.home-hero {
+  position: relative;
+  width: 100%;
+  height: 70vh;
+  border-radius: 8px;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  color: white;
+  
+  /* Imagem de fundo aplicada aqui para simplificar */
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+/* Pseudo-elemento para a camada escura, que garante a legibilidade */
+.home-hero::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  border-radius: 8px;
+}
+
+/* O container do texto que fica sobre a imagem */
+.hero-text {
+  position: relative; /* Necessário para ficar acima da camada escura */
+  padding: 1rem;
+}
+
+/* Estilos para os textos */
+.hero-text h1 {
+  font-size: 3.5rem;
+  margin: 0;
+  font-weight: 700;
+}
+
+.hero-text p {
+  font-size: 1.5rem;
+  margin-top: 0.5rem;
+  margin-bottom: 2rem;
+  font-weight: 300;
+}
+
+/* --- ESTILO DO BOTÃO ATUALIZADO CONFORME SUA SOLICITAÇÃO --- */
+.cta-button {
+  /* Estado inicial: transparente com borda branca */
+  background-color: rgba(255, 0, 0, 0.5); /* Fundo vermelho com 50% de transparência */
+  color: white;
+  border: 2px solid white; /* Borda branca */
+  
+  padding: 1rem 2.5rem;
+  border-radius: 50px;
+  text-decoration: none;
+  font-size: 1.2rem;
+  font-weight: bold;
+  display: inline-block;
+  
+  /* Transição suave para o efeito hover */
+  transition: background-color 0.3s, color 0.3s, transform 0.2s;
+}
+
+.cta-button:hover {
+  /* Estado no hover: vermelho sólido, 100% opaco */
+  background-color: #ff0000;
+  border-color: #ff0000; /* Borda também fica vermelha para um visual mais limpo */
+  transform: scale(1.05);
+}
+
+
+/* Media Query para Responsividade em Telas Pequenas */
+@media (max-width: 768px) {
+  .hero-text h1 {
+    font-size: 2.2rem;
+  }
+
+  .hero-text p {
+    font-size: 1.1rem;
+  }
+
+  .cta-button {
+    font-size: 1rem;
+    padding: 0.8rem 1.8rem;
+  }
+}

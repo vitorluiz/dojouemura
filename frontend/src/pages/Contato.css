@@ -1,0 +1,27 @@
+/* src/pages/Contato.css */
+
+.contato-container h2 {
+    text-align: center;
+    margin-bottom: 2rem;
+    font-size: 2rem;
+}
+
+.contato-content {
+    display: flex;
+    gap: 2rem;
+    flex-wrap: wrap;
+}
+
+.contato-info {
+    flex: 1;
+    min-width: 300px;
+}
+
+.contato-mapa {
+    flex: 2;
+    min-width: 300px;
+}
+
+.contato-mapa iframe {
+    border-radius: 8px;
+}

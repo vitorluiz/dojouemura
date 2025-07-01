@@ -1,0 +1,276 @@
+/* src/pages/Inscricao.css */
+
+.inscricao-container {
+  padding: 2rem;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.inscricao-container h2 {
+  text-align: center;
+  margin-bottom: 2rem;
+  color: #333;
+}
+
+.form-section {
+  margin-bottom: 2.5rem;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 1.5rem;
+}
+
+.form-section h3 {
+  margin-bottom: 1.5rem;
+  color: #1a1a1a;
+  border-left: 4px solid #007bff;
+  padding-left: 10px;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1rem;
+}
+
+.form-control {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 1rem;
+  box-sizing: border-box;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="tel"],
+input[type="password"],
+input[type="date"],
+input[type="number"],
+select {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 1rem;
+  box-sizing: border-box; /* Importante para o padding não afetar a largura total */
+}
+
+input[readOnly] {
+  background-color: #e9ecef;
+  cursor: not-allowed;
+}
+
+.dependente-card {
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  position: relative;
+}
+
+.dependente-card h4 {
+  margin-top: 0;
+  margin-bottom: 1rem;
+}
+.dependente-card h5 {
+  margin-top: 1.5rem;
+  margin-bottom: 1rem;
+  color: #555;
+}
+
+.add-btn, .submit-btn {
+  display: block;
+  width: 100%;
+  padding: 12px;
+  font-size: 1.1rem;
+  font-weight: bold;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.add-btn {
+  background-color: #28a745;
+  margin-top: 1rem;
+}
+.add-btn:hover {
+  background-color: #218838;
+}
+
+.remove-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.remove-btn:hover {
+  background-color: #c82333;
+}
+
+.submit-btn {
+  background-color: #007bff;
+}
+
+.submit-btn:hover {
+  background-color: #0056b3;
+}
+
+.form-group-inline {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-bottom: 1rem;
+}
+.form-group-inline label {
+  font-weight: bold;
+}
+.form-group-inline input {
+  flex: 1;
+}
+
+.form-group-checkbox {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.form-group-checkbox input {
+  width: auto;
+  margin-right: 10px;
+}
+
+.form-group {
+  margin-top: 1.5rem;
+}
+
+.submit-btn:disabled {
+  background-color: #6c757d; /* Um tom de cinza */
+  cursor: not-allowed;      /* Mostra um ícone de "proibido" ao passar o mouse */
+  opacity: 0.7;             /* Deixa o botão um pouco transparente */
+}
+
+.term-link {
+  color: #007bff;
+  text-decoration: underline;
+  cursor: pointer;
+  margin-left: 0.5rem; /* Ajusta o espaçamento do checkbox */
+}
+
+.term-link:hover {
+  color: #0056b3;
+}
+
+.termos-section-dependente {
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px dashed #ccc;
+}
+
+.form-grid-address {
+  display: grid;
+  gap: 1rem;
+  grid-template-areas:
+    "cep cep numero numero"
+    "logradouro logradouro logradouro logradouro"
+    "bairro bairro complemento complemento"
+    "cidade cidade cidade uf";
+}
+
+.form-grid-address .cep { grid-area: cep; }
+.form-grid-address .logradouro { grid-area: logradouro; }
+.form-grid-address .numero { grid-area: numero; }
+.form-grid-address .bairro { grid-area: bairro; }
+.form-grid-address .complemento { grid-area: complemento; }
+.form-grid-address .cidade { grid-area: cidade; }
+.form-grid-address .uf { grid-area: uf; }
+
+@media (max-width: 600px) {
+  .form-grid-address {
+    grid-template-areas:
+      "cep"
+      "logradouro"
+      "numero"
+      "bairro"
+      "complemento"
+      "cidade"
+      "uf";
+  }
+}
+
+
+.form-grid-esporte {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr auto;
+  gap: 1rem;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.add-esporte-btn, .remove-esporte-btn {
+  padding: 5px 10px;
+  border: 1px solid #ccc;
+  background-color: #f0f0f0;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.remove-esporte-btn {
+  background-color: #fce8e6;
+  color: #a50e0e;
+  border-color: #f4c7c3;
+}
+
+/* Adiciona um estilo padrão para os inputs com máscara, para que fiquem iguais aos outros */
+.form-control {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 1rem;
+  box-sizing: border-box;
+  font-family: inherit;
+}
+
+.form-grid-esporte {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr auto;
+  gap: 1rem;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.add-esporte-btn, .remove-esporte-btn {
+  padding: 5px 10px;
+  border: 1px solid #ccc;
+  background-color: #f0f0f0;
+  cursor: pointer;
+  border-radius: 4px;
+  font-size: 1rem;
+  line-height: 1;
+}
+
+.add-esporte-btn {
+    background-color: #e6f4ea;
+    color: #135223;
+    border-color: #b7d8c2;
+    margin-top: 0.5rem;
+    width: 100%;
+    padding: 8px;
+}
+
+.remove-esporte-btn {
+  background-color: #fce8e6;
+  color: #a50e0e;
+  border-color: #f4c7c3;
+  padding: 8px 12px;
+}

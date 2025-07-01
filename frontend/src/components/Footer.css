@@ -1,0 +1,106 @@
+/* src/components/Footer.css */
+
+.app-footer {
+  background-color: #1a1a1a;
+  color: #a7a7a7;
+  padding: 40px 20px;
+}
+
+.footer-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.footer-section {
+  flex: 1;
+  min-width: 250px;
+  padding: 10px;
+}
+
+.footer-section h2 {
+  color: white;
+  margin-bottom: 20px;
+  font-size: 1.2rem;
+}
+
+.footer-logo-text {
+  font-size: 1.8rem;
+  font-weight: bold;
+}
+
+.footer-section p {
+  line-height: 1.6;
+}
+
+.footer-section .contact span {
+  display: block;
+  margin-bottom: 10px;
+}
+
+.footer-section.links ul {
+  list-style: none;
+  padding: 0;
+}
+
+.footer-section.links a {
+  color: #a7a7a7;
+  text-decoration: none;
+  display: block;
+  margin-bottom: 10px;
+  transition: color 0.3s;
+}
+
+.footer-section.links a:hover {
+  color: white;
+}
+
+.footer-section.social a {
+  color: #a7a7a7;
+  text-decoration: none;
+  margin-right: 15px;
+  font-size: 1.5rem;
+  transition: color 0.3s;
+}
+
+.footer-section.social a:hover {
+  color: white;
+}
+
+/* --- ESTILOS ATUALIZADOS E NOVOS AQUI --- */
+.footer-bottom {
+  max-width: 1200px;
+  margin: 40px auto 0 auto;
+  padding-top: 20px;
+  border-top: 1px solid #333;
+  font-size: 0.9rem;
+
+  /* Novas regras para alinhar os itens */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap; /* Permite quebrar a linha em telas muito pequenas */
+  gap: 1rem; /* Espaço entre os itens quando quebrar a linha */
+}
+
+.credits a {
+  color: #a7a7a7;
+  font-weight: bold;
+  text-decoration: none;
+  transition: color 0.3s;
+}
+
+.credits a:hover {
+  color: white;
+}
+
+/* Ajuste para telas pequenas */
+@media (max-width: 768px) {
+    .footer-bottom {
+        justify-content: center; /* Centraliza tudo em telas pequenas */
+        text-align: center;
+    }
+}
