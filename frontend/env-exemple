@@ -1,0 +1,7 @@
+# URL da API do backend
+REACT_APP_API_URL=http://localhost:8000/api/v1
+
+# Outras configurações podem ser adicionadas aqui
+REACT_APP_ENVIRONMENT=development
+
+CHOKIDAR_USEPOLLING=true

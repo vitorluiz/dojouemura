@@ -1,0 +1,22 @@
+# backend/.env
+
+# Django
+SECRET_KEY=django-insecure-local-dev-key
+DEBUG=1
+
+# PostgreSQL
+POSTGRES_USER=dojouemura
+POSTGRES_PASSWORD=senha_segura
+POSTGRES_DB=dojouemura
+
+# Django DB Settings
+DB_ENGINE=django.db.backends.postgresql
+DB_NAME=dojouemura
+DB_USER=dojouemura
+DB_PASSWORD=senha_segura
+DB_HOST=db
+DB_PORT=5432
+
+# pgAdmin
+PGADMIN_DEFAULT_EMAIL=admin@dojouemura.com
+PGADMIN_DEFAULT_PASSWORD=admin123

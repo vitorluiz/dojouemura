@@ -8,6 +8,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     # Adicione esta linha para criar o prefixo /api/v1/
     path('api/v1/', include('inscription.urls')),
+    path('api/v1/manager/', include('manager.urls')),
 ]
 
 if settings.DEBUG:

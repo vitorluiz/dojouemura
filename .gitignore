@@ -55,3 +55,6 @@ docker-compose.override.yml
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+frontend-old/
+backend-old

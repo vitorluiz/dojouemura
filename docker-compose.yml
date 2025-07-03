@@ -1,11 +1,11 @@
-# docker-compose.yml
-
 services:
-  # Serviço do Backend (Django)
+  # Backend Django
   backend:
     build: ./backend
     container_name: dojo_backend
-    command: python manage.py runserver 0.0.0.0:8000
+    command: >
+      sh -c "python manage.py migrate &&
+             python manage.py runserver 0.0.0.0:8000"
     volumes:
       - ./backend:/app
       - media_data:/app/media
@@ -19,28 +19,27 @@ services:
       redis:
         condition: service_started
 
-  # Serviço do Frontend (React)
+  # Frontend React
   frontend:
     build: ./frontend
     container_name: dojo_frontend
     volumes:
       - ./frontend:/app
-      - /app/node_modules
     ports:
       - "3000:3000"
-    environment:
-      - CHOKIDAR_USEPOLLING=true
+    env_file:
+      - ./frontend/.env
+    stdin_open: true
+    tty: true
 
-  # Serviço do Banco de Dados (PostgreSQL)
+  # PostgreSQL Database
   db:
     image: postgres:16-alpine
     container_name: dojo_db
-    environment:
-      - POSTGRES_USER=dojouemura
-      - POSTGRES_PASSWORD=senha_segura
-      - POSTGRES_DB=dojouemura
+    env_file:
+      - ./backend/.env
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U dojouemura -d dojouemura"]
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
       interval: 5s
       timeout: 5s
       retries: 5
@@ -49,14 +48,13 @@ services:
     volumes:
       - dbdata:/var/lib/postgresql/data
 
-  # Serviço do pgAdmin (Gerenciador de BD)
+  # pgAdmin
   pgadmin:
     image: dpage/pgadmin4
     container_name: dojo_pgadmin
     restart: always
-    environment:
-      PGADMIN_DEFAULT_EMAIL: admin@dojouemura.com
-      PGADMIN_DEFAULT_PASSWORD: admin123
+    env_file:
+      - ./backend/.env
     ports:
       - "8080:80"
     volumes:
@@ -64,13 +62,13 @@ services:
     depends_on:
       - db
 
-  # NOVO: Serviço do Redis (Gestor de Fila)
+  # Redis
   redis:
     image: redis:7-alpine
     container_name: dojo_redis
     restart: always
 
-  # NOVO: Serviço do Celery Worker (Trabalhador de Segundo Plano)
+  # Celery Worker
   celery_worker:
     build: ./backend
     container_name: dojo_celery_worker
