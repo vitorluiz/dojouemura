@@ -1,0 +1,204 @@
+{% extends 'usuarios/base.html' %}
+
+{% block title %}Dashboard - Cadastro de Pessoas{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h1 class="text-white fw-bold">
+                        <i class="bi bi-speedometer2 me-2"></i>
+                        Dashboard
+                    </h1>
+                    <p class="text-white-50 mb-0">Bem-vindo(a), {{ user.nome_completo }}!</p>
+                </div>
+                <a href="{% url 'cadastrar_dependente' %}" class="btn btn-primary">
+                    <i class="bi bi-person-plus me-2"></i>
+                    Cadastrar Dependente
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Estatísticas -->
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <div class="card text-center">
+                <div class="card-body">
+                    <div class="display-4 text-primary mb-2">
+                        <i class="bi bi-people-fill"></i>
+                    </div>
+                    <h3 class="fw-bold">{{ dependentes.count }}</h3>
+                    <p class="text-muted mb-0">Dependente{{ dependentes.count|pluralize }}</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4">
+            <div class="card text-center">
+                <div class="card-body">
+                    <div class="display-4 text-success mb-2">
+                        <i class="bi bi-check-circle-fill"></i>
+                    </div>
+                    <h3 class="fw-bold">
+                        {% if user.email_verificado %}
+                            <span class="text-success">Verificado</span>
+                        {% else %}
+                            <span class="text-warning">Pendente</span>
+                        {% endif %}
+                    </h3>
+                    <p class="text-muted mb-0">Status do Email</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4">
+            <div class="card text-center">
+                <div class="card-body">
+                    <div class="display-4 text-info mb-2">
+                        <i class="bi bi-calendar-event"></i>
+                    </div>
+                    <h3 class="fw-bold">{{ user.date_joined|date:"d/m/Y" }}</h3>
+                    <p class="text-muted mb-0">Data de Cadastro</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Lista de Dependentes -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h4 class="mb-0 fw-bold">
+                        <i class="bi bi-people me-2"></i>
+                        Meus Dependentes
+                    </h4>
+                    {% if dependentes %}
+                        <span class="badge bg-primary">{{ dependentes.count }} dependente{{ dependentes.count|pluralize }}</span>
+                    {% endif %}
+                </div>
+                
+                <div class="card-body">
+                    {% if dependentes %}
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th><i class="bi bi-person me-1"></i>Código</th>
+                                        <th><i class="bi bi-person me-1"></i>Nome</th>
+                                        <th><i class="bi bi-calendar me-1"></i>Idade</th>
+                                        <th><i class="bi bi-heart me-1"></i>Parentesco</th>
+                                        <th><i class="bi bi-mortarboard me-1"></i>Escola</th>
+                                        <th><i class="bi bi-geo-alt me-1"></i>Cidade</th>
+                                        <th><i class="bi bi-gear me-1"></i>Ações</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for dependente in dependentes %}
+                                        <tr>
+                                            <td>
+                                                <div class="d-flex align-items-center">
+                                                    <div class="badge bg-info">
+                                                        {{ dependente.codigo_alfanumerico }}
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="d-flex align-items-center">
+                                                    <div class="avatar bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px;">
+                                                        {{ dependente.nome_completo|first|upper }}
+                                                    </div>
+                                                    <div>
+                                                        <div class="fw-bold">{{ dependente.nome_completo }}</div>
+                                                        <small class="text-muted">{{ dependente.data_nascimento|date:"d/m/Y" }}</small>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <span class="badge bg-info">{{ dependente.idade }} anos</span>
+                                            </td>
+                                            <td>{{ dependente.get_parentesco_display }}</td>
+                                            <td>
+                                                <div>{{ dependente.escola }}</div>
+                                                <small class="text-muted">{{ dependente.get_turno_display }}</small>
+                                            </td>
+                                            <td>{{ dependente.cidade }}/{{ dependente.uf }}</td>
+                                            <td>
+                                                <div class="btn-group btn-group-sm">
+                                                    <a href="{% url 'editar_dependente' dependente.id %}" 
+                                                       class="btn btn-outline-primary" 
+                                                       title="Editar">
+                                                        <i class="bi bi-pencil"></i>
+                                                    </a>
+                                                    <a href="{% url 'excluir_dependente' dependente.id %}" 
+                                                       class="btn btn-outline-danger" 
+                                                       title="Excluir">
+                                                        <i class="bi bi-trash"></i>
+                                                    </a>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <div class="text-center py-5">
+                            <div class="display-1 text-muted mb-3">
+                                <i class="bi bi-person-plus"></i>
+                            </div>
+                            <h4 class="text-muted mb-3">Nenhum dependente cadastrado</h4>
+                            <p class="text-muted mb-4">
+                                Você ainda não cadastrou nenhum dependente. 
+                                Clique no botão abaixo para começar.
+                            </p>
+                            <a href="{% url 'cadastrar_dependente' %}" class="btn btn-primary">
+                                <i class="bi bi-person-plus me-2"></i>
+                                Cadastrar Primeiro Dependente
+                            </a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Informações do Usuário -->
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0 fw-bold">
+                        <i class="bi bi-person-circle me-2"></i>
+                        Suas Informações
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p><strong>Nome:</strong> {{ user.nome_completo }}</p>
+                            <p><strong>Email:</strong> {{ user.email }}</p>
+                            <p><strong>CPF:</strong> {{ user.cpf }}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <p><strong>Telefone:</strong> {{ user.telefone }}</p>
+                            <p><strong>Data de Nascimento:</strong> {{ user.data_nascimento|date:"d/m/Y" }}</p>
+                            <p><strong>Status:</strong> 
+                                {% if user.email_verificado %}
+                                    <span class="badge bg-success">Email Verificado</span>
+                                {% else %}
+                                    <span class="badge bg-warning">Email Pendente</span>
+                                {% endif %}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
