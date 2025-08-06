@@ -82,7 +82,7 @@ def enviar_email_verificacao(request, usuario):
         reverse('verificar_email', kwargs={'uidb64': uid, 'token': token})
     )
     
-    subject = 'Verificação de Email - Cadastro de Pessoas'
+    subject = 'Verificação de Email - Cadastro Dojô Uemura'
     message = f'''
     Olá {usuario.nome_completo},
     
@@ -92,16 +92,36 @@ def enviar_email_verificacao(request, usuario):
     Se você não se cadastrou em nosso site, ignore este email.
     
     Atenciosamente,
-    Equipe Cadastro de Pessoas
+    Equipe Dojô Uemura
     '''
     
-    send_mail(
-        subject,
-        message,
-        settings.DEFAULT_FROM_EMAIL,
-        [usuario.email],
-        fail_silently=False,
-    )
+    #send_mail(
+    #    subject,
+    #    message,
+    #    settings.DEFAULT_FROM_EMAIL,
+    #    [usuario.email],
+    #    fail_silently=False,
+    #)
+     # --- INÍCIO DO CÓDIGO DE DIAGNÓSTICO ---
+    print("\n" + "="*60)
+    print("DIAGNÓSTICO DE E-MAIL DENTRO DA VIEW DO DJANGO")
+    print(f"  Remetente (From) que será usado: {settings.DEFAULT_FROM_EMAIL}")
+    print(f"  Usuário de Autenticação (Host User): {settings.EMAIL_HOST_USER}")
+    print(f"  Senha de Autenticação (Host Password): {'*' * len(settings.EMAIL_HOST_PASSWORD) if hasattr(settings, 'EMAIL_HOST_PASSWORD') else 'NAO DEFINIDA'}")
+    print("="*60 + "\n")
+    # --- FIM DO CÓDIGO DE DIAGNÓSTICO ---
+    
+    try:
+        send_mail(
+            subject,
+            message,
+            settings.DEFAULT_FROM_EMAIL, # Usando a configuração do settings
+            [usuario.email],
+            fail_silently=False,
+        )
+        print(">>> SUCESSO: O comando send_mail do Django foi executado.")
+    except Exception as e:
+        print(f">>> ERRO: O comando send_mail do Django falhou. Erro: {e}")
 
 
 def verificar_email(request, uidb64, token):

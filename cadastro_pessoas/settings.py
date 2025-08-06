@@ -124,12 +124,12 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # Configurações de Email
 #EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'mail.vnetworks.com.br'
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'noreply@vnetworks.com.br'
-EMAIL_HOST_PASSWORD = 'z10C6LlB4UG3Dwb0'
-DEFAULT_FROM_EMAIL=EMAIL_HOST_USER
+EMAIL_HOST = config('EMAIL_HOST',)
+EMAIL_PORT = config('EMAIL_PORT', cast=int)
+EMAIL_USE_TLS = config('EMAIL_USE_TLS',)
+EMAIL_HOST_USER = config('EMAIL_HOST_USER',)
+EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD',)
+DEFAULT_FROM_EMAIL = config('DEFAULT_FROM_EMAIL') 
 
 # Configurações de autenticação
 LOGIN_URL = '/login/'

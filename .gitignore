@@ -1,9 +1,10 @@
 
 .env
 env
-
+command.sh
 .venv/
 venv/
+teste_email.py
 *.pyc
 __pycache__/
 *.pyo
