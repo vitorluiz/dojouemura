@@ -4,6 +4,8 @@ env
 command.sh
 .venv/
 venv/
+media/
+staticfiles/
 teste_email.py
 *.pyc
 __pycache__/
