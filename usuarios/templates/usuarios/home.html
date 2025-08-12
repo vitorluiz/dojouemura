@@ -1,117 +1,207 @@
 {% extends 'usuarios/base.html' %}
 
-{% block title %}Início - Cadastro de Pessoas{% endblock %}
+{% block title %}Dojô Uemura - Formando Campeões da Vida{% endblock %}
 
 {% block content %}
 <!-- Hero Section -->
 <section class="hero-section">
     <div class="container">
         <div class="row justify-content-center">
-            <div class="col-lg-8 text-center">
-                <h1 class="display-4 fw-bold mb-4">
-                    <i class="bi bi-people-fill me-3"></i>
-                    Sistema de Cadastro de Alunos Dojô Uemura
-                </h1>
-                <p class="lead mb-5">
-                    Faça o cadastro dos alunos participantes do projeto social.
-                </p>
-                <div class="d-flex gap-3 justify-content-center flex-wrap">
-                    <a href="{% url 'registro' %}" class="btn btn-primary btn-lg">
-                        <i class="bi bi-person-plus me-2"></i>
-                        Criar Conta
-                    </a>
-                    <a href="{% url 'login' %}" class="btn btn-outline-light btn-lg">
-                        <i class="bi bi-box-arrow-in-right me-2"></i>
-                        Fazer Login
-                    </a>
+            <div class="col-lg-10 text-center">
+                <div class="animate-fade-in-up">
+                    <h1 class="display-3 fw-bold mb-4">
+                        <i class="bi bi-award-fill me-3"></i>
+                        Dojô Uemura
+                    </h1>
+                    <h2 class="h3 mb-4" style="color: var(--japanese-gold); font-weight: 600;">
+                        Formando Campeões da Vida
+                    </h2>
+                    <p class="lead mb-5">
+                        Projeto social de Jiu-Jitsu gratuito para crianças e adolescentes de 6 a 18 anos.<br>
+                        Desenvolvendo disciplina, respeito e caráter através das artes marciais.
+                    </p>
+                    <div class="d-flex gap-4 justify-content-center flex-wrap">
+                        <a href="{% url 'registro' %}" class="btn btn-primary btn-lg">
+                            <i class="bi bi-person-plus me-2"></i>
+                            Inscrever Dependente
+                        </a>
+                        <a href="{% url 'login' %}" class="btn btn-outline-light btn-lg">
+                            <i class="bi bi-box-arrow-in-right me-2"></i>
+                            Acessar Sistema
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Elementos decorativos -->
+    <div class="position-absolute" style="top: 20%; left: 10%; opacity: 0.1;">
+        <i class="bi bi-circle-fill" style="font-size: 3rem; color: var(--japanese-gold);"></i>
+    </div>
+    <div class="position-absolute" style="top: 60%; right: 15%; opacity: 0.1;">
+        <i class="bi bi-triangle-fill" style="font-size: 2rem; color: var(--japanese-silver);"></i>
+    </div>
+</section>
+
+<!-- Features Section -->
+<section class="py-5" style="background: var(--gray-50);">
+    <div class="container">
+        <div class="section-title">
+            <h2>Por que escolher o Dojô Uemura?</h2>
+            <p>Nossos diferenciais para formar cidadãos com caráter e disciplina</p>
+        </div>
+        
+        <div class="row g-4">
+            <div class="col-md-4 animate-slide-in-left">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="bi bi-shield-check"></i>
+                    </div>
+                    <h4>Segurança Total</h4>
+                    <p>
+                        Sistema de frequência em tempo real. Monitore seu dependente 
+                        desde a entrada até a saída do Dojô com notificações instantâneas.
+                    </p>
+                </div>
+            </div>
+            
+            <div class="col-md-4 animate-fade-in-up">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="bi bi-award"></i>
+                    </div>
+                    <h4>Professores Qualificados</h4>
+                    <p>
+                        Equipe de instrutores graduados e experientes, 
+                        comprometidos com a formação técnica e moral dos alunos.
+                    </p>
+                </div>
+            </div>
+            
+            <div class="col-md-4 animate-slide-in-right">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="bi bi-heart-fill"></i>
+                    </div>
+                    <h4>Projeto Social</h4>
+                    <p>
+                        Aulas gratuitas de Jiu-Jitsu para crianças e adolescentes, 
+                        promovendo inclusão social e desenvolvimento pessoal.
+                    </p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="row g-4 mt-4">
+            <div class="col-md-4 animate-slide-in-left">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="bi bi-calendar-check"></i>
+                    </div>
+                    <h4>Horários Flexíveis</h4>
+                    <p>
+                        Turmas nos três períodos (manhã, tarde e noite) 
+                        para atender toda a família chapadense.
+                    </p>
+                </div>
+            </div>
+            
+            <div class="col-md-4 animate-fade-in-up">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="bi bi-people-fill"></i>
+                    </div>
+                    <h4>Comunidade Unida</h4>
+                    <p>
+                        Ambiente familiar onde pais e responsáveis 
+                        participam ativamente do desenvolvimento dos alunos.
+                    </p>
+                </div>
+            </div>
+            
+            <div class="col-md-4 animate-slide-in-right">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="bi bi-star-fill"></i>
+                    </div>
+                    <h4>Formação de Caráter</h4>
+                    <p>
+                        Além da técnica, ensinamos valores como respeito, 
+                        disciplina, humildade e perseverança.
+                    </p>
                 </div>
             </div>
         </div>
     </div>
 </section>
 
-<!-- Features Section -->
+<!-- Modalidades Section -->
 <section class="py-5">
     <div class="container">
-        <div class="row">
-            <div class="col-lg-12 text-center mb-5">
-                <h2 class="display-5 fw-bold text-white mb-3">Funcionalidades do Sistema</h2>
-                <p class="lead text-white-50">Conheça todas as funcionalidades disponíveis</p>
-            </div>
+        <div class="section-title">
+            <h2>Nossas Modalidades</h2>
+            <p>Artes marciais para todas as idades e níveis</p>
         </div>
         
-        <div class="row">
-            <div class="col-md-4">
-                <div class="feature-card text-center">
-                    <div class="feature-icon">
-                        <i class="bi bi-shield-check"></i>
+        <div class="row g-4">
+            <div class="col-lg-4 col-md-6">
+                <div class="card h-100">
+                    <div class="card-body text-center p-4">
+                        <div class="mb-3">
+                            <i class="bi bi-person-fill" style="font-size: 4rem; color: var(--primary-red);"></i>
+                        </div>
+                        <h4 class="text-primary mb-3">Jiu-Jitsu</h4>
+                        <p class="mb-3">
+                            <strong>Projeto Social Gratuito</strong><br>
+                            Para crianças e adolescentes de 6 a 18 anos
+                        </p>
+                        <ul class="list-unstyled text-start">
+                            <li><i class="bi bi-check-circle text-success me-2"></i>Matrícula na escola regular</li>
+                            <li><i class="bi bi-check-circle text-success me-2"></i>Responsável legal obrigatório</li>
+                            <li><i class="bi bi-check-circle text-success me-2"></i>Frequência controlada</li>
+                        </ul>
                     </div>
-                    <h4 class="fw-bold mb-3">Segurança</h4>
-                    <p class="text-muted">
-                        Monitore seu Filho na aula.
-                    </p>
                 </div>
             </div>
             
-            <div class="col-md-4">
-                <div class="feature-card text-center">
-                    <div class="feature-icon">
-                        <i class="bi bi-people"></i>
+            <div class="col-lg-4 col-md-6">
+                <div class="card h-100">
+                    <div class="card-body text-center p-4">
+                        <div class="mb-3">
+                            <i class="bi bi-person-badge" style="font-size: 4rem; color: var(--japanese-navy);"></i>
+                        </div>
+                        <h4 style="color: var(--japanese-navy);" class="mb-3">Judô</h4>
+                        <p class="mb-3">
+                            <strong>Modalidade Mensal</strong><br>
+                            Para crianças e adultos
+                        </p>
+                        <ul class="list-unstyled text-start">
+                            <li><i class="bi bi-check-circle text-success me-2"></i>Turmas organizadas por idade</li>
+                            <li><i class="bi bi-check-circle text-success me-2"></i>Mensalidades acessíveis</li>
+                            <li><i class="bi bi-check-circle text-success me-2"></i>Participação em competições</li>
+                        </ul>
                     </div>
-                    <h4 class="fw-bold mb-3">Frequencia</h4>
-                    <p class="text-muted">
-                        Cadastre e gerencie a frequencia dos seus dependentes.
-                    </p>
                 </div>
             </div>
             
-            <div class="col-md-4">
-                <div class="feature-card text-center">
-                    <div class="feature-icon">
-                        <i class="bi bi-geo-alt"></i>
+            <div class="col-lg-4 col-md-6">
+                <div class="card h-100">
+                    <div class="card-body text-center p-4">
+                        <div class="mb-3">
+                            <i class="bi bi-lightning-fill" style="font-size: 4rem; color: var(--japanese-forest);"></i>
+                        </div>
+                        <h4 style="color: var(--japanese-forest);" class="mb-3">Muay Thai</h4>
+                        <p class="mb-3">
+                            <strong>Modalidade Mensal</strong><br>
+                            Para crianças e adultos
+                        </p>
+                        <ul class="list-unstyled text-start">
+                            <li><i class="bi bi-check-circle text-success me-2"></i>Condicionamento físico</li>
+                            <li><i class="bi bi-check-circle text-success me-2"></i>Autodefesa</li>
+                            <li><i class="bi bi-check-circle text-success me-2"></i>Disciplina mental</li>
+                        </ul>
                     </div>
-                    <h4 class="fw-bold mb-3">Localização</h4>
-                    <p class="text-muted">
-                        con a autenticação sabera da frequencia.
-                    </p>
-                </div>
-            </div>
-        </div>
-        
-        <div class="row mt-4">
-            <div class="col-md-4">
-                <div class="feature-card text-center">
-                    <div class="feature-icon">
-                        <i class="bi bi-calendar-check"></i>
-                    </div>
-                    <h4 class="fw-bold mb-3">Aulas agendadas</h4>
-                    <p class="text-muted">
-                        Aulas agendadas.
-                    </p>
-                </div>
-            </div>
-            
-            <div class="col-md-4">
-                <div class="feature-card text-center">
-                    <div class="feature-icon">
-                        <i class="bi bi-file-text"></i>
-                    </div>
-                    <h4 class="fw-bold mb-3">Termos e Condições</h4>
-                    <p class="text-muted">
-                        Controle de termos de responsabilidade e autorização.
-                    </p>
-                </div>
-            </div>
-            
-            <div class="col-md-4">
-                <div class="feature-card text-center">
-                    <div class="feature-icon">
-                        <i class="bi bi-mortarboard"></i>
-                    </div>
-                    <h4 class="fw-bold mb-3">Formação de carater</h4>
-                    <p class="text-muted">
-                        Com nossas aulas iremos for cidadoes com carater.
-                    </p>
                 </div>
             </div>
         </div>
@@ -119,46 +209,87 @@
 </section>
 
 <!-- Requirements Section -->
-<section class="py-5">
+<section class="py-5" style="background: var(--gray-50);">
     <div class="container">
         <div class="row justify-content-center">
-            <div class="col-lg-8">
+            <div class="col-lg-10">
                 <div class="card">
                     <div class="card-body p-5">
-                        <h3 class="text-center fw-bold mb-4">
-                            <i class="bi bi-info-circle me-2"></i>
-                            Requisitos do para Cadastro
-                        </h3>
+                        <div class="text-center mb-5">
+                            <h3 class="fw-bold mb-3">
+                                <i class="bi bi-info-circle me-2 text-primary"></i>
+                                Requisitos para Inscrição
+                            </h3>
+                            <p class="text-muted">Conheça os critérios para participar do nosso projeto social</p>
+                        </div>
                         
-                        <div class="row">
+                        <div class="row g-4">
                             <div class="col-md-6">
-                                <h5 class="fw-bold text-primary mb-3">
-                                    <i class="bi bi-person-check me-2"></i>
-                                    Responsável
-                                </h5>
-                                <ul class="list-unstyled">
-                                    <li class="mb-2"><i class="bi bi-check-circle text-success me-2"></i>Maior de 18 anos</li>
-                                    <li class="mb-2"><i class="bi bi-check-circle text-success me-2"></i>Email válido</li>
-                                    <li class="mb-2"><i class="bi bi-check-circle text-success me-2"></i>CPF válido</li>
-                                    <li class="mb-2"><i class="bi bi-check-circle text-success me-2"></i>Verificação por email</li>
-                                </ul>
+                                <div class="p-4 rounded" style="background: rgba(255, 44, 0, 0.05); border: 1px solid rgba(255, 44, 0, 0.1);">
+                                    <h5 class="fw-bold text-primary mb-3">
+                                        <i class="bi bi-person-check me-2"></i>
+                                        Responsável Legal
+                                    </h5>
+                                    <ul class="list-unstyled">
+                                        <li class="mb-2"><i class="bi bi-check-circle text-success me-2"></i>Maior de 18 anos</li>
+                                        <li class="mb-2"><i class="bi bi-check-circle text-success me-2"></i>Email válido e verificado</li>
+                                        <li class="mb-2"><i class="bi bi-check-circle text-success me-2"></i>CPF válido</li>
+                                        <li class="mb-2"><i class="bi bi-check-circle text-success me-2"></i>Telefone para contato</li>
+                                        <li class="mb-2"><i class="bi bi-check-circle text-success me-2"></i>Responsável pelo dependente</li>
+                                    </ul>
+                                </div>
                             </div>
                             
                             <div class="col-md-6">
-                                <h5 class="fw-bold text-primary mb-3">
-                                    <i class="bi bi-person-plus me-2"></i>
-                                    Dependente
-                                </h5>
-                                <ul class="list-unstyled">
-                                    <li class="mb-2"><i class="bi bi-check-circle text-success me-2"></i>Entre 6 e 18 anos</li>
-                                    <li class="mb-2"><i class="bi bi-check-circle text-success me-2"></i>Foto Atualizada</li>
-                                    <li class="mb-2"><i class="bi bi-check-circle text-success me-2"></i>Endereço completo</li>
-                                    <li class="mb-2"><i class="bi bi-check-circle text-success me-2"></i>Dados escolares</li>
-                                    <li class="mb-2"><i class="bi bi-check-circle text-success me-2"></i>Aceitar termos</li>
-                                </ul>
+                                <div class="p-4 rounded" style="background: rgba(212, 175, 55, 0.05); border: 1px solid rgba(212, 175, 55, 0.1);">
+                                    <h5 class="fw-bold" style="color: var(--japanese-gold);">
+                                        <i class="bi bi-person-plus me-2"></i>
+                                        Dependente
+                                    </h5>
+                                    <ul class="list-unstyled">
+                                        <li class="mb-2"><i class="bi bi-check-circle text-success me-2"></i>Entre 6 e 18 anos</li>
+                                        <li class="mb-2"><i class="bi bi-check-circle text-success me-2"></i>Matriculado na escola regular</li>
+                                        <li class="mb-2"><i class="bi bi-check-circle text-success me-2"></i>Foto atualizada</li>
+                                        <li class="mb-2"><i class="bi bi-check-circle text-success me-2"></i>Endereço completo</li>
+                                        <li class="mb-2"><i class="bi bi-check-circle text-success me-2"></i>Dados escolares</li>
+                                        <li class="mb-2"><i class="bi bi-check-circle text-success me-2"></i>Aceitar termos obrigatórios</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="text-center mt-4">
+                            <div class="alert alert-info" style="background: rgba(255, 44, 0, 0.1); border: 1px solid rgba(255, 44, 0, 0.2); color: var(--gray-700);">
+                                <i class="bi bi-lightbulb me-2"></i>
+                                <strong>Dica:</strong> O projeto social de Jiu-Jitsu é totalmente gratuito e prioriza crianças 
+                                que não teriam acesso às artes marciais de outra forma.
                             </div>
                         </div>
                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="py-5" style="background: linear-gradient(135deg, var(--japanese-navy) 0%, var(--gray-800) 100%);">
+    <div class="container text-center">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <h2 class="text-white mb-4">Pronto para começar sua jornada?</h2>
+                <p class="lead text-white-50 mb-5">
+                    Junte-se à família Dojô Uemura e descubra o poder transformador das artes marciais
+                </p>
+                <div class="d-flex gap-3 justify-content-center flex-wrap">
+                    <a href="{% url 'registro' %}" class="btn btn-primary btn-lg">
+                        <i class="bi bi-rocket-takeoff me-2"></i>
+                        Começar Agora
+                    </a>
+                    <a href="{% url 'login' %}" class="btn btn-outline-light btn-lg">
+                        <i class="bi bi-person me-2"></i>
+                        Já tenho conta
+                    </a>
                 </div>
             </div>
         </div>
