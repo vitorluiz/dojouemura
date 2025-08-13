@@ -11,5 +11,6 @@ urlpatterns = [
     path('editar-dependente/<int:dependente_id>/', views.editar_dependente, name='editar_dependente'),
     path('excluir-dependente/<int:dependente_id>/', views.excluir_dependente, name='excluir_dependente'),
     path('buscar-cep/', views.buscar_cep_ajax, name='buscar_cep'),
+    path('galeria/', views.galeria_completa, name='galeria_completa'),
 ]
 

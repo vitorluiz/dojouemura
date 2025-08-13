@@ -1,16 +1,23 @@
 {% extends 'usuarios/base.html' %}
+{% load static %}
 
 {% block title %}Dojô Uemura - Formando Campeões da Vida{% endblock %}
 
 {% block content %}
 <!-- Hero Section -->
-<section class="hero-section">
+<section class="hero-section" style="
+background: linear-gradient(rgba(0, 0, 0, 0.5), 
+rgba(0, 0, 0, 0.5)), 
+url('{% static 'assets/img/hero.jpg' %}')
+center/cover no-repeat;">
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-lg-10 text-center">
                 <div class="animate-fade-in-up">
+                    <div class="mb-4">
+                        <img src="{% static 'assets/img/logo.svg' %}" alt="Dojô Uemura" height="120" class="mb-3">
+                    </div>
                     <h1 class="display-3 fw-bold mb-4">
-                        <i class="bi bi-award-fill me-3"></i>
                         Dojô Uemura
                     </h1>
                     <h2 class="h3 mb-4" style="color: var(--japanese-gold); font-weight: 600;">
@@ -137,7 +144,7 @@
 </section>
 
 <!-- Modalidades Section -->
-<section class="py-5">
+<section id="modalidades" class="py-5">
     <div class="container">
         <div class="section-title">
             <h2>Nossas Modalidades</h2>
@@ -145,11 +152,14 @@
         </div>
         
         <div class="row g-4">
-            <div class="col-lg-4 col-md-6">
+            <div class="col-lg-4 col-md-6" id="jiujitsu">
                 <div class="card h-100">
                     <div class="card-body text-center p-4">
                         <div class="mb-3">
-                            <i class="bi bi-person-fill" style="font-size: 4rem; color: var(--primary-red);"></i>
+                            <img src="{% static 'assets/img/modalidades/JiuJitsu.png' %}" 
+                                 alt="Jiu-Jitsu" 
+                                 class="img-fluid rounded" 
+                                 style="width: 120px; height: 120px; object-fit: cover;">
                         </div>
                         <h4 class="text-primary mb-3">Jiu-Jitsu</h4>
                         <p class="mb-3">
@@ -165,11 +175,14 @@
                 </div>
             </div>
             
-            <div class="col-lg-4 col-md-6">
+            <div class="col-lg-4 col-md-6" id="judo">
                 <div class="card h-100">
                     <div class="card-body text-center p-4">
                         <div class="mb-3">
-                            <i class="bi bi-person-badge" style="font-size: 4rem; color: var(--japanese-navy);"></i>
+                            <img src="{% static 'assets/img/modalidades/judo.png' %}" 
+                                 alt="Judô" 
+                                 class="img-fluid rounded" 
+                                 style="width: 120px; height: 120px; object-fit: cover;">
                         </div>
                         <h4 style="color: var(--japanese-navy);" class="mb-3">Judô</h4>
                         <p class="mb-3">
@@ -185,11 +198,14 @@
                 </div>
             </div>
             
-            <div class="col-lg-4 col-md-6">
+            <div class="col-lg-4 col-md-6" id="muaythai">
                 <div class="card h-100">
                     <div class="card-body text-center p-4">
                         <div class="mb-3">
-                            <i class="bi bi-lightning-fill" style="font-size: 4rem; color: var(--japanese-forest);"></i>
+                            <img src="{% static 'assets/img/modalidades/MuayThai.png' %}" 
+                                 alt="Muay Thai" 
+                                 class="img-fluid rounded" 
+                                 style="width: 120px; height: 120px; object-fit: cover;">
                         </div>
                         <h4 style="color: var(--japanese-forest);" class="mb-3">Muay Thai</h4>
                         <p class="mb-3">
@@ -204,9 +220,544 @@
                     </div>
                 </div>
             </div>
+            
+            <div class="col-lg-4 col-md-6">
+                <div class="card h-100">
+                    <div class="card-body text-center p-4">
+                        <div class="mb-3">
+                            <img src="{% static 'assets/img/modalidades/Boxe.png' %}" 
+                                 alt="Boxe" 
+                                 class="img-fluid rounded" 
+                                 style="width: 120px; height: 120px; object-fit: cover;">
+                        </div>
+                        <h4 style="color: var(--primary-red);" class="mb-3">Boxe</h4>
+                        <p class="mb-3">
+                            <strong>Modalidade Mensal</strong><br>
+                            Para adolescentes e adultos
+                        </p>
+                        <ul class="list-unstyled text-start">
+                            <li><i class="bi bi-check-circle text-success me-2"></i>Condicionamento cardiovascular</li>
+                            <li><i class="bi bi-check-circle text-success me-2"></i>Autodefesa</li>
+                            <li><i class="bi bi-check-circle text-success me-2"></i>Coordenação motora</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-4 col-md-6">
+                <div class="card h-100">
+                    <div class="card-body text-center p-4">
+                        <div class="mb-3">
+                            <img src="{% static 'assets/img/modalidades/Capoeira.png' %}" 
+                                 alt="Capoeira" 
+                                 class="img-fluid rounded" 
+                                 style="width: 120px; height: 120px; object-fit: cover;">
+                        </div>
+                        <h4 style="color: var(--japanese-gold);" class="mb-3">Capoeira</h4>
+                        <p class="mb-3">
+                            <strong>Modalidade Mensal</strong><br>
+                            Para todas as idades
+                        </p>
+                        <ul class="list-unstyled text-start">
+                            <li><i class="bi bi-check-circle text-success me-2"></i>Arte-luta brasileira</li>
+                            <li><i class="bi bi-check-circle text-success me-2"></i>Musicalidade e ginga</li>
+                            <li><i class="bi bi-check-circle text-success me-2"></i>Cultura afro-brasileira</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </section>
+
+<!-- Professores Section -->
+<section id="professores" class="py-5" style="background: var(--gray-50);">
+    <div class="container">
+        <div class="section-title">
+            <h2>Nossa Equipe de Mestres</h2>
+            <p>Instrutores experientes e comprometidos com a excelência</p>
+        </div>
+        
+        <div class="row g-4">
+            <div class="col-lg-4 col-md-6">
+                <div class="card text-center h-100">
+                    <div class="card-body p-4">
+                        <div class="mb-3">
+                            <img src="{% static 'assets/img/professores/HélioGracie.png' %}" 
+                                 alt="Mestre Hélio Gracie Jr." 
+                                 class="rounded-circle" 
+                                 style="width: 150px; height: 150px; object-fit: cover;">
+                        </div>
+                        <h5 class="text-primary mb-2">Mestre Hélio Gracie Jr.</h5>
+                        <p class="text-muted mb-2">Faixa Preta 6º Dan - Jiu-Jitsu</p>
+                        <p class="small">Herdeiro de uma linhagem de grandes mestres, dedica sua vida a refinar e transmitir a arte suave. Com mais de 50 anos de experiência, acredita que o Jiu-Jitsu é uma ferramenta de autoconhecimento e superação.</p>
+                        <div class="d-flex justify-content-center gap-2 mt-3">
+                            <span class="badge bg-primary">Jiu-Jitsu</span>
+                            <span class="badge bg-secondary">Arte Suave</span>
+                        </div>
+                        <p class="text-muted mt-2 small"><em>"No tatame, não há força bruta que supere uma técnica bem aplicada."</em></p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-4 col-md-6">
+                <div class="card text-center h-100">
+                    <div class="card-body p-4">
+                        <div class="mb-3">
+                            <img src="{% static 'assets/img/professores/Apidej.png' %}" 
+                                 alt="Mestre Apidej Sitmonchai" 
+                                 class="rounded-circle" 
+                                 style="width: 150px; height: 150px; object-fit: cover;">
+                        </div>
+                        <h5 class="text-primary mb-2">Mestre Apidej "O Punho de Aço"</h5>
+                        <p class="text-muted mb-2">Faixa Preta - Muay Thai</p>
+                        <p class="small">Vindo dos campos de treinamento da Tailândia, é um lutador lendário conhecido por sua força e precisão. Ensina o Muay Thai como uma arte de combate completa, valorizando a tradição.</p>
+                        <div class="d-flex justify-content-center gap-2 mt-3">
+                            <span class="badge bg-warning text-dark">Muay Thai</span>
+                            <span class="badge bg-danger">Arte dos 8 Membros</span>
+                        </div>
+                        <p class="text-muted mt-2 small"><em>"O Muay Thai é a arte dos oito membros, mas o coração é o nono e mais importante."</em></p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-4 col-md-6">
+                <div class="card text-center h-100">
+                    <div class="card-body p-4">
+                        <div class="mb-3">
+                            <img src="{% static 'assets/img/professores/JoeFrazier.png' %}" 
+                                 alt="Mestre Joe Frazier" 
+                                 class="rounded-circle" 
+                                 style="width: 150px; height: 150px; object-fit: cover;">
+                        </div>
+                        <h5 class="text-primary mb-2">"Big" Joe Frazier</h5>
+                        <p class="text-muted mb-2">Mestre - Boxe</p>
+                        <p class="small">Com uma carreira vitoriosa nos ringues amadores e profissionais, se tornou um treinador renomado. Para ele, o boxe é mais do que um esporte; é uma lição diária de coragem e estratégia.</p>
+                        <div class="d-flex justify-content-center gap-2 mt-3">
+                            <span class="badge bg-danger">Boxe</span>
+                            <span class="badge bg-info">Estratégia</span>
+                        </div>
+                        <p class="text-muted mt-2 small"><em>"No ringue da vida, você precisa saber esquivar, atacar e, acima de tudo, nunca desistir."</em></p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-4 col-md-6">
+                <div class="card text-center h-100">
+                    <div class="card-body p-4">
+                        <div class="mb-3">
+                            <img src="{% static 'assets/img/professores/bimbaneto.png' %}" 
+                                 alt="Mestre Bimba Neto" 
+                                 class="rounded-circle" 
+                                 style="width: 150px; height: 150px; object-fit: cover;">
+                        </div>
+                        <h5 class="text-primary mb-2">Mestre Bimba Neto</h5>
+                        <p class="text-muted mb-2">Mestre - Capoeira</p>
+                        <p class="small">É a personificação da alma da capoeira. Com uma vida dedicada à preservação e divulgação dessa arte-luta brasileira, ensina a importância da malícia, musicalidade e camaradagem.</p>
+                        <div class="d-flex justify-content-center gap-2 mt-3">
+                            <span class="badge bg-success">Capoeira</span>
+                            <span class="badge bg-warning text-dark">Cultura Brasileira</span>
+                        </div>
+                        <p class="text-muted mt-2 small"><em>"A capoeira é diálogo de corpo e alma, ginga que liberta e luta que encanta."</em></p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-4 col-md-6">
+                <div class="card text-center h-100">
+                    <div class="card-body p-4">
+                        <div class="mb-3">
+                            <img src="{% static 'assets/img/professores/Boxe.png' %}" 
+                                 alt="Mestre Takeshi Tanaka" 
+                                 class="rounded-circle" 
+                                 style="width: 150px; height: 150px; object-fit: cover;">
+                        </div>
+                        <h5 class="text-primary mb-2">Mestre Takeshi Tanaka</h5>
+                        <p class="text-muted mb-2">Mestre - Judô</p>
+                        <p class="small">Um dos mais respeitados mestres de Judô do país. Nascido no Japão, trouxe para o Brasil a essência do "caminho suave", ensinando a importância da disciplina e do respeito.</p>
+                        <div class="d-flex justify-content-center gap-2 mt-3">
+                            <span class="badge bg-primary">Judô</span>
+                            <span class="badge bg-info">Caminho Suave</span>
+                        </div>
+                        <p class="text-muted mt-2 small"><em>"O caminho suave não é para os fracos, mas para aqueles que sabem ceder para vencer."</em></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Galeria Section -->
+<section id="galeria" class="py-5">
+    <div class="container">
+        <div class="section-title">
+            <h2>Galeria de Eventos</h2>
+            <p>Momentos especiais e conquistas dos nossos alunos</p>
+        </div>
+        
+        <div class="row g-4">
+            <div class="col-lg-6 col-md-6">
+                <div class="card gallery-card h-100" data-bs-toggle="modal" data-bs-target="#galleryModal" data-event="graduacao-julho">
+                    <div class="card-body p-0">
+                        <img src="{% static 'assets/img/galeria/dojo_imagem_01.jpg' %}" 
+                             alt="Graduação Julho 2025" 
+                             class="img-fluid rounded-top" 
+                             style="width: 100%; height: 250px; object-fit: cover;">
+                        <div class="card-body">
+                            <h5 class="card-title text-primary">Graduação Julho 2025</h5>
+                            <p class="card-text text-muted">
+                                <i class="bi bi-geo-alt-fill me-2"></i>
+                                Dojô Uemura
+                            </p>
+                            <p class="card-text small">Celebração das conquistas e progresso dos nossos alunos</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-6 col-md-6">
+                <div class="card gallery-card h-100" data-bs-toggle="modal" data-bs-target="#galleryModal" data-event="competicao-marco">
+                    <div class="card-body p-0">
+                        <img src="{% static 'assets/img/galeria/dojo_imagem_02.jpg' %}" 
+                             alt="Competição Março 2025" 
+                             class="img-fluid rounded-top" 
+                             style="width: 100%; height: 250px; object-fit: cover;">
+                        <div class="card-body">
+                            <h5 class="card-title text-primary">Competição Março 2025</h5>
+                            <p class="card-text text-muted">
+                                <i class="bi bi-geo-alt-fill me-2"></i>
+                                Ginásio Municipal
+                            </p>
+                            <p class="card-text small">Desafios e superação em competições regionais</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-6 col-md-6">
+                <div class="card gallery-card h-100" data-bs-toggle="modal" data-bs-target="#galleryModal" data-event="treino-especial">
+                    <div class="card-body p-0">
+                        <img src="{% static 'assets/img/galeria/dojo_imagem_03.jpg' %}" 
+                             alt="Treino Especial Maio 2025" 
+                             class="img-fluid rounded-top" 
+                             style="width: 100%; height: 250px; object-fit: cover;">
+                        <div class="card-body">
+                            <h5 class="card-title text-primary">Treino Especial Maio 2025</h5>
+                            <p class="card-text text-muted">
+                                <i class="bi bi-geo-alt-fill me-2"></i>
+                                Dojô Uemura
+                            </p>
+                            <p class="card-text small">Aulas especiais com mestres convidados</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-6 col-md-6">
+                <div class="card gallery-card h-100" data-bs-toggle="modal" data-bs-target="#galleryModal" data-event="campeonato-junho">
+                    <div class="card-body p-0">
+                        <img src="{% static 'assets/img/galeria/dojo_imagem_04.jpg' %}" 
+                             alt="Campeonato Junho 2025" 
+                             class="img-fluid rounded-top" 
+                             style="width: 100%; height: 250px; object-fit: cover;">
+                        <div class="card-body">
+                            <h5 class="card-title text-primary">Campeonato Junho 2025</h5>
+                            <p class="card-text text-muted">
+                                <i class="bi bi-geo-alt-fill me-2"></i>
+                                Arena Esportiva
+                            </p>
+                            <p class="card-text small">Grande evento de artes marciais da região</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="text-center mt-4">
+            <a href="{% url 'galeria_completa' %}" class="btn btn-outline-primary">
+                <i class="bi bi-images me-2"></i>
+                Ver Mais Eventos
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- Modal da Galeria -->
+<div class="modal fade" id="galleryModal" tabindex="-1" aria-labelledby="galleryModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="galleryModalLabel">Galeria de Fotos</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row g-3" id="modalGalleryContent">
+                    <!-- Conteúdo dinâmico será carregado aqui -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Projeto Social Section -->
+<section id="projeto-social" class="py-5" style="background: var(--gray-50);">
+    <div class="container">
+        <div class="section-title">
+            <h2>Projeto Social</h2>
+            <p>Transformando vidas através das artes marciais</p>
+        </div>
+        
+        <div class="row align-items-center g-5">
+            <div class="col-lg-6">
+                <img src="{% static 'assets/img/galeria/dojo_imagem_01.jpg' %}" 
+                     alt="Projeto Social" 
+                     class="img-fluid rounded shadow-lg">
+            </div>
+            <div class="col-lg-6">
+                <h3 class="mb-4">Inscrição Gratuita</h3>
+                <p class="lead mb-4">
+                    Nosso projeto social oferece aulas gratuitas de Jiu-Jitsu para crianças e adolescentes 
+                    que não teriam acesso às artes marciais de outra forma.
+                </p>
+                
+                <div class="row g-3 mb-4">
+                    <div class="col-6">
+                        <div class="d-flex align-items-center">
+                            <i class="bi bi-check-circle-fill text-success me-2 fs-4"></i>
+                            <span>Aulas 100% gratuitas</span>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="d-flex align-items-center">
+                            <i class="bi bi-check-circle-fill text-success me-2 fs-4"></i>
+                            <span>Material incluído</span>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="d-flex align-items-center">
+                            <i class="bi bi-check-circle-fill text-success me-2 fs-4"></i>
+                            <span>Horários flexíveis</span>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="d-flex align-items-center">
+                            <i class="bi bi-check-circle-fill text-success me-2 fs-4"></i>
+                            <span>Suporte completo</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <a href="{% url 'login' %}" class="btn btn-primary btn-lg">
+                    <i class="bi bi-heart-fill me-2"></i>
+                    Inscrever Agora
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Portal do Aluno Section -->
+<section id="portal-aluno" class="py-5">
+    <div class="container">
+        <div class="section-title">
+            <h2>Portal do Aluno</h2>
+            <p>Acesso completo ao seu desenvolvimento e progresso</p>
+        </div>
+        
+        <div class="row g-4">
+            <div class="col-lg-3 col-md-6">
+                <div class="card text-center h-100">
+                    <div class="card-body p-4">
+                        <div class="mb-3">
+                            <i class="bi bi-calendar-check text-primary" style="font-size: 3rem;"></i>
+                        </div>
+                        <h5>Frequência</h5>
+                        <p class="small">Acompanhe sua presença nas aulas e eventos</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-3 col-md-6">
+                <div class="card text-center h-100">
+                    <div class="card-body p-4">
+                        <div class="mb-3">
+                            <i class="bi bi-award text-primary" style="font-size: 3rem;"></i>
+                        </div>
+                        <h5>Progresso</h5>
+                        <p class="small">Visualize seu desenvolvimento técnico</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-3 col-md-6">
+                <div class="card text-center h-100">
+                    <div class="card-body p-4">
+                        <div class="mb-3">
+                            <i class="bi bi-chat-dots text-primary" style="font-size: 3rem;"></i>
+                        </div>
+                        <h5>Mensagens</h5>
+                        <p class="small">Comunicação direta com professores</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-3 col-md-6">
+                <div class="card text-center h-100">
+                    <div class="card-body p-4">
+                        <div class="mb-3">
+                            <i class="bi bi-file-earmark-text text-primary" style="font-size: 3rem;"></i>
+                        </div>
+                        <h5>Documentos</h5>
+                        <p class="small">Certificados e comprovantes</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="text-center mt-5">
+            <a href="{% url 'login' %}" class="btn btn-primary btn-lg">
+                <i class="bi bi-box-arrow-in-right me-2"></i>
+                Acessar Portal
+            </a>
+        </div>
+    </div>
+</section>
+
+
+
+<!-- Contato Section -->
+<section id="contato" class="py-5">
+    <div class="container">
+        <div class="section-title">
+            <h2>Entre em Contato</h2>
+            <p>Estamos aqui para ajudar você e sua família</p>
+        </div>
+        
+        <div class="row g-5">
+            <div class="col-lg-6">
+                <div class="contact-info">
+                    <h4 class="mb-4">Informações de Contato</h4>
+                    
+                    <div class="d-flex mb-3">
+                        <div class="contact-icon me-3">
+                            <i class="bi bi-geo-alt-fill text-primary"></i>
+                        </div>
+                        <div>
+                            <h6>Endereço</h6>
+                            <p class="mb-0">Rua das Artes Marciais, 123<br>Centro - Chapada dos Guimarães - MT</p>
+                        </div>
+                    </div>
+                    
+                    <div class="d-flex mb-3">
+                        <div class="contact-icon me-3">
+                            <i class="bi bi-telephone-fill text-primary"></i>
+                        </div>
+                        <div>
+                            <h6>Telefone</h6>
+                            <p class="mb-0">(65) 99999-9999<br>(65) 88888-8888</p>
+                        </div>
+                    </div>
+                    
+                    <div class="d-flex mb-3">
+                        <div class="contact-icon me-3">
+                            <i class="bi bi-envelope-fill text-primary"></i>
+                        </div>
+                        <div>
+                            <h6>Email</h6>
+                            <p class="mb-0">contato@dojouemura.com<br>admin@dojouemura.com</p>
+                        </div>
+                    </div>
+                    
+                                         <div class="d-flex mb-3">
+                         <div class="contact-icon me-3">
+                             <i class="bi bi-clock-fill text-primary"></i>
+                         </div>
+                         <div>
+                             <h6>Horário de Funcionamento</h6>
+                             <p class="mb-0">Segunda a Sexta: 7h às 22h<br>Sábado: 8h às 18h</p>
+                         </div>
+                     </div>
+                     
+                     <div class="d-flex mb-3">
+                         <div class="contact-icon me-3">
+                             <i class="bi bi-instagram text-primary"></i>
+                         </div>
+                         <div>
+                             <h6>Instagram</h6>
+                             <p class="mb-0">
+                                 <a href="https://www.instagram.com/jiu_jitsuchapada/" target="_blank" class="text-decoration-none">
+                                     @jiu_jitsuchapada
+                                 </a>
+                             </p>
+                         </div>
+                     </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-6">
+                <div class="card">
+                    <div class="card-body p-4">
+                        <h4 class="mb-4">Envie uma Mensagem</h4>
+                        <form>
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label class="form-label">Nome</label>
+                                    <input type="text" class="form-control" placeholder="Seu nome completo">
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Email</label>
+                                    <input type="email" class="form-control" placeholder="seu@email.com">
+                                </div>
+                                <div class="col-12">
+                                    <label class="form-label">Assunto</label>
+                                    <input type="text" class="form-control" placeholder="Como podemos ajudar?">
+                                </div>
+                                <div class="col-12">
+                                    <label class="form-label">Mensagem</label>
+                                    <textarea class="form-control" rows="4" placeholder="Digite sua mensagem..."></textarea>
+                                </div>
+                                <div class="col-12">
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="bi bi-send me-2"></i>
+                                        Enviar Mensagem
+                                    </button>
+                                </div>
+                            </div>
+                                                 </form>
+                     </div>
+                 </div>
+             </div>
+         </div>
+         
+         <!-- Mapa do Google Maps -->
+         <div class="row mt-5">
+             <div class="col-12">
+                 <div class="card">
+                     <div class="card-body p-4">
+                         <h4 class="mb-4 text-center">
+                             <i class="bi bi-geo-alt-fill text-primary me-2"></i>
+                             Nossa Localização
+                         </h4>
+                         <div class="text-center">
+                             <iframe 
+                                 src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3845.501051897262!2d-55.75322659999999!3d-15.457457999999999!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x939d93a4bd05ed4b%3A0x257f904dd29c5a7e!2sDoj%C3%B4%20Uemura!5e0!3m2!1spt-BR!2sbr!4v1755060475367!5m2!1spt-BR!2sbr" 
+                                 width="100%" 
+                                 height="450" 
+                                 style="border:0; border-radius: 8px;" 
+                                 allowfullscreen="" 
+                                 loading="lazy" 
+                                 referrerpolicy="no-referrer-when-downgrade">
+                             </iframe>
+                         </div>
+                     </div>
+                 </div>
+             </div>
+         </div>
+     </div>
+ </section>
 
 <!-- Requirements Section -->
 <section class="py-5" style="background: var(--gray-50);">

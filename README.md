@@ -1,278 +1,273 @@
-# Sistema de Cadastro de Pessoas
+# 🥋 Dojô Uemura - Sistema de Gestão Completo
 
-Um sistema web completo desenvolvido em Django para cadastro de usuários responsáveis e seus dependentes, com validações específicas de idade, autenticação por email e integração com API de CEP.
+## 📋 Visão Geral
 
-## 🚀 Funcionalidades
+O **Dojô Uemura** é um sistema de gestão completo para academias de artes marciais, com foco especial em projetos sociais. O sistema oferece uma interface moderna, responsiva e profissional para gerenciar alunos, professores, modalidades, turmas e muito mais.
 
-### Usuário Responsável
-- **Cadastro com validações rigorosas**: Nome completo, email, CPF, telefone e data de nascimento
-- **Validação de idade**: Apenas maiores de 18 anos podem se cadastrar
-- **Autenticação por email**: Login usando email como username
-- **Verificação obrigatória**: Email deve ser verificado antes do primeiro login
-- **Validação de CPF**: Algoritmo completo de validação de CPF brasileiro
+## ✨ Características Principais
 
-### Dependentes
-- **Cadastro completo**: Dados pessoais, endereço, informações escolares e médicas
-- **Validação de idade**: Dependentes devem ter entre 6 e 18 anos
-- **Relacionamento**: Cada dependente pertence a um usuário responsável
-- **Dados de endereço**: Integração com API ViaCEP para preenchimento automático
-- **Informações escolares**: Escolaridade, escola e turno
-- **Condições médicas**: Campo para informações relevantes para prática de esportes
-- **Termos obrigatórios**: Aceite de termos de responsabilidade e uso de imagem
+### 🎨 Frontend Profissional
+- **Design Moderno**: Interface inspirada no design japonês com cores vibrantes
+- **Totalmente Responsivo**: Funciona perfeitamente em todos os dispositivos
+- **Animações Suaves**: Transições e efeitos visuais elegantes
+- **Galeria Interativa**: Lightbox para visualização de imagens
+- **Navegação Intuitiva**: Menu completo com todas as funcionalidades
 
-### Sistema
-- **Interface moderna**: Design responsivo com Bootstrap 5
-- **Validações em tempo real**: Máscaras de input e validação de CEP
-- **Segurança**: Proteção CSRF, validações server-side
-- **Usabilidade**: Mensagens de feedback, navegação intuitiva
+### 🏠 Páginas Implementadas
+- **Home**: Página principal com hero section e informações gerais
+- **Contato**: Formulário de contato e informações da academia
+- **Professores**: Perfis dos instrutores com fotos e especialidades
+- **Galeria**: Fotos dos eventos, aulas e graduações
+- **Modalidades**: Descrição das artes marciais oferecidas
+- **Projeto Social**: Informações sobre o programa gratuito
+- **Portal do Aluno**: Acesso ao progresso e frequência
+- **Painel Administrativo**: Gestão completa da academia
 
-## 🛠️ Tecnologias Utilizadas
+### 🎯 Funcionalidades Administrativas
+- **Cadastros**: Alunos, Professores, Modalidades, Turmas
+- **Gestão**: Financeiro, Frequência, Mensagens, Estoque
+- **Dashboard**: Visão geral e estatísticas
+- **Relatórios**: Frequência e progresso dos alunos
 
-- **Backend**: Django 5.2.4
-- **Frontend**: HTML5, CSS3, Bootstrap 5, JavaScript/jQuery
-- **Banco de Dados**: SQLite (desenvolvimento)
-- **APIs Externas**: ViaCEP para consulta de endereços
-- **Validações**: CPF, email, idade, CEP
-- **Autenticação**: Sistema customizado do Django
+## 🚀 Tecnologias Utilizadas
 
-## 📋 Requisitos
+### Frontend
+- **HTML5**: Estrutura semântica e acessível
+- **CSS3**: Estilos modernos com variáveis CSS e Flexbox/Grid
+- **JavaScript ES6+**: Funcionalidades interativas e animações
+- **Bootstrap 5**: Framework CSS para layout responsivo
+- **Bootstrap Icons**: Ícones vetoriais profissionais
 
-- Python 3.11+
-- Django 5.2.4
-- Requests (para API ViaCEP)
-- Conexão com internet (para API de CEP e CDNs)
-
-## 🚀 Como Executar
-
-### 1. Navegue até o diretório do projeto
-```bash
-cd cadastro_pessoas
-```
-
-### 2. Execute as migrações (se necessário)
-```bash
-python3 manage.py migrate
-```
-
-### 3. Inicie o servidor de desenvolvimento
-```bash
-python3 manage.py runserver 0.0.0.0:8000
-```
-
-### 4. Acesse a aplicação
-Abra seu navegador e acesse: `http://localhost:8000`
+### Backend
+- **Django**: Framework Python robusto e seguro
+- **SQLite**: Banco de dados para desenvolvimento
+- **Python 3.8+**: Linguagem de programação
 
 ## 📁 Estrutura do Projeto
 
 ```
-cadastro_pessoas/
-├── cadastro_pessoas/          # Configurações do projeto
-│   ├── settings.py           # Configurações principais
-│   ├── urls.py              # URLs principais
-│   └── wsgi.py              # Configuração WSGI
-├── usuarios/                 # App principal
+uemura/
+├── cadastro_pessoas/          # Configurações do Django
+├── usuarios/                  # App principal
+│   ├── templates/            # Templates HTML
+│   ├── static/              # Arquivos estáticos
 │   ├── models.py            # Modelos de dados
-│   ├── views.py             # Views/Controllers
-│   ├── forms.py             # Formulários
-│   ├── urls.py              # URLs do app
-│   ├── templates/           # Templates HTML
-│   │   └── usuarios/
-│   │       ├── base.html
-│   │       ├── home.html
-│   │       ├── dashboard.html
-│   │       ├── login.html
-│   │       ├── registro.html
-│   │       ├── cadastrar_dependente.html
-│   │       ├── editar_dependente.html
-│   │       └── excluir_dependente.html
-│   └── migrations/          # Migrações do banco
-├── db.sqlite3              # Banco de dados
-└── manage.py               # Script de gerenciamento
+│   ├── views.py             # Lógica de negócio
+│   └── urls.py              # Roteamento
+├── static/                   # Arquivos estáticos globais
+│   └── assets/
+│       ├── css/             # Estilos CSS
+│       ├── js/              # JavaScript
+│       └── img/             # Imagens
+├── utils/                    # Utilitários
+└── manage.py                 # Script de gerenciamento
 ```
 
-## 🔧 Modelos de Dados
+## 🎨 Design System
 
-### Usuario (Modelo Customizado)
-- `nome_completo`: CharField(200)
-- `email`: EmailField(unique=True) - usado como username
-- `data_nascimento`: DateField - com validação de maioridade
-- `cpf`: CharField(14, unique=True) - com validação de CPF
-- `telefone`: CharField(15) - com máscara (XX) XXXXX-XXXX
-- `email_verificado`: BooleanField - controla acesso ao sistema
+### Cores Principais
+- **Vermelho Primário**: #FF2C00 (energia e paixão)
+- **Dourado Japonês**: #D4AF37 (tradição e excelência)
+- **Azul Marinho**: #1B365D (confiança e estabilidade)
+- **Verde Floresta**: #2D5016 (crescimento e natureza)
 
-### Dependente
-- `usuario`: ForeignKey(Usuario) - relacionamento com responsável
-- `nome_completo`: CharField(200)
-- `data_nascimento`: DateField - validação entre 6 e 18 anos
-- `parentesco`: CharField - choices (filho, enteado, neto, sobrinho, outro)
-- **Endereço**:
-  - `cep`: CharField(9) - formato XXXXX-XXX
-  - `logradouro`: CharField(200)
-  - `numero`: CharField(10)
-  - `complemento`: CharField(100, opcional)
-  - `bairro`: CharField(100)
-  - `cidade`: CharField(100)
-  - `uf`: CharField(2)
-- **Dados Escolares**:
-  - `escolaridade`: CharField - choices (fundamental I/II, médio, técnico)
-  - `escola`: CharField(200)
-  - `turno`: CharField - choices (matutino, vespertino, noturno, integral)
-- `condicoes_medicas`: TextField(opcional)
-- `termo_responsabilidade`: BooleanField(obrigatório)
-- `termo_uso_imagem`: BooleanField(obrigatório)
+### Tipografia
+- **Fonte Principal**: Inter (moderna e legível)
+- **Fonte Japonesa**: Noto Sans JP (autenticidade)
 
-## 🔐 Validações Implementadas
+### Componentes
+- **Cards**: Bordas arredondadas e sombras suaves
+- **Botões**: Gradientes e efeitos hover
+- **Formulários**: Validação visual e feedback
+- **Navegação**: Menu dropdown responsivo
 
-### Usuário
-- **Idade**: Deve ser maior de 18 anos
-- **CPF**: Validação completa com dígitos verificadores
-- **Email**: Formato válido e único no sistema
-- **Telefone**: Formato brasileiro (XX) XXXXX-XXXX
+## 🖼️ Galeria de Imagens
 
-### Dependente
-- **Idade**: Entre 6 e 18 anos
-- **CEP**: Formato brasileiro XXXXX-XXX
-- **UF**: Duas letras maiúsculas
-- **Termos**: Obrigatório aceitar ambos os termos
+O sistema inclui uma galeria interativa com:
+- **Lightbox**: Visualização em tela cheia
+- **Overlay**: Informações sobre cada imagem
+- **Responsividade**: Adaptação automática para mobile
+- **Lazy Loading**: Carregamento otimizado
 
-## 🌐 Integração com APIs
+## 📱 Responsividade
 
-### ViaCEP
-- **Endpoint**: `https://viacep.com.br/ws/{cep}/json/`
-- **Funcionalidade**: Preenchimento automático de endereço
-- **Implementação**: JavaScript no frontend + view AJAX no backend
-- **Tratamento de erros**: Fallback para preenchimento manual
+### Breakpoints
+- **Desktop**: 1200px+
+- **Tablet**: 768px - 1199px
+- **Mobile**: 320px - 767px
 
-## 🎨 Interface de Usuário
+### Recursos Mobile
+- Menu hambúrguer colapsável
+- Touch gestures para galeria
+- Otimização de performance
+- Layout adaptativo
 
-### Design
-- **Framework**: Bootstrap 5.3.0
-- **Tema**: Gradiente roxo/azul moderno
-- **Responsividade**: Compatível com desktop e mobile
-- **Ícones**: Bootstrap Icons
-- **Efeitos**: Transições suaves, hover states, cards com sombra
+## 🎭 Animações e Interações
 
-### Páginas
-1. **Home**: Apresentação do sistema e funcionalidades
-2. **Cadastro**: Formulário de registro de usuário
-3. **Login**: Autenticação com email/senha
-4. **Dashboard**: Visão geral dos dependentes cadastrados
-5. **Cadastrar Dependente**: Formulário completo com seções organizadas
-6. **Editar Dependente**: Atualização de dados existentes
-7. **Excluir Dependente**: Confirmação de exclusão com avisos
+### Efeitos Visuais
+- **Fade In**: Elementos aparecem suavemente
+- **Slide**: Movimentos laterais elegantes
+- **Hover**: Transformações nos elementos
+- **Parallax**: Efeito de profundidade no hero
 
-### Recursos de UX
-- **Máscaras de input**: CPF, telefone, CEP
-- **Preenchimento automático**: Endereço via CEP
-- **Validação em tempo real**: Feedback imediato
-- **Mensagens de status**: Sucesso, erro, informação
-- **Navegação intuitiva**: Breadcrumbs, botões de ação claros
+### JavaScript Interativo
+- Scroll suave para links internos
+- Observador de interseção para animações
+- Sistema de notificações
+- Lightbox para galeria
+- Botão "voltar ao topo"
 
-## 📧 Sistema de Email
+## 🔧 Instalação e Configuração
 
-### Configuração
-- **Backend**: Console (desenvolvimento)
-- **Produção**: Configurar SMTP real no settings.py
+### Pré-requisitos
+- Python 3.8+
+- pip (gerenciador de pacotes Python)
+- Git
 
-### Funcionalidades
-- **Verificação de cadastro**: Email automático com link de ativação
-- **Token de segurança**: Geração segura de tokens de verificação
-- **Expiração**: Links com validade limitada
+### Passos de Instalação
 
-## 🔒 Segurança
+1. **Clone o repositório**
+   ```bash
+   git clone [URL_DO_REPOSITORIO]
+   cd uemura
+   ```
 
-### Implementadas
-- **Proteção CSRF**: Tokens em todos os formulários
-- **Validação server-side**: Todas as entradas são validadas
-- **Sanitização**: Prevenção de XSS
-- **Autenticação**: Sistema robusto do Django
-- **Autorização**: Usuários só acessam seus próprios dados
+2. **Crie um ambiente virtual**
+   ```bash
+   python -m venv venv
+   source venv/bin/activate  # Linux/Mac
+   venv\Scripts\activate     # Windows
+   ```
 
-### Recomendações para Produção
-- Configurar `DEBUG = False`
-- Usar banco de dados robusto (PostgreSQL)
-- Configurar HTTPS
-- Implementar rate limiting
-- Configurar logs de segurança
+3. **Instale as dependências**
+   ```bash
+   pip install -r requirements.txt
+   ```
 
-## 🚀 Deploy
+4. **Configure o banco de dados**
+   ```bash
+   python manage.py migrate
+   ```
 
-### Desenvolvimento
-O projeto está configurado para execução local com:
-- `ALLOWED_HOSTS = ['*']`
-- SQLite como banco
-- Email backend console
+5. **Crie um superusuário**
+   ```bash
+   python manage.py createsuperuser
+   ```
 
-### Produção
-Para deploy em produção, ajustar:
-1. **settings.py**: DEBUG, ALLOWED_HOSTS, banco de dados
-2. **Servidor web**: Nginx + Gunicorn
-3. **Banco**: PostgreSQL ou MySQL
-4. **Email**: Configurar SMTP real
-5. **Estáticos**: Configurar coleta de arquivos estáticos
+6. **Execute o servidor**
+   ```bash
+   python manage.py runserver
+   ```
 
-## 📝 Como Usar
+### Configuração de Imagens
 
-### 1. Cadastro de Usuário
-1. Acesse a página inicial
-2. Clique em "Criar Conta"
-3. Preencha todos os dados obrigatórios
-4. Verifique seu email
-5. Faça login
+Para usar suas próprias imagens na galeria:
 
-### 2. Cadastro de Dependente
-1. Após login, acesse o dashboard
-2. Clique em "Cadastrar Dependente"
-3. Preencha os dados pessoais
-4. Digite o CEP (preenchimento automático)
-5. Complete dados escolares e médicos
-6. Aceite os termos obrigatórios
-7. Salve o cadastro
+1. Coloque as imagens em `static/assets/img/`
+2. Atualize os caminhos no template `home.html`
+3. Use o formato: `{% static 'assets/img/sua_imagem.jpg' %}`
 
-### 3. Gerenciamento
-- **Visualizar**: Dashboard lista todos os dependentes
-- **Editar**: Clique no ícone de lápis
-- **Excluir**: Clique no ícone de lixeira (com confirmação)
+## 📊 Funcionalidades do Sistema
 
-## 🐛 Solução de Problemas
+### Para Alunos
+- Visualização de frequência
+- Acompanhamento de progresso
+- Comunicação com professores
+- Acesso a documentos
 
-### Erro de Migração
-```bash
-python3 manage.py makemigrations
-python3 manage.py migrate
-```
+### Para Professores
+- Gestão de turmas
+- Controle de frequência
+- Comunicação com alunos
+- Relatórios de progresso
 
-### Erro de Dependências
-```bash
-pip3 install django requests
-```
+### Para Administradores
+- Cadastro completo de usuários
+- Gestão financeira
+- Controle de estoque
+- Relatórios gerenciais
 
-### Erro de Porta
-Altere a porta no comando runserver:
-```bash
-python3 manage.py runserver 0.0.0.0:8080
-```
+## 🎯 Projeto Social
+
+O Dojô Uemura oferece:
+- **Aulas gratuitas** de Jiu-Jitsu para crianças
+- **Faixa etária**: 6 a 18 anos
+- **Requisitos**: Matrícula escolar e responsável legal
+- **Horários**: Manhã, tarde e noite
+- **Material**: Incluso no projeto
+
+## 🌟 Diferenciais
+
+### Técnicos
+- Código limpo e bem documentado
+- Arquitetura escalável
+- Segurança implementada
+- Performance otimizada
+
+### Visuais
+- Design único e memorável
+- Identidade visual consistente
+- Experiência do usuário excepcional
+- Acessibilidade implementada
+
+## 🔮 Roadmap Futuro
+
+### Próximas Versões
+- [ ] Sistema de pagamentos online
+- [ ] App mobile nativo
+- [ ] Integração com redes sociais
+- [ ] Sistema de gamificação
+- [ ] Relatórios avançados
+- [ ] API REST para integrações
+
+### Melhorias Planejadas
+- [ ] Chat em tempo real
+- [ ] Sistema de notificações push
+- [ ] Integração com wearables
+- [ ] Análise de dados avançada
+- [ ] Machine Learning para recomendações
+
+## 🤝 Contribuição
+
+### Como Contribuir
+1. Faça um fork do projeto
+2. Crie uma branch para sua feature
+3. Commit suas mudanças
+4. Push para a branch
+5. Abra um Pull Request
+
+### Padrões de Código
+- Siga as convenções PEP 8 (Python)
+- Use nomes descritivos para variáveis
+- Documente funções complexas
+- Teste suas mudanças
 
 ## 📄 Licença
 
-Este projeto foi desenvolvido para fins educacionais e demonstrativos.
-
-## 👥 Contribuição
-
-Para contribuir com o projeto:
-1. Faça um fork
-2. Crie uma branch para sua feature
-3. Commit suas mudanças
-4. Abra um Pull Request
+Este projeto está licenciado sob a licença MIT. Veja o arquivo `LICENSE` para mais detalhes.
 
 ## 📞 Suporte
 
-Para dúvidas ou problemas:
-- Verifique a documentação
-- Consulte os logs do Django
-- Teste em ambiente limpo
+### Contato
+- **Email**: contato@dojouemura.com
+- **Telefone**: (65) 99999-9999
+- **Endereço**: Chapada dos Guimarães - MT
+
+### Comunidade
+- **GitHub Issues**: Para bugs e sugestões
+- **Documentação**: Wiki do projeto
+- **Fórum**: Comunidade de desenvolvedores
+
+## 🙏 Agradecimentos
+
+- **VNETWORKS**: Licenciamento e suporte
+- **Comunidade Django**: Framework robusto
+- **Bootstrap**: Componentes responsivos
+- **Contribuidores**: Todos que ajudaram no projeto
 
 ---
 
-**Desenvolvido com Django 5.2.4 | Bootstrap 5 | ViaCEP API**
+**Dojô Uemura** - Formando Campeões da Vida 🥋
+
+*Desenvolvido com ❤️ para transformar vidas através das artes marciais*
 

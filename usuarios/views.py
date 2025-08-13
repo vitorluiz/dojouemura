@@ -234,3 +234,8 @@ def buscar_cep_ajax(request):
     
     return JsonResponse({'erro': 'CEP não encontrado'}, status=404)
 
+
+def galeria_completa(request):
+    """View para a página completa da galeria"""
+    return render(request, 'usuarios/galeria_completa.html')
+
