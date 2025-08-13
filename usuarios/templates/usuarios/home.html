@@ -15,7 +15,9 @@ center/cover no-repeat;">
             <div class="col-lg-10 text-center">
                 <div class="animate-fade-in-up">
                     <div class="mb-4">
-                        <img src="{% static 'assets/img/logo.svg' %}" alt="Dojô Uemura" height="120" class="mb-3">
+                        <div class="logo-hero-container">
+                            <img src="{% static 'assets/img/logo.svg' %}" alt="Dojô Uemura" height="120" class="mb-3 hero-logo">
+                        </div>
                     </div>
                     <h1 class="display-3 fw-bold mb-4">
                         Dojô Uemura
@@ -28,14 +30,7 @@ center/cover no-repeat;">
                         Desenvolvendo disciplina, respeito e caráter através das artes marciais.
                     </p>
                     <div class="d-flex gap-4 justify-content-center flex-wrap">
-                        <a href="{% url 'registro' %}" class="btn btn-primary btn-lg">
-                            <i class="bi bi-person-plus me-2"></i>
-                            Inscrever Dependente
-                        </a>
-                        <a href="{% url 'login' %}" class="btn btn-outline-light btn-lg">
-                            <i class="bi bi-box-arrow-in-right me-2"></i>
-                            Acessar Sistema
-                        </a>
+                        <!-- Botões removidos conforme solicitado -->
                     </div>
                 </div>
             </div>

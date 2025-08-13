@@ -94,6 +94,26 @@ p {
   transition: var(--transition-normal);
 }
 
+/* Logo no Hero - Container com fundo branco */
+.logo-hero-container {
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 20px;
+    padding: 20px;
+    display: inline-block;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.hero-logo {
+    filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+    transition: transform 0.3s ease;
+}
+
+.hero-logo:hover {
+    transform: scale(1.05);
+}
+
 /* Botão Portal do Aluno em destaque */
 .navbar .btn-primary {
   background: var(--primary-red);
