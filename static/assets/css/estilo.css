@@ -96,7 +96,7 @@ p {
 
 /* Logo no Hero - Container com fundo branco */
 .logo-hero-container {
-    background: rgba(255, 255, 255, 0.95);
+    background: rgba(255, 255, 255, 0.25);
     border-radius: 20px;
     padding: 20px;
     display: inline-block;
@@ -152,8 +152,8 @@ p {
 }
 
 .logo {
-  width: 45px;
-  height: 45px;
+  width: 150px;
+  height: 50px;
   margin-right: 12px;
   filter: drop-shadow(var(--shadow-sm));
   overflow: hidden;
@@ -166,8 +166,8 @@ p {
   width: 100%;
   height: 100%;
   object-fit: contain;
-  max-width: 45px;
-  max-height: 45px;
+  max-width: 150px;
+  max-height: 50px;
 }
 
 .navbar-nav .nav-link {
