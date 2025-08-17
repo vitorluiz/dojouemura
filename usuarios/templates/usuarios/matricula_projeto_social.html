@@ -31,7 +31,7 @@
                     </div>
                     
                     <!-- Formulário de Matrícula -->
-                    <form method="post" enctype="multipart/form-data">
+                    <form method="post" enctype="multipart/form-data" id="matriculaProjetoSocialForm">
                         {% csrf_token %}
                         
                         <!-- Dados do Responsável -->
@@ -263,45 +263,118 @@
     </div>
 </div>
 
+<!-- JavaScript para validações e autocompletar CEP -->
 <script>
-// Validação de idade
-document.getElementById('data_nascimento').addEventListener('change', function() {
-    const dataNascimento = new Date(this.value);
-    const hoje = new Date();
-    const idade = hoje.getFullYear() - dataNascimento.getFullYear();
-    const mes = hoje.getMonth() - dataNascimento.getMonth();
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('matriculaProjetoSocialForm');
+    const cepInput = document.getElementById('cep');
+    const logradouroInput = document.getElementById('logradouro');
+    const bairroInput = document.getElementById('bairro');
+    const cidadeInput = document.getElementById('cidade');
+    const ufInput = document.getElementById('uf');
+    const dataNascimentoInput = document.getElementById('data_nascimento');
+    const cpfInput = document.getElementById('cpf');
     
-    if (mes < 0 || (mes === 0 && hoje.getDate() < dataNascimento.getDate())) {
-        idade--;
-    }
+    // Máscara para CEP
+    cepInput.addEventListener('input', function() {
+        let value = this.value.replace(/\D/g, '');
+        value = value.replace(/(\d{5})(\d)/, '$1-$2');
+        this.value = value;
+    });
     
-    if (idade < 6 || idade > 18) {
-        alert('O dependente deve ter entre 6 e 18 anos para participar do projeto social.');
-        this.value = '';
-    }
-});
-
-// Máscara para CPF
-document.getElementById('cpf').addEventListener('input', function(e) {
-    let value = e.target.value.replace(/\D/g, '');
-    if (value.length <= 11) {
-        value = value.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
-        e.target.value = value;
-    }
-});
-
-// Máscara para CEP
-document.getElementById('cep').addEventListener('input', function(e) {
-    let value = e.target.value.replace(/\D/g, '');
-    if (value.length <= 8) {
-        value = value.replace(/(\d{5})(\d{3})/, '$1-$2');
-        e.target.value = value;
-    }
-});
-
-// Máscara para UF
-document.getElementById('uf').addEventListener('input', function(e) {
-    e.target.value = e.target.value.toUpperCase();
+    // Autocompletar endereço quando CEP for digitado
+    cepInput.addEventListener('blur', function() {
+        const cep = this.value.replace(/\D/g, '');
+        
+        if (cep.length === 8) {
+            // Mostrar indicador de carregamento
+            this.classList.add('is-loading');
+            
+            // Fazer requisição para a API ViaCEP
+            fetch(`https://viacep.com.br/ws/${cep}/json/`)
+                .then(response => response.json())
+                .then(data => {
+                    if (!data.erro) {
+                        // Preencher campos automaticamente
+                        logradouroInput.value = data.logradouro || '';
+                        bairroInput.value = data.bairro || '';
+                        cidadeInput.value = data.localidade || '';
+                        ufInput.value = data.uf || '';
+                        
+                        // Adicionar classe de sucesso
+                        this.classList.add('is-valid');
+                        this.classList.remove('is-invalid');
+                        
+                        // Focar no campo número
+                        document.getElementById('numero').focus();
+                    } else {
+                        // CEP não encontrado
+                        this.classList.add('is-invalid');
+                        this.classList.remove('is-valid');
+                        alert('CEP não encontrado. Verifique e tente novamente.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Erro ao buscar CEP:', error);
+                    this.classList.add('is-invalid');
+                    this.classList.remove('is-valid');
+                    alert('Erro ao buscar CEP. Tente novamente.');
+                })
+                .finally(() => {
+                    this.classList.remove('is-loading');
+                });
+        }
+    });
+    
+    // Máscara para CPF
+    cpfInput.addEventListener('input', function() {
+        let value = this.value.replace(/\D/g, '');
+        value = value.replace(/(\d{3})(\d)/, '$1.$2');
+        value = value.replace(/(\d{3})(\d)/, '$1.$2');
+        value = value.replace(/(\d{3})(\d{1,2})$/, '$1-$2');
+        this.value = value;
+    });
+    
+    // Validação de idade (6-18 anos para projeto social)
+    dataNascimentoInput.addEventListener('change', function() {
+        const hoje = new Date();
+        const nascimento = new Date(this.value);
+        const idade = hoje.getFullYear() - nascimento.getFullYear();
+        const mes = hoje.getMonth() - nascimento.getMonth();
+        
+        if (mes < 0 || (mes === 0 && hoje.getDate() < nascimento.getDate())) {
+            idade--;
+        }
+        
+        if (idade < 6 || idade > 18) {
+            alert('Para o projeto social, o dependente deve ter entre 6 e 18 anos.');
+            this.value = '';
+            this.classList.add('is-invalid');
+        } else {
+            this.classList.remove('is-invalid');
+            this.classList.add('is-valid');
+        }
+    });
+    
+    // Validação do formulário
+    form.addEventListener('submit', function(e) {
+        const requiredFields = form.querySelectorAll('[required]');
+        let isValid = true;
+        
+        requiredFields.forEach(field => {
+            if (!field.value.trim()) {
+                isValid = false;
+                field.classList.add('is-invalid');
+            } else {
+                field.classList.remove('is-invalid');
+            }
+        });
+        
+        if (!isValid) {
+            e.preventDefault();
+            alert('Por favor, preencha todos os campos obrigatórios.');
+        }
+    });
 });
 </script>
 

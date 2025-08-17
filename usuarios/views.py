@@ -330,8 +330,16 @@ def matricula_modalidade_paga(request):
         modalidade = request.POST.get('modalidade')
         plano = request.POST.get('plano')
         
+        # Campos de endereço
+        cep = request.POST.get('cep')
+        logradouro = request.POST.get('logradouro')
+        numero = request.POST.get('numero')
+        bairro = request.POST.get('bairro')
+        cidade = request.POST.get('cidade')
+        uf = request.POST.get('uf')
+        
         # Validações básicas
-        if not all([nome_completo, data_nascimento, cpf, escola, turma, turno, modalidade, plano]):
+        if not all([nome_completo, data_nascimento, cpf, escola, turma, turno, modalidade, plano, cep, logradouro, numero, bairro, cidade, uf]):
             messages.error(request, 'Todos os campos obrigatórios devem ser preenchidos.')
             return render(request, 'usuarios/matricula_modalidade_paga.html')
         
@@ -361,6 +369,12 @@ def matricula_modalidade_paga(request):
                 escola=escola,
                 turma=turma,
                 turno=turno,
+                cep=cep,
+                logradouro=logradouro,
+                numero=numero,
+                bairro=bairro,
+                cidade=cidade,
+                uf=uf,
                 tipo_matricula=tipo_matricula,
                 modalidade=modalidade_obj,
                 status_matricula=status_matricula,

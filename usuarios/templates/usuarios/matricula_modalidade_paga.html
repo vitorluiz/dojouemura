@@ -78,6 +78,68 @@
                             </div>
                         </div>
 
+                        <!-- Endereço -->
+                        <div class="card mb-4">
+                            <div class="card-header bg-info text-white">
+                                <h5 class="mb-0">
+                                    <i class="bi bi-geo-alt me-2"></i>
+                                    Endereço
+                                </h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="row g-3">
+                                    <div class="col-md-4">
+                                        <label for="cep" class="form-label fw-bold">
+                                            <i class="bi bi-pin-map me-1"></i>
+                                            CEP *
+                                        </label>
+                                        <input type="text" class="form-control" id="cep" name="cep" placeholder="00000-000" required>
+                                        <div class="form-text">Digite o CEP para autocompletar o endereço</div>
+                                    </div>
+                                    
+                                    <div class="col-md-8">
+                                        <label for="logradouro" class="form-label fw-bold">
+                                            <i class="bi bi-signpost me-1"></i>
+                                            Logradouro *
+                                        </label>
+                                        <input type="text" class="form-control" id="logradouro" name="logradouro" required>
+                                    </div>
+                                    
+                                    <div class="col-md-2">
+                                        <label for="numero" class="form-label fw-bold">
+                                            <i class="bi bi-hash me-1"></i>
+                                            Número *
+                                        </label>
+                                        <input type="text" class="form-control" id="numero" name="numero" required>
+                                    </div>
+                                    
+                                    <div class="col-md-5">
+                                        <label for="bairro" class="form-label fw-bold">
+                                            <i class="bi bi-building me-1"></i>
+                                            Bairro *
+                                        </label>
+                                        <input type="text" class="form-control" id="bairro" name="bairro" required>
+                                    </div>
+                                    
+                                    <div class="col-md-3">
+                                        <label for="cidade" class="form-label fw-bold">
+                                            <i class="bi bi-geo-alt me-1"></i>
+                                            Cidade *
+                                        </label>
+                                        <input type="text" class="form-control" id="cidade" name="cidade" required>
+                                    </div>
+                                    
+                                    <div class="col-md-2">
+                                        <label for="uf" class="form-label fw-bold">
+                                            <i class="bi bi-geo-alt me-1"></i>
+                                            UF *
+                                        </label>
+                                        <input type="text" class="form-control" id="uf" name="uf" maxlength="2" required>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                         <!-- Dados Escolares -->
                         <div class="card mb-4">
                             <div class="card-header bg-success text-white">
@@ -234,6 +296,11 @@ document.addEventListener('DOMContentLoaded', function() {
     const form = document.getElementById('matriculaModalidadeForm');
     const dataNascimento = document.getElementById('data_nascimento');
     const cpf = document.getElementById('cpf');
+    const cepInput = document.getElementById('cep');
+    const logradouroInput = document.getElementById('logradouro');
+    const bairroInput = document.getElementById('bairro');
+    const cidadeInput = document.getElementById('cidade');
+    const ufInput = document.getElementById('uf');
     
     // Validação de idade mínima (6 anos)
     dataNascimento.addEventListener('change', function() {
@@ -259,6 +326,57 @@ document.addEventListener('DOMContentLoaded', function() {
         value = value.replace(/(\d{3})(\d)/, '$1.$2');
         value = value.replace(/(\d{3})(\d{1,2})$/, '$1-$2');
         this.value = value;
+    });
+    
+    // Máscara para CEP
+    cepInput.addEventListener('input', function() {
+        let value = this.value.replace(/\D/g, '');
+        value = value.replace(/(\d{5})(\d)/, '$1-$2');
+        this.value = value;
+    });
+    
+    // Autocompletar endereço quando CEP for digitado
+    cepInput.addEventListener('blur', function() {
+        const cep = this.value.replace(/\D/g, '');
+        
+        if (cep.length === 8) {
+            // Mostrar indicador de carregamento
+            this.classList.add('is-loading');
+            
+            // Fazer requisição para a API ViaCEP
+            fetch(`https://viacep.com.br/ws/${cep}/json/`)
+                .then(response => response.json())
+                .then(data => {
+                    if (!data.erro) {
+                        // Preencher campos automaticamente
+                        logradouroInput.value = data.logradouro || '';
+                        bairroInput.value = data.bairro || '';
+                        cidadeInput.value = data.localidade || '';
+                        ufInput.value = data.uf || '';
+                        
+                        // Adicionar classe de sucesso
+                        this.classList.add('is-valid');
+                        this.classList.remove('is-invalid');
+                        
+                        // Focar no campo número
+                        document.getElementById('numero').focus();
+                    } else {
+                        // CEP não encontrado
+                        this.classList.add('is-invalid');
+                        this.classList.remove('is-valid');
+                        alert('CEP não encontrado. Verifique e tente novamente.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Erro ao buscar CEP:', error);
+                    this.classList.add('is-invalid');
+                    this.classList.remove('is-valid');
+                    alert('Erro ao buscar CEP. Tente novamente.');
+                })
+                .finally(() => {
+                    this.classList.remove('is-loading');
+                });
+        }
     });
     
     // Validação do formulário
