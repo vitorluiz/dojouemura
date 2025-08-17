@@ -381,27 +381,35 @@ def matricula_modalidade_paga(request):
         
         # Verificar se é busca por CPF ou nova matrícula
         if 'buscar_cpf' in request.POST:
-            # Busca por CPF existente
-            cpf_busca = request.POST.get('cpf_busca', '').replace('.', '').replace('-', '')
+            # Busca por CPF existente - NÃO LIMPAR O CPF!
+            cpf_busca = request.POST.get('cpf_busca', '').strip()
             logger.info(f"Buscando atleta por CPF: {cpf_busca}")
             
             try:
+                # Buscar primeiro pelo CPF exato (com formatação)
                 atleta_existente = Dependente.objects.get(cpf=cpf_busca)
-                logger.info(f"Atleta encontrado: {atleta_existente.nome}")
-                
-                # Retornar dados do atleta para preenchimento automático
-                return render(request, 'usuarios/matricula_modalidade_paga.html', {
-                    'atleta_existente': atleta_existente,
-                    'modalidades': Modalidade.objects.all(),
-                    'success_message': f'Atleta encontrado: {atleta_existente.nome}. Preencha apenas a modalidade desejada.'
-                })
+                logger.info(f"Atleta encontrado pelo CPF exato: {atleta_existente.nome}")
                 
             except Dependente.DoesNotExist:
-                logger.warning(f"CPF não encontrado: {cpf_busca}")
-                return render(request, 'usuarios/matricula_modalidade_paga.html', {
-                    'modalidades': Modalidade.objects.all(),
-                    'error_message': 'CPF não encontrado. Preencha todos os dados para nova matrícula.'
-                })
+                try:
+                    # Se não encontrar, tentar com CPF limpo
+                    cpf_limpo = cpf_busca.replace('.', '').replace('-', '')
+                    atleta_existente = Dependente.objects.get(cpf=cpf_limpo)
+                    logger.info(f"Atleta encontrado pelo CPF limpo: {atleta_existente.nome}")
+                    
+                except Dependente.DoesNotExist:
+                    logger.warning(f"CPF não encontrado: {cpf_busca}")
+                    return render(request, 'usuarios/matricula_modalidade_paga.html', {
+                        'modalidades': Modalidade.objects.all(),
+                        'error_message': 'CPF não encontrado. Preencha todos os dados para nova matrícula.'
+                    })
+            
+            # Retornar dados do atleta para preenchimento automático
+            return render(request, 'usuarios/matricula_modalidade_paga.html', {
+                'atleta_existente': atleta_existente,
+                'modalidades': Modalidade.objects.all(),
+                'success_message': f'Atleta encontrado: {atleta_existente.nome}. Preencha apenas a modalidade desejada.'
+            })
         
         # Processar matrícula (nova ou existente)
         cpf = request.POST.get('cpf', '').replace('.', '').replace('-', '')
