@@ -12,13 +12,13 @@ class UsuarioAdmin(UserAdmin):
     
     # Campos exibidos na listagem
     list_display = [
-        'email', 'nome_completo', 'cpf', 'telefone', 
+        'email', 'get_nome_completo', 'cpf', 'telefone', 
         'data_nascimento', 'email_verificado', 'is_active', 
         'date_joined', 'dependentes_count'
     ]
     
     # Campos para busca
-    search_fields = ['email', 'nome_completo', 'cpf', 'telefone']
+    search_fields = ['email', 'first_name', 'last_name', 'cpf', 'telefone']
     
     # Filtros laterais
     list_filter = [
@@ -41,7 +41,7 @@ class UsuarioAdmin(UserAdmin):
             'fields': ('email', 'password')
         }),
         ('Dados Pessoais', {
-            'fields': ('nome_completo', 'data_nascimento', 'cpf', 'telefone')
+            'fields': ('first_name', 'last_name', 'data_nascimento', 'cpf', 'telefone')
         }),
         ('Permissões', {
             'fields': ('is_active', 'is_staff', 'is_superuser', 'groups', 'user_permissions'),
@@ -64,7 +64,7 @@ class UsuarioAdmin(UserAdmin):
     add_fieldsets = (
         ('Informações Básicas', {
             'classes': ('wide',),
-            'fields': ('email', 'nome_completo', 'password1', 'password2'),
+            'fields': ('email', 'first_name', 'last_name', 'password1', 'password2'),
         }),
         ('Dados Pessoais', {
             'fields': ('data_nascimento', 'cpf', 'telefone')
@@ -76,6 +76,12 @@ class UsuarioAdmin(UserAdmin):
     
     # Configurações do UserAdmin
     username_field = 'email'
+    
+    def get_nome_completo(self, obj):
+        """Retorna o nome completo do usuário"""
+        return obj.nome_completo
+    get_nome_completo.short_description = 'Nome Completo'
+    get_nome_completo.admin_order_field = 'first_name'
     
     def dependentes_count(self, obj):
         """Conta quantos dependentes o usuário possui"""
@@ -98,14 +104,14 @@ class DependenteAdmin(admin.ModelAdmin):
     
     # Campos exibidos na listagem
     list_display = [
-        'nome_completo', 'usuario_link', 'idade_display', 
+        'get_nome_completo', 'usuario_link', 'idade_display', 
         'parentesco', 'escola', 'cidade_uf', 'foto_thumbnail',
         'termos_aceitos', 'data_cadastro'
     ]
     
     # Campos para busca
     search_fields = [
-        'nome_completo', 'usuario__nome_completo', 'usuario__email',
+        'get_nome_completo', 'usuario__first_name', 'usuario__last_name', 'usuario__email',
         'escola', 'cidade', 'bairro'
     ]
     
@@ -120,7 +126,7 @@ class DependenteAdmin(admin.ModelAdmin):
     list_editable = ['parentesco']
     
     # Ordenação padrão
-    ordering = ['-data_cadastro', 'nome_completo']
+    ordering = ['-data_cadastro', 'usuario__first_name']
     
     # Campos readonly
     readonly_fields = ['data_cadastro', 'idade_display', 'endereco_completo', 'foto_preview']
@@ -128,7 +134,7 @@ class DependenteAdmin(admin.ModelAdmin):
     # Configuração dos fieldsets
     fieldsets = (
         ('Dados Pessoais', {
-            'fields': ('usuario', 'nome_completo', 'data_nascimento', 'idade_display', 'parentesco')
+            'fields': ('usuario', 'get_nome_completo', 'data_nascimento', 'idade_display', 'parentesco')
         }),
         ('Foto', {
             'fields': ('foto', 'foto_preview'),
@@ -165,12 +171,18 @@ class DependenteAdmin(admin.ModelAdmin):
     list_per_page = 25
     list_max_show_all = 100
     
+    def get_nome_completo(self, obj):
+        """Retorna o nome completo do dependente"""
+        return obj.nome_completo
+    get_nome_completo.short_description = 'Nome Completo'
+    get_nome_completo.admin_order_field = 'usuario__first_name'
+    
     def usuario_link(self, obj):
         """Link para o usuário responsável"""
         url = reverse('admin:usuarios_usuario_change', args=[obj.usuario.pk])
         return format_html('<a href="{}">{}</a>', url, obj.usuario.nome_completo)
     usuario_link.short_description = 'Responsável'
-    usuario_link.admin_order_field = 'usuario__nome_completo'
+    usuario_link.admin_order_field = 'usuario__first_name'
     
     def idade_display(self, obj):
         """Exibe a idade com formatação"""
