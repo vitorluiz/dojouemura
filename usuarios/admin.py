@@ -3,7 +3,7 @@ from django.contrib.auth.admin import UserAdmin
 from django.utils.html import format_html
 from django.urls import reverse
 from django.utils.safestring import mark_safe
-from .models import Usuario, Dependente
+from .models import Usuario, Dependente, Modalidade, TipoMatricula, StatusMatricula
 
 
 @admin.register(Usuario)
@@ -248,6 +248,64 @@ class DependenteAdmin(admin.ModelAdmin):
             f'Exportação de {count} dependente(s) iniciada. (Funcionalidade em desenvolvimento)'
         )
     exportar_dependentes.short_description = "Exportar dependentes selecionados"
+
+
+@admin.register(Modalidade)
+class ModalidadeAdmin(admin.ModelAdmin):
+    """Configuração do admin para o modelo Modalidade"""
+    
+    list_display = ['nome', 'ativa', 'ordem', 'descricao_curta']
+    list_editable = ['ativa', 'ordem']
+    list_filter = ['ativa']
+    search_fields = ['nome', 'descricao']
+    ordering = ['ordem', 'nome']
+    
+    def descricao_curta(self, obj):
+        """Retorna descrição truncada para a listagem"""
+        if obj.descricao:
+            return obj.descricao[:50] + '...' if len(obj.descricao) > 50 else obj.descricao
+        return '-'
+    descricao_curta.short_description = 'Descrição'
+
+
+@admin.register(TipoMatricula)
+class TipoMatriculaAdmin(admin.ModelAdmin):
+    """Configuração do admin para o modelo TipoMatricula"""
+    
+    list_display = ['nome', 'gratuito', 'taxa_inscricao', 'ativo', 'ordem']
+    list_editable = ['gratuito', 'taxa_inscricao', 'ativo', 'ordem']
+    list_filter = ['gratuito', 'ativo']
+    search_fields = ['nome', 'descricao']
+    ordering = ['ordem', 'nome']
+    
+    fieldsets = (
+        ('Informações Básicas', {
+            'fields': ('nome', 'descricao', 'ativo', 'ordem')
+        }),
+        ('Configurações Financeiras', {
+            'fields': ('gratuito', 'taxa_inscricao'),
+            'classes': ('collapse',)
+        }),
+    )
+
+
+@admin.register(StatusMatricula)
+class StatusMatriculaAdmin(admin.ModelAdmin):
+    """Configuração do admin para o modelo StatusMatricula"""
+    
+    list_display = ['nome', 'cor_display', 'ativo', 'ordem']
+    list_editable = ['ativo', 'ordem']
+    list_filter = ['ativo']
+    search_fields = ['nome', 'descricao']
+    ordering = ['ordem', 'nome']
+    
+    def cor_display(self, obj):
+        """Exibe a cor como um quadrado colorido"""
+        return format_html(
+            '<div style="width: 20px; height: 20px; background-color: {}; border: 1px solid #ccc; border-radius: 3px;"></div>',
+            obj.cor
+        )
+    cor_display.short_description = 'Cor'
 
 
 # Configurações globais do admin
