@@ -9,11 +9,19 @@ import re
 class UsuarioRegistroForm(UserCreationForm):
     """Formulário de registro de usuário"""
     
-    nome_completo = forms.CharField(
-        max_length=200,
+    first_name = forms.CharField(
+        max_length=150,
         widget=forms.TextInput(attrs={
             'class': 'form-control',
-            'placeholder': 'Nome completo'
+            'placeholder': 'Primeiro nome'
+        })
+    )
+    
+    last_name = forms.CharField(
+        max_length=150,
+        widget=forms.TextInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Sobrenome'
         })
     )
     
@@ -67,7 +75,7 @@ class UsuarioRegistroForm(UserCreationForm):
     
     class Meta:
         model = Usuario
-        fields = ('nome_completo', 'email', 'data_nascimento', 'cpf', 'telefone', 'password1', 'password2')
+        fields = ('first_name', 'last_name', 'email', 'data_nascimento', 'cpf', 'telefone', 'password1', 'password2')
     
     def clean_cpf(self):
         cpf = self.cleaned_data.get('cpf')

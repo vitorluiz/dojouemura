@@ -29,7 +29,8 @@ def registro_usuario(request):
         form = UsuarioRegistroForm(request.POST)
         if form.is_valid():
             usuario = form.save(commit=False)
-            usuario.username = usuario.nome_completo
+            # Usar email como username temporariamente
+            usuario.username = usuario.email
             usuario.is_active = False  # Usuário inativo até verificar email
             usuario.save()
             
@@ -84,8 +85,9 @@ def enviar_email_verificacao(request, usuario):
     )
     
     subject = 'Verificação de Email - Cadastro Dojô Uemura'
+    nome_completo = f"{usuario.first_name} {usuario.last_name}".strip() or usuario.email
     message = f'''
-    Olá {usuario.nome_completo},
+    Olá {nome_completo},
     
     Para ativar sua conta, clique no link abaixo:
     {verification_url}
@@ -390,4 +392,18 @@ def matricula_modalidade_paga(request):
             messages.error(request, f'Erro inesperado: {str(e)}')
     
     return render(request, 'usuarios/matricula_modalidade_paga.html')
+
+
+def dashboard(request):
+    """Dashboard do usuário logado"""
+    usuario = request.user
+    dependentes = Dependente.objects.filter(usuario=usuario)
+    
+    context = {
+        'usuario': usuario,
+        'dependentes': dependentes,
+        'nome_completo': f"{usuario.first_name} {usuario.last_name}".strip() or usuario.email
+    }
+    
+    return render(request, 'usuarios/dashboard.html', context)
 

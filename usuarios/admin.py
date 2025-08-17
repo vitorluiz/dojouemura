@@ -79,7 +79,7 @@ class UsuarioAdmin(UserAdmin):
     
     def get_nome_completo(self, obj):
         """Retorna o nome completo do usuário"""
-        return obj.nome_completo
+        return f"{obj.first_name} {obj.last_name}".strip() or obj.email
     get_nome_completo.short_description = 'Nome Completo'
     get_nome_completo.admin_order_field = 'first_name'
     
@@ -173,14 +173,15 @@ class DependenteAdmin(admin.ModelAdmin):
     
     def get_nome_completo(self, obj):
         """Retorna o nome completo do dependente"""
-        return obj.nome_completo
+        return obj.nome_completo if hasattr(obj, 'nome_completo') else f"{obj.usuario.first_name} {obj.usuario.last_name}".strip()
     get_nome_completo.short_description = 'Nome Completo'
     get_nome_completo.admin_order_field = 'usuario__first_name'
     
     def usuario_link(self, obj):
         """Link para o usuário responsável"""
         url = reverse('admin:usuarios_usuario_change', args=[obj.usuario.pk])
-        return format_html('<a href="{}">{}</a>', url, obj.usuario.nome_completo)
+        nome_completo = f"{obj.usuario.first_name} {obj.usuario.last_name}".strip() or obj.usuario.email
+        return format_html('<a href="{}">{}</a>', url, nome_completo)
     usuario_link.short_description = 'Responsável'
     usuario_link.admin_order_field = 'usuario__first_name'
     
@@ -209,7 +210,10 @@ class DependenteAdmin(admin.ModelAdmin):
                 '<img src="{}" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover;" />',
                 obj.foto.url
             )
-        return format_html('<div style="width: 40px; height: 40px; border-radius: 50%; background: #ddd; display: flex; align-items: center; justify-content: center; font-size: 12px;">{}</div>', obj.nome_completo[0].upper())
+        # Usar primeira letra do nome do dependente ou do usuário responsável
+        nome = obj.nome_completo if hasattr(obj, 'nome_completo') else f"{obj.usuario.first_name} {obj.usuario.last_name}".strip()
+        primeira_letra = nome[0].upper() if nome else '?'
+        return format_html('<div style="width: 40px; height: 40px; border-radius: 50%; background: #ddd; display: flex; align-items: center; justify-content: center; font-size: 12px;">{}</div>', primeira_letra)
     foto_thumbnail.short_description = 'Foto'
     
     def foto_preview(self, obj):

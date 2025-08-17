@@ -4,8 +4,8 @@ from django.core.validators import RegexValidator
 from django.core.exceptions import ValidationError
 from datetime import date, timedelta
 from utils.get_alphanumeric import get_alphanumeric
-import re
-from utils.valicacaos import validar_cpf, validar_idade_usuario, validar_idade_dependente
+
+from utils.validacoes import validar_cpf, validar_idade_usuario, validar_idade_dependente
 
 
 
@@ -34,11 +34,15 @@ class Usuario(AbstractUser):
         max_length=14,
         unique=True,
         verbose_name='CPF',
-        validators=[validar_cpf]
+        validators=[validar_cpf],
+        null=True,
+        blank=True
     )
     data_nascimento = models.DateField(
         verbose_name='Data de Nascimento',
-        validators=[validar_idade_usuario]
+        validators=[validar_idade_usuario],
+        null=True,
+        blank=True
     )
     telefone = models.CharField(
         max_length=15,
@@ -46,7 +50,9 @@ class Usuario(AbstractUser):
         validators=[RegexValidator(
             regex=r'^\(\d{2}\)\s\d{4,5}-\d{4}$',
             message='Telefone deve estar no formato (XX) XXXXX-XXXX'
-        )]
+        )],
+        null=True,
+        blank=True
     )
 
 
@@ -67,7 +73,7 @@ class Usuario(AbstractUser):
         verbose_name_plural = 'Usuários'
     
     def __str__(self):
-        return self.nome_completo
+        return f"{self.first_name} {self.last_name}".strip() or self.email
 
 
 class Dependente(models.Model):
@@ -271,7 +277,8 @@ class Dependente(models.Model):
     # Dentro da classe Usuario(AbstractUser)
     @property
     def nome_completo(self):
-        return f"{self.first_name} {self.last_name}".strip()
+        """Retorna o nome completo do usuário"""
+        return f"{self.first_name} {self.last_name}".strip() or self.email
 
     @property
     def idade(self):
@@ -301,7 +308,9 @@ class Dependente(models.Model):
         super().save(*args, **kwargs)
 
     def __str__(self):
-        return f"{self.nome_completo} ({self.usuario.nome_completo})"
+        nome_dependente = self.nome_completo if hasattr(self, 'nome_completo') else "Dependente"
+        nome_usuario = f"{self.usuario.first_name} {self.usuario.last_name}".strip() or self.usuario.email
+        return f"{nome_dependente} ({nome_usuario})"
 
 
 # MODELOS PARA CHOICES - Permitem gerenciar opções via admin
