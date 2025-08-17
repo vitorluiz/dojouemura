@@ -319,8 +319,20 @@ document.addEventListener('DOMContentLoaded', function() {
     dataNascimentoInput.addEventListener('change', function() {
         if (!this.value) return; // Não validar se campo estiver vazio
         
+        // Verificar se a data é válida (formato completo)
+        const dataParts = this.value.split('-');
+        if (dataParts.length !== 3 || dataParts[2] === 'aaaa') {
+            return; // Não validar datas incompletas
+        }
+        
         const hoje = new Date();
         const nascimento = new Date(this.value);
+        
+        // Verificar se a data é válida
+        if (isNaN(nascimento.getTime())) {
+            return; // Data inválida, não validar
+        }
+        
         const idade = hoje.getFullYear() - nascimento.getFullYear();
         const mes = hoje.getMonth() - nascimento.getMonth();
         
