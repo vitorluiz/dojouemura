@@ -1,0 +1,285 @@
+{% extends 'usuarios/base.html' %}
+{% load static %}
+
+{% block title %}Matrícula por Modalidade - Dojô Uemura{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-7">
+            <div class="card">
+                <div class="card-body p-5">
+                    <div class="text-center mb-4">
+                        <div class="display-4 text-primary mb-3">
+                            <i class="bi bi-award"></i>
+                        </div>
+                        <h2 class="fw-bold">Matrícula por Modalidade</h2>
+                        <p class="text-muted">Escolha sua modalidade e faça sua inscrição</p>
+                    </div>
+
+                    <!-- Informações sobre modalidades pagas -->
+                    <div class="alert alert-info mb-4">
+                        <h6 class="alert-heading fw-bold">
+                            <i class="bi bi-info-circle me-2"></i>
+                            Modalidades Disponíveis
+                        </h6>
+                        <p class="mb-0">
+                            <strong>Judô, Muay Thai, Boxe e Capoeira</strong><br>
+                            Para crianças a partir de 6 anos e adultos
+                        </p>
+                    </div>
+
+                    <form method="post" id="matriculaModalidadeForm">
+                        {% csrf_token %}
+                        
+                        <!-- Dados do Dependente -->
+                        <div class="card mb-4">
+                            <div class="card-header bg-primary text-white">
+                                <h5 class="mb-0">
+                                    <i class="bi bi-person-plus me-2"></i>
+                                    Dados do Dependente
+                                </h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="row g-3">
+                                    <div class="col-12">
+                                        <label for="nome_completo" class="form-label fw-bold">
+                                            <i class="bi bi-person me-1"></i>
+                                            Nome Completo *
+                                        </label>
+                                        <input type="text" class="form-control" id="nome_completo" name="nome_completo" required>
+                                    </div>
+                                    
+                                    <div class="col-md-6">
+                                        <label for="data_nascimento" class="form-label fw-bold">
+                                            <i class="bi bi-calendar me-1"></i>
+                                            Data de Nascimento *
+                                        </label>
+                                        <input type="date" class="form-control" id="data_nascimento" name="data_nascimento" required>
+                                    </div>
+                                    
+                                    <div class="col-md-6">
+                                        <label for="cpf" class="form-label fw-bold">
+                                            <i class="bi bi-card-text me-1"></i>
+                                            CPF *
+                                        </label>
+                                        <input type="text" class="form-control" id="cpf" name="cpf" placeholder="000.000.000-00" required>
+                                    </div>
+                                    
+                                    <div class="col-12">
+                                        <label for="foto" class="form-label fw-bold">
+                                            <i class="bi bi-camera me-1"></i>
+                                            Foto *
+                                        </label>
+                                        <input type="file" class="form-control" id="foto" name="foto" accept="image/*" required>
+                                        <div class="form-text">Foto atualizada do dependente</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Dados Escolares -->
+                        <div class="card mb-4">
+                            <div class="card-header bg-success text-white">
+                                <h5 class="mb-0">
+                                    <i class="bi bi-mortarboard me-2"></i>
+                                    Dados Escolares
+                                </h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="row g-3">
+                                    <div class="col-md-6">
+                                        <label for="escola" class="form-label fw-bold">
+                                            <i class="bi bi-building me-1"></i>
+                                            Escola *
+                                        </label>
+                                        <input type="text" class="form-control" id="escola" name="escola" required>
+                                    </div>
+                                    
+                                    <div class="col-md-3">
+                                        <label for="turma" class="form-label fw-bold">
+                                            <i class="bi bi-people me-1"></i>
+                                            Turma *
+                                        </label>
+                                        <input type="text" class="form-control" id="turma" name="turma" required>
+                                    </div>
+                                    
+                                    <div class="col-md-3">
+                                        <label for="turno" class="form-label fw-bold">
+                                            <i class="bi bi-clock me-1"></i>
+                                            Turno *
+                                        </label>
+                                        <select class="form-select" id="turno" name="turno" required>
+                                            <option value="">Selecione</option>
+                                            <option value="manha">Manhã</option>
+                                            <option value="tarde">Tarde</option>
+                                            <option value="noite">Noite</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Modalidade e Pagamento -->
+                        <div class="card mb-4">
+                            <div class="card-header bg-warning text-dark">
+                                <h5 class="mb-0">
+                                    <i class="bi bi-credit-card me-2"></i>
+                                    Modalidade e Pagamento
+                                </h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="row g-3">
+                                    <div class="col-md-6">
+                                        <label for="modalidade" class="form-label fw-bold">
+                                            <i class="bi bi-award me-1"></i>
+                                            Modalidade *
+                                        </label>
+                                        <select class="form-select" id="modalidade" name="modalidade" required>
+                                            <option value="">Selecione a modalidade</option>
+                                            <option value="judo">Judô</option>
+                                            <option value="muaythai">Muay Thai</option>
+                                            <option value="boxe">Boxe</option>
+                                            <option value="capoeira">Capoeira</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <div class="col-md-6">
+                                        <label for="plano" class="form-label fw-bold">
+                                            <i class="bi bi-calendar-month me-1"></i>
+                                            Plano *
+                                        </label>
+                                        <select class="form-select" id="plano" name="plano" required>
+                                            <option value="">Selecione o plano</option>
+                                            <option value="mensal">Mensal - R$ 80,00</option>
+                                            <option value="trimestral">Trimestral - R$ 220,00</option>
+                                            <option value="semestral">Semestral - R$ 400,00</option>
+                                            <option value="anual">Anual - R$ 720,00</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                
+                                <!-- Informações de pagamento -->
+                                <div class="alert alert-success mt-3">
+                                    <h6 class="alert-heading fw-bold">
+                                        <i class="bi bi-info-circle me-2"></i>
+                                        Informações de Pagamento
+                                    </h6>
+                                    <ul class="mb-0 small">
+                                        <li>Taxa de matrícula: R$ 50,00 (única vez)</li>
+                                        <li>Mensalidade conforme plano escolhido</li>
+                                        <li>Pagamento via PIX ou boleto bancário</li>
+                                        <li>Material de treino incluído no primeiro mês</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Termos e Condições -->
+                        <div class="card mb-4">
+                            <div class="card-header bg-secondary text-white">
+                                <h5 class="mb-0">
+                                    <i class="bi bi-file-text me-2"></i>
+                                    Termos e Condições
+                                </h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="form-check mb-3">
+                                    <input class="form-check-input" type="checkbox" id="termo_responsabilidade" name="termo_responsabilidade" required>
+                                    <label class="form-check-label" for="termo_responsabilidade">
+                                        <strong>Termo de Responsabilidade:</strong> Declaro que sou responsável legal pelo dependente e assumo total responsabilidade por sua conduta e segurança durante as aulas.
+                                    </label>
+                                </div>
+                                
+                                <div class="form-check mb-3">
+                                    <input class="form-check-input" type="checkbox" id="direito_imagem" name="direito_imagem">
+                                    <label class="form-check-label" for="direito_imagem">
+                                        <strong>Direito de Uso de Imagem:</strong> Autorizo o uso de imagens do dependente para fins promocionais e educativos do Dojô Uemura.
+                                    </label>
+                                </div>
+                                
+                                <div class="form-check mb-3">
+                                    <input class="form-check-input" type="checkbox" id="termo_saude" name="termo_saude" required>
+                                    <label class="form-check-label" for="termo_saude">
+                                        <strong>Termo de Saúde:</strong> Declaro que o dependente está em condições físicas adequadas para praticar a modalidade escolhida.
+                                    </label>
+                                </div>
+                                
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="aceite_regras" name="aceite_regras" required>
+                                    <label class="form-check-label" for="aceite_regras">
+                                        <strong>Regras do Dojô:</strong> Li e aceito as regras e regulamentos internos do Dojô Uemura.
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Botão de envio -->
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <i class="bi bi-check-circle me-2"></i>
+                                Finalizar Matrícula
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- JavaScript para validações -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('matriculaModalidadeForm');
+    const dataNascimento = document.getElementById('data_nascimento');
+    const cpf = document.getElementById('cpf');
+    
+    // Validação de idade mínima (6 anos)
+    dataNascimento.addEventListener('change', function() {
+        const hoje = new Date();
+        const nascimento = new Date(this.value);
+        const idade = hoje.getFullYear() - nascimento.getFullYear();
+        const mes = hoje.getMonth() - nascimento.getMonth();
+        
+        if (mes < 0 || (mes === 0 && hoje.getDate() < nascimento.getDate())) {
+            idade--;
+        }
+        
+        if (idade < 6) {
+            alert('O dependente deve ter pelo menos 6 anos para se matricular.');
+            this.value = '';
+        }
+    });
+    
+    // Máscara para CPF
+    cpf.addEventListener('input', function() {
+        let value = this.value.replace(/\D/g, '');
+        value = value.replace(/(\d{3})(\d)/, '$1.$2');
+        value = value.replace(/(\d{3})(\d)/, '$1.$2');
+        value = value.replace(/(\d{3})(\d{1,2})$/, '$1-$2');
+        this.value = value;
+    });
+    
+    // Validação do formulário
+    form.addEventListener('submit', function(e) {
+        const requiredFields = form.querySelectorAll('[required]');
+        let isValid = true;
+        
+        requiredFields.forEach(field => {
+            if (!field.value.trim()) {
+                isValid = false;
+                field.classList.add('is-invalid');
+            } else {
+                field.classList.remove('is-invalid');
+            }
+        });
+        
+        if (!isValid) {
+            e.preventDefault();
+            alert('Por favor, preencha todos os campos obrigatórios.');
+        }
+    });
+});
+</script>
+{% endblock %}

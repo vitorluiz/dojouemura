@@ -12,6 +12,7 @@ from django.http import HttpResponse, JsonResponse
 from .models import Usuario, Dependente
 from .forms import UsuarioRegistroForm, UsuarioLoginForm, DependenteForm
 import requests
+from datetime import date, datetime
 
 
 def home(request):
@@ -242,170 +243,137 @@ def galeria_completa(request):
 
 @login_required
 def matricula_projeto_social(request):
-    """View para matrícula no projeto social"""
     if request.method == 'POST':
-        # Processar formulário de matrícula no projeto social
-        form_data = request.POST
-        files = request.FILES
+        # Processar dados do formulário
+        nome_completo = request.POST.get('nome_completo')
+        data_nascimento = request.POST.get('data_nascimento')
+        cpf = request.POST.get('cpf')
+        escola = request.POST.get('escola')
+        turma = request.POST.get('turma')
+        turno = request.POST.get('turno')
+        cep = request.POST.get('cep')
+        logradouro = request.POST.get('logradouro')
+        numero = request.POST.get('numero')
+        bairro = request.POST.get('bairro')
+        cidade = request.POST.get('cidade')
+        uf = request.POST.get('uf')
+        
+        # Validações básicas
+        if not all([nome_completo, data_nascimento, cpf, escola, turma, turno, cep, logradouro, numero, bairro, cidade, uf]):
+            messages.error(request, 'Todos os campos obrigatórios devem ser preenchidos.')
+            return render(request, 'usuarios/matricula_projeto_social.html')
+        
+        # Validar idade (6-18 anos para projeto social)
+        try:
+            data_nasc = datetime.strptime(data_nascimento, '%Y-%m-%d').date()
+            idade = (date.today() - data_nasc).days // 365
+            if idade < 6 or idade > 18:
+                messages.error(request, 'Para o projeto social, o dependente deve ter entre 6 e 18 anos.')
+                return render(request, 'usuarios/matricula_projeto_social.html')
+        except ValueError:
+            messages.error(request, 'Data de nascimento inválida.')
+            return render(request, 'usuarios/matricula_projeto_social.html')
+        
+        # Validar se escola foi informada (obrigatória para projeto social)
+        if not escola.strip():
+            messages.error(request, 'A escola é obrigatória para o projeto social.')
+            return render(request, 'usuarios/matricula_projeto_social.html')
         
         try:
-            # Criar dependente com dados do projeto social
-            dependente = Dependente()
-            dependente.usuario = request.user
+            # Buscar os objetos necessários
+            tipo_matricula = TipoMatricula.objects.get(nome='Projeto Social')
+            status_matricula = StatusMatricula.objects.get(nome='Pendente')
+            modalidade_jiujitsu = Modalidade.objects.get(nome='Jiu-Jitsu')
             
-            # Dados pessoais
-            dependente.nome_completo = form_data.get('nome_completo')
-            dependente.data_nascimento = form_data.get('data_nascimento')
-            dependente.cpf = form_data.get('cpf')
-            dependente.parentesco = form_data.get('parentesco')
-            
-            # Foto
-            if 'foto' in files:
-                dependente.foto = files['foto']
-            
-            # Endereço
-            dependente.cep = form_data.get('cep')
-            dependente.logradouro = form_data.get('logradouro')
-            dependente.numero = form_data.get('numero')
-            dependente.complemento = form_data.get('complemento', '')
-            dependente.bairro = form_data.get('bairro')
-            dependente.cidade = form_data.get('cidade')
-            dependente.uf = form_data.get('uf')
-            
-            # Dados escolares
-            dependente.escolaridade = form_data.get('escolaridade')
-            dependente.escola = form_data.get('escola')
-            dependente.turno = form_data.get('turno')
-            
-            # Informações médicas
-            dependente.condicoes_medicas = form_data.get('condicoes_medicas', '')
-            
-            # Termos
-            dependente.termo_responsabilidade = form_data.get('termo_responsabilidade') == 'on'
-            dependente.termo_uso_imagem = form_data.get('termo_uso_imagem') == 'on'
-            
-            # Configurações de matrícula para projeto social
-            from .models import TipoMatricula, StatusMatricula
-            
-            # Buscar tipo "Projeto Social"
-            tipo_projeto_social = TipoMatricula.objects.filter(nome='Projeto Social').first()
-            if tipo_projeto_social:
-                dependente.tipo_matricula = tipo_projeto_social
-            
-            # Buscar status "Pendente"
-            status_pendente = StatusMatricula.objects.filter(nome='Pendente').first()
-            if status_pendente:
-                dependente.status_matricula = status_pendente
-            
-            # Modalidade será Jiu-Jitsu (projeto social)
-            modalidade_jiujitsu = Modalidade.objects.filter(nome='Jiu-Jitsu').first()
-            if modalidade_jiujitsu:
-                dependente.modalidade = modalidade_jiujitsu
-            
-            # Salvar dependente
-            dependente.save()
-            
-            messages.success(
-                request, 
-                'Matrícula no projeto social solicitada com sucesso! '
-                'Aguarde a análise e aprovação. Taxa de inscrição: R$ 50,00'
+            # Criar o dependente
+            dependente = Dependente.objects.create(
+                usuario=request.user,
+                nome_completo=nome_completo,
+                data_nascimento=data_nasc,
+                cpf=cpf,
+                escola=escola,
+                turma=turma,
+                turno=turno,
+                cep=cep,
+                logradouro=logradouro,
+                numero=numero,
+                bairro=bairro,
+                cidade=cidade,
+                uf=uf,
+                tipo_matricula=tipo_matricula,
+                modalidade=modalidade_jiujitsu,  # Projeto social sempre é Jiu-Jitsu
+                status_matricula=status_matricula,
+                data_matricula=date.today()
             )
-            return redirect('home')
             
+            messages.success(request, f'Matrícula no projeto social realizada com sucesso! {nome_completo} está inscrito no Jiu-Jitsu gratuito.')
+            return redirect('dashboard')
+            
+        except (TipoMatricula.DoesNotExist, StatusMatricula.DoesNotExist, Modalidade.DoesNotExist):
+            messages.error(request, 'Erro ao processar a matrícula. Tente novamente.')
         except Exception as e:
-            messages.error(
-                request, 
-                f'Erro ao processar matrícula: {str(e)}. '
-                'Tente novamente ou entre em contato conosco.'
-            )
+            messages.error(request, f'Erro inesperado: {str(e)}')
     
-    # GET request - mostrar formulário
     return render(request, 'usuarios/matricula_projeto_social.html')
 
 
 @login_required
 def matricula_modalidade_paga(request):
-    """View para matrícula em modalidade paga"""
     if request.method == 'POST':
-        # Processar formulário de matrícula paga
-        form_data = request.POST
-        files = request.FILES
+        # Processar dados do formulário
+        nome_completo = request.POST.get('nome_completo')
+        data_nascimento = request.POST.get('data_nascimento')
+        cpf = request.POST.get('cpf')
+        escola = request.POST.get('escola')
+        turma = request.POST.get('turma')
+        turno = request.POST.get('turno')
+        modalidade = request.POST.get('modalidade')
+        plano = request.POST.get('plano')
+        
+        # Validações básicas
+        if not all([nome_completo, data_nascimento, cpf, escola, turma, turno, modalidade, plano]):
+            messages.error(request, 'Todos os campos obrigatórios devem ser preenchidos.')
+            return render(request, 'usuarios/matricula_modalidade_paga.html')
+        
+        # Validar idade mínima (6 anos)
+        try:
+            data_nasc = datetime.strptime(data_nascimento, '%Y-%m-%d').date()
+            idade = (date.today() - data_nasc).days // 365
+            if idade < 6:
+                messages.error(request, 'O dependente deve ter pelo menos 6 anos para se matricular.')
+                return render(request, 'usuarios/matricula_modalidade_paga.html')
+        except ValueError:
+            messages.error(request, 'Data de nascimento inválida.')
+            return render(request, 'usuarios/matricula_paga.html')
         
         try:
-            # Criar dependente com dados da modalidade paga
-            dependente = Dependente()
-            dependente.usuario = request.user
+            # Buscar os objetos necessários
+            tipo_matricula = TipoMatricula.objects.get(nome='Modalidade Paga')
+            status_matricula = StatusMatricula.objects.get(nome='Pendente')
+            modalidade_obj = Modalidade.objects.get(nome=modalidade.title())
             
-            # Dados pessoais
-            dependente.nome_completo = form_data.get('nome_completo')
-            dependente.data_nascimento = form_data.get('data_nascimento')
-            dependente.cpf = form_data.get('cpf')
-            dependente.parentesco = form_data.get('parentesco')
-            
-            # Foto
-            if 'foto' in files:
-                dependente.foto = files['foto']
-            
-            # Endereço
-            dependente.cep = form_data.get('cep')
-            dependente.logradouro = form_data.get('logradouro')
-            dependente.numero = form_data.get('numero')
-            dependente.complemento = form_data.get('complemento', '')
-            dependente.bairro = form_data.get('bairro')
-            dependente.cidade = form_data.get('cidade')
-            dependente.uf = form_data.get('uf')
-            
-            # Dados escolares (opcional para modalidade paga)
-            dependente.escolaridade = form_data.get('escolaridade', '')
-            dependente.escola = form_data.get('escola', '')
-            dependente.turno = form_data.get('turno', '')
-            
-            # Informações médicas
-            dependente.condicoes_medicas = form_data.get('condicoes_medicas', '')
-            
-            # Termos (opcionais para modalidade paga)
-            dependente.termo_responsabilidade = form_data.get('termo_responsabilidade') == 'on'
-            dependente.termo_uso_imagem = form_data.get('termo_uso_imagem') == 'on'
-            
-            # Configurações de matrícula para modalidade paga
-            from .models import TipoMatricula, StatusMatricula, Modalidade
-            
-            # Buscar tipo "Modalidade Paga"
-            tipo_modalidade_paga = TipoMatricula.objects.filter(nome='Modalidade Paga').first()
-            if tipo_modalidade_paga:
-                dependente.tipo_matricula = tipo_modalidade_paga
-            
-            # Buscar status "Pendente"
-            status_pendente = StatusMatricula.objects.filter(nome='Pendente').first()
-            if status_pendente:
-                dependente.status_matricula = status_pendente
-            
-            # Modalidade escolhida (obrigatória para modalidade paga)
-            modalidade_id = form_data.get('modalidade')
-            if modalidade_id:
-                modalidade = Modalidade.objects.filter(id=modalidade_id).first()
-                if modalidade:
-                    dependente.modalidade = modalidade
-            
-            # Salvar dependente
-            dependente.save()
-            
-            messages.success(
-                request, 
-                'Matrícula em modalidade paga solicitada com sucesso! '
-                'Aguarde a análise e aprovação. Mensalidade será informada após aprovação.'
+            # Criar o dependente
+            dependente = Dependente.objects.create(
+                usuario=request.user,
+                nome_completo=nome_completo,
+                data_nascimento=data_nasc,
+                cpf=cpf,
+                escola=escola,
+                turma=turma,
+                turno=turno,
+                tipo_matricula=tipo_matricula,
+                modalidade=modalidade_obj,
+                status_matricula=status_matricula,
+                data_matricula=date.today()
             )
-            return redirect('home')
             
+            messages.success(request, f'Matrícula de {nome_completo} realizada com sucesso! Status: Pendente de Pagamento.')
+            return redirect('dashboard')
+            
+        except (TipoMatricula.DoesNotExist, StatusMatricula.DoesNotExist, Modalidade.DoesNotExist):
+            messages.error(request, 'Erro ao processar a matrícula. Tente novamente.')
         except Exception as e:
-            messages.error(
-                request, 
-                f'Erro ao processar matrícula: {str(e)}. '
-                'Tente novamente ou entre em contato conosco.'
-            )
+            messages.error(request, f'Erro inesperado: {str(e)}')
     
-    # GET request - mostrar formulário
-    # Por enquanto, redirecionar para o formulário geral
-    # TODO: Criar template específico para modalidade paga
-    return redirect('cadastrar_dependente')
+    return render(request, 'usuarios/matricula_modalidade_paga.html')
 

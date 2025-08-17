@@ -67,7 +67,76 @@
         </div>
     </div>
     
-    <!-- Lista de Dependentes -->
+    <!-- Seção de Matrícula -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">
+                        <i class="bi bi-person-plus me-2"></i>
+                        Nova Matrícula
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <div class="card h-100 border-success">
+                                <div class="card-body text-center">
+                                    <div class="mb-3">
+                                        <i class="bi bi-heart-fill text-success" style="font-size: 3rem;"></i>
+                                    </div>
+                                    <h5 class="card-title text-success">Projeto Social</h5>
+                                    <p class="card-text small">
+                                        <strong>Jiu-Jitsu Gratuito</strong><br>
+                                        Para crianças de 6 a 18 anos<br>
+                                        Taxa única: R$ 50,00
+                                    </p>
+                                    <a href="{% url 'matricula_projeto_social' %}" class="btn btn-success">
+                                        <i class="bi bi-heart-fill me-2"></i>
+                                        Inscrever no Projeto Social
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <div class="card h-100 border-warning">
+                                <div class="card-body text-center">
+                                    <div class="mb-3">
+                                        <i class="bi bi-award text-warning" style="font-size: 3rem;"></i>
+                                    </div>
+                                    <h5 class="card-title text-warning">Por Modalidade</h5>
+                                    <p class="card-text small">
+                                        <strong>Judô, Muay Thai, Boxe, Capoeira</strong><br>
+                                        Para crianças a partir de 6 anos<br>
+                                        Mensalidades a partir de R$ 80,00
+                                    </p>
+                                    <a href="{% url 'matricula_modalidade_paga' %}" class="btn btn-warning">
+                                        <i class="bi bi-award me-2"></i>
+                                        Inscrever em Modalidade
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="alert alert-info mt-3 mb-0">
+                        <h6 class="alert-heading fw-bold">
+                            <i class="bi bi-info-circle me-2"></i>
+                            Como funciona?
+                        </h6>
+                        <ul class="mb-0 small">
+                            <li><strong>Projeto Social:</strong> Jiu-Jitsu gratuito para crianças em situação de vulnerabilidade</li>
+                            <li><strong>Por Modalidade:</strong> Escolha sua arte marcial preferida com mensalidades acessíveis</li>
+                            <li>Ambos os tipos incluem material de treino e acompanhamento completo</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Seção de Dependentes -->
     <div class="row">
         <div class="col-12">
             <div class="card">
