@@ -2,6 +2,7 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.core.exceptions import ValidationError
 from .models import Usuario, Dependente
+from utils.validacoes import validar_cpf
 import re
 
 
@@ -77,6 +78,12 @@ class UsuarioRegistroForm(UserCreationForm):
             # Verificar se já existe
             if Usuario.objects.filter(cpf=cpf).exists():
                 raise ValidationError('Este CPF já está cadastrado.')
+            
+            # Usar validação real de CPF
+            try:
+                validar_cpf(cpf)
+            except ValidationError as e:
+                raise ValidationError(f'CPF inválido: {e.message}')
             
             # Formatar CPF
             if len(cpf_limpo) == 11:
