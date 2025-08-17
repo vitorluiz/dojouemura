@@ -1,183 +1,136 @@
-# 📋 TODO - SISTEMA DOJÔ UEMURA
+# 📋 **TODO - Dojô Uemura**
 
-## 🎯 **OBJETIVO PRINCIPAL**
-Implementar sistema completo de matrículas para projeto social e modalidades pagas do Dojô Uemura.
-
----
-
-## ✅ **CONCLUÍDO**
-
-### **1. Estrutura Base**
-- [x] Modelo Usuario com tipos de conta (RESPONSAVEL, PROFESSOR, GESTOR, FUNCIONARIO)
-- [x] Modelo Dependente com campos de matrícula
-- [x] Modelos para choices (Modalidade, TipoMatricula, StatusMatricula)
-- [x] Campo email_verificado no Usuario
-- [x] Admin Django configurado para todos os modelos
-- [x] Migrações criadas e aplicadas
-- [x] Dados iniciais criados (modalidades, tipos, status)
-
-### **2. Formulários e Templates**
-- [x] DependenteForm atualizado com campos de matrícula
-- [x] Template cadastrar_dependente.html atualizado
-- [x] Dashboard atualizado para mostrar informações de matrícula
-- [x] Template matricula_projeto_social.html criado
-- [x] URLs organizadas para diferentes tipos de matrícula
+## 🎯 **OBJETIVO DO PROJETO**
+Sistema completo de gestão para Dojô Uemura, incluindo matrículas, frequência, financeiro e eventos.
 
 ---
 
-## 🚧 **EM ANDAMENTO**
+## ✅ **TAREFAS CONCLUÍDAS**
 
-### **3. Views e Lógica de Negócio**
-- [ ] Implementar view `matricula_projeto_social`
-- [ ] Implementar view `matricula_modalidade_paga`
-- [ ] Atualizar view `cadastrar_dependente` para usar novos campos
-- [ ] Validações específicas por tipo de matrícula
+### **🏗️ Estrutura Base**
+- [x] Configuração inicial do projeto Django
+- [x] App `usuarios` como central de autenticação
+- [x] Modelo `Usuario` customizado com `AbstractUser`
+- [x] Modelo `Dependente` para atletas
+- [x] Sistema de tipos de conta (RESPONSAVEL, PROFESSOR, GESTOR, FUNCIONARIO)
 
----
+### **🔐 Sistema de Autenticação**
+- [x] Views de registro e login
+- [x] Verificação de email
+- [x] Templates de autenticação
+- [x] Sistema de mensagens
 
-## 📋 **PRÓXIMOS PASSOS**
+### **📊 Modelos de Dados**
+- [x] Modelos `Modalidade`, `TipoMatricula`, `StatusMatricula`
+- [x] Campos de matrícula no modelo `Dependente`
+- [x] Relacionamentos entre modelos
+- [x] Migrações do banco de dados
 
-### **4. Views Específicas (PRIORIDADE ALTA)**
-- [ ] **View: matricula_projeto_social**
-  - Formulário específico para projeto social
-  - Validações de idade (6-18 anos)
-  - Validações de escola obrigatória
-  - Taxa de inscrição R$ 50,00
-  
-- [ ] **View: matricula_modalidade_paga**
-  - Formulário para modalidades pagas
-  - Escolha de modalidade obrigatória
-  - Validações de idade (a partir de 6 anos)
-  - Sistema de mensalidades
+### **🎨 Interface e Navegação**
+- [x] Template home com fluxo claro de navegação
+- [x] Botões "Registre-se" e "Portal do Aluno" na home
+- [x] Seção Portal do Aluno com explicações claras
+- [x] Dashboard com informações do usuário
 
-- [ ] **View: cadastrar_dependente atualizada**
-  - Integrar com novos campos de matrícula
-  - Validações condicionais por tipo
-  - Processamento automático de dados
-
-### **5. Sistema de Validações (PRIORIDADE ALTA)**
-- [ ] **Validações de Projeto Social**
-  - Idade entre 6-18 anos
-  - Escola regular obrigatória
-  - Termos obrigatórios
-  
-- [ ] **Validações de Modalidade Paga**
-  - Idade a partir de 6 anos
-  - Modalidade obrigatória
-  - Termos opcionais
-
-### **6. Sistema de Pagamentos (PRIORIDADE MÉDIA)**
-- [ ] **Integração com PIX**
-  - Geração de QR Code PIX
-  - Validação de pagamento
-  - Webhook de confirmação
-  
-- [ ] **Sistema de Boletos**
-  - Geração de boletos bancários
-  - Controle de vencimento
-  - Status de pagamento
-
-### **7. Notificações e Comunicação (PRIORIDADE MÉDIA)**
-- [ ] **Email automático**
-  - Confirmação de matrícula
-  - Instruções de pagamento
-  - Status de aprovação
-  
-- [ ] **SMS (futuro)**
-  - Lembretes de pagamento
-  - Confirmações importantes
-
-### **8. Controle de Frequência (PRIORIDADE BAIXA)**
-- [ ] **Sistema de QR Code**
-  - Geração de QR para cada dependente
-  - Leitor na portaria
-  - Registro de entrada/saída
-  
-- [ ] **Notificações em tempo real**
-  - Para responsáveis
-  - Para professores
-
-### **9. Relatórios e Analytics (PRIORIDADE BAIXA)**
-- [ ] **Dashboard do Gestor**
-  - Total de matrículas por tipo
-  - Receita mensal
-  - Frequência dos alunos
-  
-- [ ] **Relatórios financeiros**
-  - Inadimplência
-  - Projeções de receita
-  - Histórico de pagamentos
+### **📝 Sistema de Matrículas**
+- [x] Views para projeto social e modalidade paga
+- [x] Template específico para projeto social
+- [x] Template específico para modalidade paga
+- [x] Validações específicas por tipo de matrícula
+- [x] Dashboard com opções de matrícula
 
 ---
 
-## 🛠️ **TECNOLOGIAS E FERRAMENTAS**
+## 🔄 **TAREFAS EM ANDAMENTO**
 
-### **Backend**
-- [x] Django 5.2.4
-- [x] SQLite (desenvolvimento)
-- [ ] Django REST Framework (futuro)
-- [ ] Celery (para tarefas assíncronas)
+### **⚡ Views e Lógica de Negócio**
+- [x] ~~Implementar view `matricula_projeto_social`~~ ✅ **CONCLUÍDO**
+- [x] ~~Implementar view `matricula_modalidade_paga`~~ ✅ **CONCLUÍDO**
+- [x] ~~Atualizar view `cadastrar_dependente` para usar novos campos~~ ✅ **CONCLUÍDO**
+- [x] ~~Validações específicas por tipo de matrícula~~ ✅ **CONCLUÍDO**
 
-### **Frontend**
-- [x] Bootstrap 5
-- [x] JavaScript vanilla
-- [ ] QR Code Scanner (futuro)
-- [ ] PWA capabilities (futuro)
+---
 
-### **Integrações**
-- [ ] API PIX (Banco Central)
-- [ ] Serviços de email (SendGrid, etc.)
-- [ ] Serviços de SMS (Twilio, etc.)
+## 📋 **PRÓXIMAS TAREFAS (PRIORIDADE ALTA)**
+
+### **🔧 Melhorias no Sistema de Matrículas**
+- [ ] **Validações de CPF** - Implementar validação real de CPF
+- [ ] **Upload de fotos** - Configurar media files para fotos dos dependentes
+- [ ] **Validações de CEP** - Integrar com API de CEP para autocompletar endereço
+- [ ] **Termos legais** - Criar templates para termos de responsabilidade e uso de imagem
+
+### **💰 Sistema de Pagamentos (PRIORIDADE MÉDIA)**
+- [ ] **Integração com PIX** - Configurar gateway de pagamento
+- [ ] **Sistema de Boletos** - Geração automática de boletos
+- [ ] **Controle de mensalidades** - Sistema de cobrança recorrente
+- [ ] **Relatórios financeiros** - Dashboard para gestores
+
+### **📧 Notificações e Comunicação (PRIORIDADE MÉDIA)**
+- [ ] **Email automático** - Confirmação de matrícula e status
+- [ ] **SMS (futuro)** - Notificações importantes
+- [ ] **WhatsApp Business** - Comunicação direta com responsáveis
+
+---
+
+## 📋 **TAREFAS FUTURAS (PRIORIDADE BAIXA)**
+
+### **📱 Controle de Frequência**
+- [ ] **Sistema de QR Code** - Check-in/check-out dos alunos
+- [ ] **Notificações em tempo real** - Avisos para responsáveis
+- [ ] **Relatórios de presença** - Estatísticas de frequência
+
+### **📊 Relatórios e Analytics**
+- [ ] **Dashboard do Gestor** - Visão geral do Dojô
+- [ ] **Relatórios financeiros** - Análise de receita e despesas
+- [ ] **Estatísticas de alunos** - Crescimento e retenção
+
+### **🎉 Sistema de Eventos**
+- [ ] **Gestão de competições** - Inscrições e resultados
+- [ ] **Graduações** - Controle de faixas e progressão
+- [ ] **Eventos especiais** - Workshops e seminários
+
+---
+
+## 🚀 **PRÓXIMOS PASSOS RECOMENDADOS**
+
+### **1. Validações e Melhorias (SEMANA ATUAL)**
+- [ ] Implementar validação real de CPF
+- [ ] Configurar upload de fotos
+- [ ] Integrar validação de CEP
+- [ ] Testar fluxo completo de matrículas
+
+### **2. Sistema de Pagamentos (PRÓXIMA SEMANA)**
+- [ ] Configurar gateway PIX
+- [ ] Implementar sistema de boletos
+- [ ] Criar controle de mensalidades
+- [ ] Testar fluxo de pagamento
+
+### **3. Notificações (TERCEIRA SEMANA)**
+- [ ] Configurar emails automáticos
+- [ ] Implementar sistema de mensagens
+- [ ] Testar notificações
 
 ---
 
 ## 📅 **CRONOGRAMA ESTIMADO**
 
-### **Semana 1-2: Views e Validações**
-- [ ] Implementar views de matrícula
-- [ ] Sistema de validações
-- [ ] Testes básicos
-
-### **Semana 3-4: Sistema de Pagamentos**
-- [ ] Integração PIX
-- [ ] Sistema de boletos
-- [ ] Controle financeiro
-
-### **Semana 5-6: Notificações e UX**
-- [ ] Emails automáticos
-- [ ] Melhorias na interface
-- [ ] Testes de usuário
-
-### **Semana 7-8: Funcionalidades Avançadas**
-- [ ] Controle de frequência
-- [ ] Relatórios
-- [ ] Documentação
+- **Semana 1**: Validações e melhorias ✅ **EM ANDAMENTO**
+- **Semana 2**: Sistema de pagamentos
+- **Semana 3**: Notificações e comunicação
+- **Semana 4**: Controle de frequência
+- **Semana 5**: Relatórios e analytics
+- **Semana 6**: Sistema de eventos
 
 ---
 
-## 🚨 **PROBLEMAS IDENTIFICADOS**
+## 🎯 **MÉTRICAS DE SUCESSO**
 
-### **Urgente**
-- [x] ~~Views faltando para novas URLs~~
-- [x] ~~Campos de matrícula não implementados~~
-
-### **Para Resolver**
-- [ ] Validações específicas por tipo de matrícula
-- [ ] Sistema de pagamentos
-- [ ] Notificações automáticas
+- [ ] **Usabilidade**: Fluxo de matrícula em menos de 5 minutos
+- [ ] **Performance**: Página carrega em menos de 3 segundos
+- [ ] **Segurança**: 100% das validações funcionando
+- [ ] **Satisfação**: Teste com usuários reais
 
 ---
 
-## 📝 **NOTAS IMPORTANTES**
-
-- **Arquitetura**: Manter app `usuarios` único (decisão tomada)
-- **Banco**: Usar ForeignKey para choices (flexibilidade via admin)
-- **Frontend**: Manter simplicidade, focar na experiência do usuário
-- **Segurança**: Implementar validações robustas no backend
-
----
-
-**Status**: 🚧 Em Desenvolvimento  
-**Última Atualização**: {{ date.today().strftime('%d/%m/%Y') }}  
-**Próxima Reunião**: Implementar views de matrícula
+**Última atualização**: 17/08/2025 - Implementação das validações específicas por tipo de matrícula concluída ✅
 
