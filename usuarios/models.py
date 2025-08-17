@@ -211,7 +211,9 @@ class Dependente(models.Model):
         'TipoMatricula',
         on_delete=models.PROTECT,
         verbose_name='Tipo de Matrícula',
-        help_text='Projeto Social (gratuito) ou Modalidade Paga'
+        help_text='Projeto Social (gratuito) ou Modalidade Paga',
+        null=True,  # Temporariamente null para permitir migração
+        blank=True
     )
     
     modalidade = models.ForeignKey(
@@ -226,12 +228,14 @@ class Dependente(models.Model):
     status_matricula = models.ForeignKey(
         'StatusMatricula',
         on_delete=models.PROTECT,
-        default=1,  # ID do status 'pendente'
+        null=True,  # Temporariamente null para permitir migração
+        blank=True,
         verbose_name='Status da Matrícula'
     )
     
     data_matricula = models.DateField(
-        auto_now_add=True,
+        null=True,  # Temporariamente null para permitir migração
+        blank=True,
         verbose_name='Data da Matrícula'
     )
     
