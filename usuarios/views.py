@@ -26,8 +26,15 @@ def home(request):
 def registro_usuario(request):
     """Registro de novo usuário"""
     if request.method == 'POST':
+        print(f"DEBUG: POST recebido - {request.POST}")
         form = UsuarioRegistroForm(request.POST)
+        print(f"DEBUG: Formulário criado - {form}")
+        print(f"DEBUG: Formulário válido? {form.is_valid()}")
+        if not form.is_valid():
+            print(f"DEBUG: Erros do formulário: {form.errors}")
+        
         if form.is_valid():
+            print("DEBUG: Formulário válido, criando usuário...")
             usuario = form.save(commit=False)
             # Usar email como username temporariamente
             usuario.username = usuario.email
@@ -40,12 +47,15 @@ def registro_usuario(request):
             
             usuario.is_active = False  # Usuário inativo até verificar email
             usuario.save()
+            print(f"DEBUG: Usuário criado com ID: {usuario.id}")
             
             # Enviar email de verificação com senha temporária
             enviar_email_verificacao(request, usuario, senha_temp)
             
             messages.success(request, 'Cadastro realizado com sucesso! Verifique seu email para ativar sua conta.')
             return redirect('login')
+        else:
+            print("DEBUG: Formulário inválido, renderizando com erros...")
     else:
         form = UsuarioRegistroForm()
     

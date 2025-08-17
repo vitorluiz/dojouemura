@@ -6,7 +6,7 @@ from utils.validacoes import validar_cpf
 import re
 
 
-class UsuarioRegistroForm(UserCreationForm):
+class UsuarioRegistroForm(forms.ModelForm):
     """Formulário de registro de usuário"""
     
     first_name = forms.CharField(
