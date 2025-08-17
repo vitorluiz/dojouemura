@@ -29,12 +29,10 @@
                         </p>
                     </div>
 
-                    <!-- Formulário de Matrícula -->
-                    <form method="post" enctype="multipart/form-data" id="matriculaModalidadePagaForm">
+                    <!-- Busca por CPF Existente (FORMULÁRIO SEPARADO) -->
+                    <form method="post" id="buscaCpfForm" class="mb-4">
                         {% csrf_token %}
-                        
-                        <!-- Busca por CPF Existente -->
-                        <div class="row mb-4">
+                        <div class="row">
                             <div class="col-12">
                                 <h5 class="fw-bold text-primary border-bottom pb-2 mb-3">
                                     <i class="bi bi-search me-2"></i>
@@ -49,7 +47,7 @@
                             <div class="col-md-8 mb-3">
                                 <label for="cpf_busca" class="form-label fw-bold">CPF do Atleta</label>
                                 <input type="text" class="form-control" id="cpf_busca" name="cpf_busca" 
-                                       placeholder="000.000.000-00">
+                                       placeholder="000.000.000-00" value="{% if atleta_existente %}{{ atleta_existente.cpf }}{% endif %}">
                                 <small class="text-muted">Digite o CPF para buscar atleta existente</small>
                             </div>
                             
@@ -60,27 +58,32 @@
                                 </button>
                             </div>
                         </div>
-                        
-                        <!-- Mensagens de Status -->
-                        {% if success_message %}
-                        <div class="alert alert-success mb-4">
-                            <h6 class="alert-heading fw-bold">
-                                <i class="bi bi-check-circle me-2"></i>
-                                Atleta Encontrado!
-                            </h6>
-                            <p class="mb-0">{{ success_message }}</p>
-                        </div>
-                        {% endif %}
-                        
-                        {% if error_message %}
-                        <div class="alert alert-danger mb-4">
-                            <h6 class="alert-heading fw-bold">
-                                <i class="bi bi-exclamation-triangle me-2"></i>
-                                Erro na Busca
-                            </h6>
-                            <p class="mb-0">{{ error_message }}</p>
-                        </div>
-                        {% endif %}
+                    </form>
+                    
+                    <!-- Mensagens de Status -->
+                    {% if success_message %}
+                    <div class="alert alert-success mb-4">
+                        <h6 class="alert-heading fw-bold">
+                            <i class="bi bi-check-circle me-2"></i>
+                            Atleta Encontrado!
+                        </h6>
+                        <p class="mb-0">{{ success_message }}</p>
+                    </div>
+                    {% endif %}
+                    
+                    {% if error_message %}
+                    <div class="alert alert-danger mb-4">
+                        <h6 class="alert-heading fw-bold">
+                            <i class="bi bi-exclamation-triangle me-2"></i>
+                            Erro na Busca
+                        </h6>
+                        <p class="mb-0">{{ error_message }}</p>
+                    </div>
+                    {% endif %}
+                    
+                    <!-- Formulário de Matrícula -->
+                    <form method="post" enctype="multipart/form-data" id="matriculaModalidadePagaForm">
+                        {% csrf_token %}
                         
                         <!-- Dados do Atleta -->
                         <div class="row mb-4">
@@ -134,10 +137,16 @@
                             <div class="col-12 mb-3">
                                 <label for="foto" class="form-label fw-bold">
                                     <i class="bi bi-camera me-1"></i>
-                                    Foto *
+                                    Foto {% if not atleta_existente %}*{% endif %}
                                 </label>
-                                <input type="file" class="form-control" id="foto" name="foto" accept="image/*" required>
-                                <div class="form-text">Foto atualizada do atleta</div>
+                                <input type="file" class="form-control" id="foto" name="foto" accept="image/*" {% if not atleta_existente %}required{% endif %}>
+                                <div class="form-text">
+                                    {% if atleta_existente %}
+                                        Foto atualizada do atleta (opcional se já possui foto)
+                                    {% else %}
+                                        Foto atualizada do atleta
+                                    {% endif %}
+                                </div>
                             </div>
                         </div>
                         

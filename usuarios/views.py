@@ -432,11 +432,16 @@ def matricula_modalidade_paga(request):
         modalidade_id = request.POST.get('modalidade')
         
         # Verificar campos obrigatórios baseado no tipo de matrícula
-        required_fields = ['nome', 'data_nascimento', 'cpf', 'parentesco', 'foto', 'modalidade']
+        required_fields = ['nome', 'data_nascimento', 'cpf', 'parentesco', 'modalidade']
         
         # Para modalidade paga, escola, turma e turno são opcionais
         if not request.POST.get('escola') or not request.POST.get('turno'):
             logger.info("Modalidade paga: campos escolares são opcionais")
+        
+        # Foto só é obrigatória para novos atletas
+        if not atleta_existente and 'foto' not in request.FILES:
+            required_fields.append('foto')
+            logger.warning("Foto obrigatória para novo atleta")
         
         missing_fields = []
         for field in required_fields:
