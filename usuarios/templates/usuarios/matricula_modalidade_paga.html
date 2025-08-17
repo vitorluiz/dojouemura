@@ -29,52 +29,99 @@
                         </p>
                     </div>
 
-                    <form method="post" id="matriculaModalidadeForm">
+                    <!-- Formulário de Matrícula -->
+                    <form method="post" enctype="multipart/form-data" id="matriculaModalidadePagaForm">
                         {% csrf_token %}
                         
-                        <!-- Dados do Dependente -->
-                        <div class="card mb-4">
-                            <div class="card-header bg-primary text-white">
-                                <h5 class="mb-0">
+                        <!-- Busca por CPF Existente -->
+                        <div class="row mb-4">
+                            <div class="col-12">
+                                <h5 class="fw-bold text-primary border-bottom pb-2 mb-3">
+                                    <i class="bi bi-search me-2"></i>
+                                    Buscar Atleta Existente
+                                </h5>
+                                <div class="alert alert-info">
+                                    <strong>Dica:</strong> Se o atleta já está cadastrado no projeto social, 
+                                    busque pelo CPF para reutilizar os dados e escolher apenas a nova modalidade.
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-8 mb-3">
+                                <label for="cpf_busca" class="form-label fw-bold">CPF do Atleta</label>
+                                <input type="text" class="form-control" id="cpf_busca" name="cpf_busca" 
+                                       placeholder="000.000.000-00">
+                                <small class="text-muted">Digite o CPF para buscar atleta existente</small>
+                            </div>
+                            
+                            <div class="col-md-4 mb-3 d-flex align-items-end">
+                                <button type="submit" name="buscar_cpf" class="btn btn-info w-100">
+                                    <i class="bi bi-search me-2"></i>
+                                    Buscar Atleta
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <!-- Mensagens de Status -->
+                        {% if success_message %}
+                        <div class="alert alert-success mb-4">
+                            <h6 class="alert-heading fw-bold">
+                                <i class="bi bi-check-circle me-2"></i>
+                                Atleta Encontrado!
+                            </h6>
+                            <p class="mb-0">{{ success_message }}</p>
+                        </div>
+                        {% endif %}
+                        
+                        {% if error_message %}
+                        <div class="alert alert-danger mb-4">
+                            <h6 class="alert-heading fw-bold">
+                                <i class="bi bi-exclamation-triangle me-2"></i>
+                                Erro na Busca
+                            </h6>
+                            <p class="mb-0">{{ error_message }}</p>
+                        </div>
+                        {% endif %}
+                        
+                        <!-- Dados do Atleta -->
+                        <div class="row mb-4">
+                            <div class="col-12">
+                                <h5 class="fw-bold text-primary border-bottom pb-2 mb-3">
                                     <i class="bi bi-person-plus me-2"></i>
-                                    Dados do Dependente
+                                    Dados do Atleta
                                 </h5>
                             </div>
-                            <div class="card-body">
-                                <div class="row g-3">
-                                    <div class="col-12">
-                                        <label for="nome_completo" class="form-label fw-bold">
-                                            <i class="bi bi-person me-1"></i>
-                                            Nome Completo *
-                                        </label>
-                                        <input type="text" class="form-control" id="nome_completo" name="nome_completo" required>
-                                    </div>
-                                    
-                                    <div class="col-md-6">
-                                        <label for="data_nascimento" class="form-label fw-bold">
-                                            <i class="bi bi-calendar me-1"></i>
-                                            Data de Nascimento *
-                                        </label>
-                                        <input type="date" class="form-control" id="data_nascimento" name="data_nascimento" required>
-                                    </div>
-                                    
-                                    <div class="col-md-6">
-                                        <label for="cpf" class="form-label fw-bold">
-                                            <i class="bi bi-card-text me-1"></i>
-                                            CPF *
-                                        </label>
-                                        <input type="text" class="form-control" id="cpf" name="cpf" placeholder="000.000.000-00" required>
-                                    </div>
-                                    
-                                    <div class="col-12">
-                                        <label for="foto" class="form-label fw-bold">
-                                            <i class="bi bi-camera me-1"></i>
-                                            Foto *
-                                        </label>
-                                        <input type="file" class="form-control" id="foto" name="foto" accept="image/*" required>
-                                        <div class="form-text">Foto atualizada do dependente</div>
-                                    </div>
-                                </div>
+                            
+                            <div class="col-md-6">
+                                <label for="nome_completo" class="form-label fw-bold">
+                                    <i class="bi bi-person me-1"></i>
+                                    Nome Completo *
+                                </label>
+                                <input type="text" class="form-control" id="nome_completo" name="nome_completo" required>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <label for="data_nascimento" class="form-label fw-bold">
+                                    <i class="bi bi-calendar me-1"></i>
+                                    Data de Nascimento *
+                                </label>
+                                <input type="date" class="form-control" id="data_nascimento" name="data_nascimento" required>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <label for="cpf" class="form-label fw-bold">
+                                    <i class="bi bi-card-text me-1"></i>
+                                    CPF *
+                                </label>
+                                <input type="text" class="form-control" id="cpf" name="cpf" placeholder="000.000.000-00" required>
+                            </div>
+                            
+                            <div class="col-12">
+                                <label for="foto" class="form-label fw-bold">
+                                    <i class="bi bi-camera me-1"></i>
+                                    Foto *
+                                </label>
+                                <input type="file" class="form-control" id="foto" name="foto" accept="image/*" required>
+                                <div class="form-text">Foto atualizada do dependente</div>
                             </div>
                         </div>
 
@@ -293,7 +340,7 @@
 <!-- JavaScript para validações -->
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    const form = document.getElementById('matriculaModalidadeForm');
+    const form = document.getElementById('matriculaModalidadePagaForm');
     const dataNascimento = document.getElementById('data_nascimento');
     const cpf = document.getElementById('cpf');
     const cepInput = document.getElementById('cep');

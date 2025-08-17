@@ -373,76 +373,153 @@ def matricula_projeto_social(request):
 @login_required
 def matricula_modalidade_paga(request):
     if request.method == 'POST':
-        # Processar dados do formulário
-        nome_completo = request.POST.get('nome_completo')
-        data_nascimento = request.POST.get('data_nascimento')
-        cpf = request.POST.get('cpf')
-        escola = request.POST.get('escola')
-        turma = request.POST.get('turma')
-        turno = request.POST.get('turno')
-        modalidade = request.POST.get('modalidade')
-        plano = request.POST.get('plano')
+        logger.info("=== INÍCIO DO PROCESSAMENTO DE MATRÍCULA MODALIDADE PAGA ===")
         
-        # Campos de endereço
-        cep = request.POST.get('cep')
-        logradouro = request.POST.get('logradouro')
-        numero = request.POST.get('numero')
-        bairro = request.POST.get('bairro')
-        cidade = request.POST.get('cidade')
-        uf = request.POST.get('uf')
+        # Log de todos os dados recebidos
+        logger.info(f"POST data recebida: {request.POST}")
+        logger.info(f"FILES data recebida: {request.FILES}")
         
-        # Validações básicas
-        if not all([nome_completo, data_nascimento, cpf, escola, turma, turno, modalidade, plano, cep, logradouro, numero, bairro, cidade, uf]):
-            messages.error(request, 'Todos os campos obrigatórios devem ser preenchidos.')
-            return render(request, 'usuarios/matricula_modalidade_paga.html')
-        
-        # Validar idade mínima (6 anos)
-        try:
-            data_nasc = datetime.strptime(data_nascimento, '%Y-%m-%d').date()
-            idade = (date.today() - data_nasc).days // 365
-            if idade < 6:
-                messages.error(request, 'O dependente deve ter pelo menos 6 anos para se matricular.')
-                return render(request, 'usuarios/matricula_modalidade_paga.html')
-        except ValueError:
-            messages.error(request, 'Data de nascimento inválida.')
-            return render(request, 'usuarios/matricula_paga.html')
-        
-        try:
-            # Buscar os objetos necessários
-            tipo_matricula = TipoMatricula.objects.get(nome='Modalidade Paga')
-            status_matricula = StatusMatricula.objects.get(nome='Pendente')
-            modalidade_obj = Modalidade.objects.get(nome=modalidade.title())
+        # Verificar se é busca por CPF ou nova matrícula
+        if 'buscar_cpf' in request.POST:
+            # Busca por CPF existente
+            cpf_busca = request.POST.get('cpf_busca', '').replace('.', '').replace('-', '')
+            logger.info(f"Buscando atleta por CPF: {cpf_busca}")
             
-            # Criar o dependente
-            dependente = Dependente.objects.create(
-                usuario=request.user,
-                nome_completo=nome_completo,
-                data_nascimento=data_nasc,
-                cpf=cpf,
-                escola=escola,
-                turma=turma,
-                turno=turno,
-                cep=cep,
-                logradouro=logradouro,
-                numero=numero,
-                bairro=bairro,
-                cidade=cidade,
-                uf=uf,
-                tipo_matricula=tipo_matricula,
-                modalidade=modalidade_obj,
-                status_matricula=status_matricula,
-                data_matricula=date.today()
-            )
+            try:
+                atleta_existente = Dependente.objects.get(cpf=cpf_busca)
+                logger.info(f"Atleta encontrado: {atleta_existente.nome}")
+                
+                # Retornar dados do atleta para preenchimento automático
+                return render(request, 'usuarios/matricula_modalidade_paga.html', {
+                    'atleta_existente': atleta_existente,
+                    'modalidades': Modalidade.objects.all(),
+                    'success_message': f'Atleta encontrado: {atleta_existente.nome}. Preencha apenas a modalidade desejada.'
+                })
+                
+            except Dependente.DoesNotExist:
+                logger.warning(f"CPF não encontrado: {cpf_busca}")
+                return render(request, 'usuarios/matricula_modalidade_paga.html', {
+                    'modalidades': Modalidade.objects.all(),
+                    'error_message': 'CPF não encontrado. Preencha todos os dados para nova matrícula.'
+                })
+        
+        # Processar matrícula (nova ou existente)
+        cpf = request.POST.get('cpf', '').replace('.', '').replace('-', '')
+        modalidade_id = request.POST.get('modalidade')
+        
+        # Verificar campos obrigatórios baseado no tipo de matrícula
+        required_fields = ['nome', 'data_nascimento', 'cpf', 'parentesco', 'foto', 'modalidade']
+        
+        # Para modalidade paga, escola, turma e turno são opcionais
+        if not request.POST.get('escola') or not request.POST.get('turno'):
+            logger.info("Modalidade paga: campos escolares são opcionais")
+        
+        missing_fields = []
+        for field in required_fields:
+            if field == 'foto':
+                if field not in request.FILES:
+                    missing_fields.append(field)
+                    logger.warning(f"Campo obrigatório ausente: {field}")
+            else:
+                if not request.POST.get(field):
+                    missing_fields.append(field)
+                    logger.warning(f"Campo obrigatório ausente: {field}")
+        
+        if missing_fields:
+            logger.error(f"Campos obrigatórios ausentes: {missing_fields}")
+            return render(request, 'usuarios/matricula_modalidade_paga.html', {
+                'modalidades': Modalidade.objects.all(),
+                'error_message': f'Campos obrigatórios ausentes: {", ".join(missing_fields)}'
+            })
+        
+        logger.info("Todos os campos obrigatórios estão preenchidos")
+        
+        try:
+            # Verificar se atleta já existe
+            atleta_existente = None
+            try:
+                atleta_existente = Dependente.objects.get(cpf=cpf)
+                logger.info(f"Atleta existente encontrado: {atleta_existente.nome}")
+            except Dependente.DoesNotExist:
+                logger.info("Novo atleta sendo cadastrado")
             
-            messages.success(request, f'Matrícula de {nome_completo} realizada com sucesso! Status: Pendente de Pagamento.')
+            # Processar dados do formulário
+            nome_completo = request.POST.get('nome')
+            data_nascimento = request.POST.get('data_nascimento')
+            parentesco = request.POST.get('parentesco')
+            foto = request.FILES.get('foto')
+            escolaridade = request.POST.get('escolaridade', '')
+            escola = request.POST.get('escola', '')
+            turno = request.POST.get('turno', '')
+            cep = request.POST.get('cep')
+            logradouro = request.POST.get('logradouro')
+            numero = request.POST.get('numero')
+            bairro = request.POST.get('bairro')
+            cidade = request.POST.get('cidade')
+            uf = request.POST.get('uf')
+            condicoes_medicas = request.POST.get('condicoes_medicas', '')
+            
+            logger.info(f"Dados processados - Nome: {nome_completo}, Modalidade: {modalidade_id}")
+            
+            # Validações
+            if not request.user.is_authenticated:
+                logger.error("Usuário não autenticado")
+                return render(request, 'usuarios/matricula_modalidade_paga.html', {
+                    'modalidades': Modalidade.objects.all(),
+                    'error_message': 'Usuário não autenticado'
+                })
+            
+            if atleta_existente:
+                # Atualizar atleta existente com nova modalidade
+                atleta_existente.modalidade = Modalidade.objects.get(id=modalidade_id)
+                atleta_existente.tipo_matricula = TipoMatricula.objects.get(nome='Modalidade Paga')
+                atleta_existente.status_matricula = StatusMatricula.objects.get(nome='Pendente')
+                atleta_existente.data_matricula = date.today()
+                atleta_existente.save()
+                
+                logger.info(f"Atleta existente atualizado com nova modalidade: {atleta_existente.id}")
+                
+            else:
+                # Criar novo atleta
+                dependente = Dependente.objects.create(
+                    usuario=request.user,
+                    nome=nome_completo,
+                    data_nascimento=data_nascimento,
+                    cpf=cpf,
+                    parentesco=parentesco,
+                    foto=foto,
+                    escolaridade=escolaridade,
+                    escola=escola,
+                    turno=turno,
+                    cep=cep,
+                    logradouro=logradouro,
+                    numero=numero,
+                    bairro=bairro,
+                    cidade=cidade,
+                    uf=uf,
+                    condicoes_medicas=condicoes_medicas,
+                    tipo_matricula=TipoMatricula.objects.get(nome='Modalidade Paga'),
+                    modalidade=Modalidade.objects.get(id=modalidade_id),
+                    status_matricula=StatusMatricula.objects.get(nome='Pendente'),
+                    data_matricula=date.today()
+                )
+                
+                logger.info(f"Novo atleta criado: {dependente.id}")
+            
+            # Redirecionar para dashboard
             return redirect('dashboard')
             
-        except (TipoMatricula.DoesNotExist, StatusMatricula.DoesNotExist, Modalidade.DoesNotExist):
-            messages.error(request, 'Erro ao processar a matrícula. Tente novamente.')
         except Exception as e:
-            messages.error(request, f'Erro inesperado: {str(e)}')
+            logger.error(f"Erro ao processar matrícula: {str(e)}")
+            return render(request, 'usuarios/matricula_modalidade_paga.html', {
+                'modalidades': Modalidade.objects.all(),
+                'error_message': f'Erro ao processar matrícula: {str(e)}'
+            })
     
-    return render(request, 'usuarios/matricula_modalidade_paga.html')
+    logger.info("Renderizando formulário de matrícula modalidade paga")
+    return render(request, 'usuarios/matricula_modalidade_paga.html', {
+        'modalidades': Modalidade.objects.all()
+    })
 
 
 def dashboard(request):
