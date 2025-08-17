@@ -91,6 +91,7 @@
                                         <th><i class="bi bi-person me-1"></i>Nome</th>
                                         <th><i class="bi bi-calendar me-1"></i>Idade</th>
                                         <th><i class="bi bi-heart me-1"></i>Parentesco</th>
+                                        <th><i class="bi bi-card-checklist me-1"></i>Matrícula</th>
                                         <th><i class="bi bi-mortarboard me-1"></i>Escola</th>
                                         <th><i class="bi bi-geo-alt me-1"></i>Cidade</th>
                                         <th><i class="bi bi-gear me-1"></i>Ações</th>
@@ -121,6 +122,25 @@
                                                 <span class="badge bg-info">{{ dependente.idade }} anos</span>
                                             </td>
                                             <td>{{ dependente.get_parentesco_display }}</td>
+                                            <td>
+                                                <div class="mb-1">
+                                                    <span class="badge bg-primary">
+                                                        {{ dependente.tipo_matricula.nome }}
+                                                    </span>
+                                                </div>
+                                                {% if dependente.modalidade %}
+                                                    <div class="mb-1">
+                                                        <span class="badge bg-info">
+                                                            {{ dependente.modalidade.nome }}
+                                                        </span>
+                                                    </div>
+                                                {% endif %}
+                                                <div>
+                                                    <span class="badge" style="background-color: {{ dependente.status_matricula.cor }}">
+                                                        {{ dependente.status_matricula.nome }}
+                                                    </span>
+                                                </div>
+                                            </td>
                                             <td>
                                                 <div>{{ dependente.escola }}</div>
                                                 <small class="text-muted">{{ dependente.get_turno_display }}</small>
