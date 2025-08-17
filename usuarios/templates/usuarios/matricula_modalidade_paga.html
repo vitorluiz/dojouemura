@@ -91,243 +91,238 @@
                                 </h5>
                             </div>
                             
-                            <div class="col-md-6">
-                                <label for="nome_completo" class="form-label fw-bold">
+                            <div class="col-md-6 mb-3">
+                                <label for="nome" class="form-label fw-bold">
                                     <i class="bi bi-person me-1"></i>
                                     Nome Completo *
                                 </label>
-                                <input type="text" class="form-control" id="nome_completo" name="nome_completo" required>
+                                <input type="text" class="form-control" id="nome" name="nome" 
+                                       value="{% if atleta_existente %}{{ atleta_existente.nome }}{% endif %}" required>
                             </div>
                             
-                            <div class="col-md-6">
+                            <div class="col-md-6 mb-3">
                                 <label for="data_nascimento" class="form-label fw-bold">
                                     <i class="bi bi-calendar me-1"></i>
                                     Data de Nascimento *
                                 </label>
-                                <input type="date" class="form-control" id="data_nascimento" name="data_nascimento" required>
+                                <input type="date" class="form-control" id="data_nascimento" name="data_nascimento" 
+                                       value="{% if atleta_existente %}{{ atleta_existente.data_nascimento|date:'Y-m-d' }}{% endif %}" required>
                             </div>
                             
-                            <div class="col-md-6">
+                            <div class="col-md-6 mb-3">
                                 <label for="cpf" class="form-label fw-bold">
                                     <i class="bi bi-card-text me-1"></i>
                                     CPF *
                                 </label>
-                                <input type="text" class="form-control" id="cpf" name="cpf" placeholder="000.000.000-00" required>
+                                <input type="text" class="form-control" id="cpf" name="cpf" 
+                                       value="{% if atleta_existente %}{{ atleta_existente.cpf }}{% endif %}" 
+                                       placeholder="000.000.000-00" required>
                             </div>
                             
-                            <div class="col-12">
+                            <div class="col-md-6 mb-3">
+                                <label for="parentesco" class="form-label fw-bold">Parentesco</label>
+                                <select class="form-control" id="parentesco" name="parentesco" required>
+                                    <option value="">Selecione...</option>
+                                    <option value="filho" {% if atleta_existente and atleta_existente.parentesco == 'filho' %}selected{% endif %}>Filho(a)</option>
+                                    <option value="enteado" {% if atleta_existente and atleta_existente.parentesco == 'enteado' %}selected{% endif %}>Enteado(a)</option>
+                                    <option value="neto" {% if atleta_existente and atleta_existente.parentesco == 'neto' %}selected{% endif %}>Neto(a)</option>
+                                    <option value="sobrinho" {% if atleta_existente and atleta_existente.parentesco == 'sobrinho' %}selected{% endif %}>Sobrinho(a)</option>
+                                    <option value="outro" {% if atleta_existente and atleta_existente.parentesco == 'outro' %}selected{% endif %}>Outro</option>
+                                </select>
+                            </div>
+                            
+                            <div class="col-12 mb-3">
                                 <label for="foto" class="form-label fw-bold">
                                     <i class="bi bi-camera me-1"></i>
                                     Foto *
                                 </label>
                                 <input type="file" class="form-control" id="foto" name="foto" accept="image/*" required>
-                                <div class="form-text">Foto atualizada do dependente</div>
+                                <div class="form-text">Foto atualizada do atleta</div>
                             </div>
                         </div>
-
+                        
+                        <!-- Dados Escolares (Opcionais para Modalidade Paga) -->
+                        <div class="row mb-4">
+                            <div class="col-12">
+                                <h5 class="fw-bold text-primary border-bottom pb-2 mb-3">
+                                    <i class="bi bi-mortarboard me-2"></i>
+                                    Dados Escolares (Opcionais)
+                                </h5>
+                                <div class="alert alert-info">
+                                    <strong>Nota:</strong> Para matrícula em modalidade paga, os dados escolares são opcionais.
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6 mb-3">
+                                <label for="escolaridade" class="form-label fw-bold">Escolaridade</label>
+                                <select class="form-control" id="escolaridade" name="escolaridade">
+                                    <option value="">Selecione...</option>
+                                    <option value="fundamental_1" {% if atleta_existente and atleta_existente.escolaridade == 'fundamental_1' %}selected{% endif %}>Ensino Fundamental I (1º ao 5º ano)</option>
+                                    <option value="fundamental_2" {% if atleta_existente and atleta_existente.escolaridade == 'fundamental_2' %}selected{% endif %}>Ensino Fundamental II (6º ao 9º ano)</option>
+                                    <option value="medio" {% if atleta_existente and atleta_existente.escolaridade == 'medio' %}selected{% endif %}>Ensino Médio</option>
+                                    <option value="tecnico" {% if atleta_existente and atleta_existente.escolaridade == 'tecnico' %}selected{% endif %}>Ensino Técnico</option>
+                                </select>
+                            </div>
+                            
+                            <div class="col-md-6 mb-3">
+                                <label for="escola" class="form-label fw-bold">Nome da Escola</label>
+                                <input type="text" class="form-control" id="escola" name="escola" 
+                                       value="{% if atleta_existente %}{{ atleta_existente.escola }}{% endif %}" 
+                                       placeholder="Nome da escola (opcional)">
+                            </div>
+                            
+                            <div class="col-md-6 mb-3">
+                                <label for="turno" class="form-label fw-bold">Turno</label>
+                                <select class="form-control" id="turno" name="turno">
+                                    <option value="">Selecione...</option>
+                                    <option value="matutino" {% if atleta_existente and atleta_existente.turno == 'matutino' %}selected{% endif %}>Matutino</option>
+                                    <option value="vespertino" {% if atleta_existente and atleta_existente.turno == 'vespertino' %}selected{% endif %}>Vespertino</option>
+                                    <option value="noturno" {% if atleta_existente and atleta_existente.turno == 'noturno' %}selected{% endif %}>Noturno</option>
+                                    <option value="integral" {% if atleta_existente and atleta_existente.turno == 'integral' %}selected{% endif %}>Integral</option>
+                                </select>
+                            </div>
+                        </div>
+                        
                         <!-- Endereço -->
-                        <div class="card mb-4">
-                            <div class="card-header bg-info text-white">
-                                <h5 class="mb-0">
+                        <div class="row mb-4">
+                            <div class="col-12">
+                                <h5 class="fw-bold text-primary border-bottom pb-2 mb-3">
                                     <i class="bi bi-geo-alt me-2"></i>
                                     Endereço
                                 </h5>
                             </div>
-                            <div class="card-body">
-                                <div class="row g-3">
-                                    <div class="col-md-4">
-                                        <label for="cep" class="form-label fw-bold">
-                                            <i class="bi bi-pin-map me-1"></i>
-                                            CEP *
-                                        </label>
-                                        <input type="text" class="form-control" id="cep" name="cep" placeholder="00000-000" required>
-                                        <div class="form-text">Digite o CEP para autocompletar o endereço</div>
-                                    </div>
-                                    
-                                    <div class="col-md-8">
-                                        <label for="logradouro" class="form-label fw-bold">
-                                            <i class="bi bi-signpost me-1"></i>
-                                            Logradouro *
-                                        </label>
-                                        <input type="text" class="form-control" id="logradouro" name="logradouro" required>
-                                    </div>
-                                    
-                                    <div class="col-md-2">
-                                        <label for="numero" class="form-label fw-bold">
-                                            <i class="bi bi-hash me-1"></i>
-                                            Número *
-                                        </label>
-                                        <input type="text" class="form-control" id="numero" name="numero" required>
-                                    </div>
-                                    
-                                    <div class="col-md-5">
-                                        <label for="bairro" class="form-label fw-bold">
-                                            <i class="bi bi-building me-1"></i>
-                                            Bairro *
-                                        </label>
-                                        <input type="text" class="form-control" id="bairro" name="bairro" required>
-                                    </div>
-                                    
-                                    <div class="col-md-3">
-                                        <label for="cidade" class="form-label fw-bold">
-                                            <i class="bi bi-geo-alt me-1"></i>
-                                            Cidade *
-                                        </label>
-                                        <input type="text" class="form-control" id="cidade" name="cidade" required>
-                                    </div>
-                                    
-                                    <div class="col-md-2">
-                                        <label for="uf" class="form-label fw-bold">
-                                            <i class="bi bi-geo-alt me-1"></i>
-                                            UF *
-                                        </label>
-                                        <input type="text" class="form-control" id="uf" name="uf" maxlength="2" required>
-                                    </div>
-                                </div>
+                            
+                            <div class="col-md-4 mb-3">
+                                <label for="cep" class="form-label fw-bold">CEP</label>
+                                <input type="text" class="form-control" id="cep" name="cep" 
+                                       value="{% if atleta_existente %}{{ atleta_existente.cep }}{% endif %}" 
+                                       placeholder="00000-000" required>
+                            </div>
+                            
+                            <div class="col-md-8 mb-3">
+                                <label for="logradouro" class="form-label fw-bold">Logradouro</label>
+                                <input type="text" class="form-control" id="logradouro" name="logradouro" 
+                                       value="{% if atleta_existente %}{{ atleta_existente.logradouro }}{% endif %}" required>
+                            </div>
+                            
+                            <div class="col-md-4 mb-3">
+                                <label for="numero" class="form-label fw-bold">Número</label>
+                                <input type="text" class="form-control" id="numero" name="numero" 
+                                       value="{% if atleta_existente %}{{ atleta_existente.numero }}{% endif %}" required>
+                            </div>
+                            
+                            <div class="col-md-8 mb-3">
+                                <label for="complemento" class="form-label fw-bold">Complemento</label>
+                                <input type="text" class="form-control" id="complemento" name="complemento" 
+                                       value="{% if atleta_existente %}{{ atleta_existente.complemento }}{% endif %}" 
+                                       placeholder="Apartamento, bloco, etc. (opcional)">
+                            </div>
+                            
+                            <div class="col-md-4 mb-3">
+                                <label for="bairro" class="form-label fw-bold">Bairro</label>
+                                <input type="text" class="form-control" id="bairro" name="bairro" 
+                                       value="{% if atleta_existente %}{{ atleta_existente.bairro }}{% endif %}" required>
+                            </div>
+                            
+                            <div class="col-md-4 mb-3">
+                                <label for="cidade" class="form-label fw-bold">Cidade</label>
+                                <input type="text" class="form-control" id="cidade" name="cidade" 
+                                       value="{% if atleta_existente %}{{ atleta_existente.cidade }}{% endif %}" required>
+                            </div>
+                            
+                            <div class="col-md-4 mb-3">
+                                <label for="uf" class="form-label fw-bold">UF</label>
+                                <input type="text" class="form-control" id="uf" name="uf" maxlength="2" 
+                                       value="{% if atleta_existente %}{{ atleta_existente.uf }}{% endif %}" 
+                                       placeholder="MT" required>
                             </div>
                         </div>
-
-                        <!-- Dados Escolares -->
-                        <div class="card mb-4">
-                            <div class="card-header bg-success text-white">
-                                <h5 class="mb-0">
-                                    <i class="bi bi-mortarboard me-2"></i>
-                                    Dados Escolares
+                        
+                        <!-- Informações de Saúde -->
+                        <div class="row mb-4">
+                            <div class="col-12">
+                                <h5 class="fw-bold text-primary border-bottom pb-2 mb-3">
+                                    <i class="bi bi-heart-pulse me-2"></i>
+                                    Informações de Saúde
                                 </h5>
                             </div>
-                            <div class="card-body">
-                                <div class="row g-3">
-                                    <div class="col-md-6">
-                                        <label for="escola" class="form-label fw-bold">
-                                            <i class="bi bi-building me-1"></i>
-                                            Escola *
-                                        </label>
-                                        <input type="text" class="form-control" id="escola" name="escola" required>
-                                    </div>
-                                    
-                                    <div class="col-md-3">
-                                        <label for="turma" class="form-label fw-bold">
-                                            <i class="bi bi-people me-1"></i>
-                                            Turma *
-                                        </label>
-                                        <input type="text" class="form-control" id="turma" name="turma" required>
-                                    </div>
-                                    
-                                    <div class="col-md-3">
-                                        <label for="turno" class="form-label fw-bold">
-                                            <i class="bi bi-clock me-1"></i>
-                                            Turno *
-                                        </label>
-                                        <select class="form-select" id="turno" name="turno" required>
-                                            <option value="">Selecione</option>
-                                            <option value="manha">Manhã</option>
-                                            <option value="tarde">Tarde</option>
-                                            <option value="noite">Noite</option>
-                                        </select>
-                                    </div>
-                                </div>
+                            
+                            <div class="col-12 mb-3">
+                                <label for="condicoes_medicas" class="form-label fw-bold">Condições Médicas</label>
+                                <textarea class="form-control" id="condicoes_medicas" name="condicoes_medicas" rows="4" 
+                                          placeholder="Descreva qualquer condição médica relevante para a prática de esportes (opcional)">{% if atleta_existente %}{{ atleta_existente.condicoes_medicas }}{% endif %}</textarea>
                             </div>
                         </div>
-
+                        
                         <!-- Modalidade e Pagamento -->
-                        <div class="card mb-4">
-                            <div class="card-header bg-warning text-dark">
-                                <h5 class="mb-0">
+                        <div class="row mb-4">
+                            <div class="col-12">
+                                <h5 class="fw-bold text-primary border-bottom pb-2 mb-3">
                                     <i class="bi bi-credit-card me-2"></i>
                                     Modalidade e Pagamento
                                 </h5>
                             </div>
-                            <div class="card-body">
-                                <div class="row g-3">
-                                    <div class="col-md-6">
-                                        <label for="modalidade" class="form-label fw-bold">
-                                            <i class="bi bi-award me-1"></i>
-                                            Modalidade *
-                                        </label>
-                                        <select class="form-select" id="modalidade" name="modalidade" required>
-                                            <option value="">Selecione a modalidade</option>
-                                            <option value="judo">Judô</option>
-                                            <option value="muaythai">Muay Thai</option>
-                                            <option value="boxe">Boxe</option>
-                                            <option value="capoeira">Capoeira</option>
-                                        </select>
-                                    </div>
-                                    
-                                    <div class="col-md-6">
-                                        <label for="plano" class="form-label fw-bold">
-                                            <i class="bi bi-calendar-month me-1"></i>
-                                            Plano *
-                                        </label>
-                                        <select class="form-select" id="plano" name="plano" required>
-                                            <option value="">Selecione o plano</option>
-                                            <option value="mensal">Mensal - R$ 80,00</option>
-                                            <option value="trimestral">Trimestral - R$ 220,00</option>
-                                            <option value="semestral">Semestral - R$ 400,00</option>
-                                            <option value="anual">Anual - R$ 720,00</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                
-                                <!-- Informações de pagamento -->
-                                <div class="alert alert-success mt-3">
-                                    <h6 class="alert-heading fw-bold">
-                                        <i class="bi bi-info-circle me-2"></i>
-                                        Informações de Pagamento
-                                    </h6>
-                                    <ul class="mb-0 small">
-                                        <li>Taxa de matrícula: R$ 50,00 (única vez)</li>
-                                        <li>Mensalidade conforme plano escolhido</li>
-                                        <li>Pagamento via PIX ou boleto bancário</li>
-                                        <li>Material de treino incluído no primeiro mês</li>
-                                    </ul>
-                                </div>
+                            
+                            <div class="col-md-6 mb-3">
+                                <label for="modalidade" class="form-label fw-bold">Modalidade *</label>
+                                <select class="form-control" id="modalidade" name="modalidade" required>
+                                    <option value="">Selecione a modalidade...</option>
+                                    {% for modalidade in modalidades %}
+                                    <option value="{{ modalidade.id }}">{{ modalidade.nome }}</option>
+                                    {% endfor %}
+                                </select>
                             </div>
                         </div>
-
+                        
                         <!-- Termos e Condições -->
-                        <div class="card mb-4">
-                            <div class="card-header bg-secondary text-white">
-                                <h5 class="mb-0">
-                                    <i class="bi bi-file-text me-2"></i>
+                        <div class="row mb-4">
+                            <div class="col-12">
+                                <h5 class="fw-bold text-primary border-bottom pb-2 mb-3">
+                                    <i class="bi bi-file-check me-2"></i>
                                     Termos e Condições
                                 </h5>
                             </div>
-                            <div class="card-body">
-                                <div class="form-check mb-3">
+                            
+                            <div class="col-12 mb-3">
+                                <div class="form-check">
                                     <input class="form-check-input" type="checkbox" id="termo_responsabilidade" name="termo_responsabilidade" required>
                                     <label class="form-check-label" for="termo_responsabilidade">
-                                        <strong>Termo de Responsabilidade:</strong> Declaro que sou responsável legal pelo dependente e assumo total responsabilidade por sua conduta e segurança durante as aulas.
+                                        <strong>Declaro que sou responsável pelo atleta</strong> e autorizo sua participação nas atividades da modalidade escolhida.
                                     </label>
                                 </div>
-                                
-                                <div class="form-check mb-3">
-                                    <input class="form-check-input" type="checkbox" id="direito_imagem" name="direito_imagem">
-                                    <label class="form-check-label" for="direito_imagem">
-                                        <strong>Direito de Uso de Imagem:</strong> Autorizo o uso de imagens do dependente para fins promocionais e educativos do Dojô Uemura.
-                                    </label>
-                                </div>
-                                
-                                <div class="form-check mb-3">
-                                    <input class="form-check-input" type="checkbox" id="termo_saude" name="termo_saude" required>
-                                    <label class="form-check-label" for="termo_saude">
-                                        <strong>Termo de Saúde:</strong> Declaro que o dependente está em condições físicas adequadas para praticar a modalidade escolhida.
-                                    </label>
-                                </div>
-                                
+                            </div>
+                            
+                            <div class="col-12 mb-3">
                                 <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" id="aceite_regras" name="aceite_regras" required>
-                                    <label class="form-check-label" for="aceite_regras">
-                                        <strong>Regras do Dojô:</strong> Li e aceito as regras e regulamentos internos do Dojô Uemura.
+                                    <input class="form-check-input" type="checkbox" id="termo_uso_imagem" name="termo_uso_imagem" required>
+                                    <label class="form-check-label" for="termo_uso_imagem">
+                                        <strong>Autorizo o uso de imagem</strong> do atleta para fins promocionais e educacionais.
                                     </label>
                                 </div>
                             </div>
                         </div>
-
-                        <!-- Botão de envio -->
-                        <div class="d-grid">
-                            <button type="submit" class="btn btn-primary btn-lg">
+                        
+                        <!-- Informações de Pagamento -->
+                        <div class="alert alert-warning mb-4">
+                            <h6 class="alert-heading fw-bold">
+                                <i class="bi bi-exclamation-triangle me-2"></i>
+                                Pagamento da Mensalidade
+                            </h6>
+                            <p class="mb-0">
+                                <strong>Valor:</strong> Será informado conforme a modalidade escolhida<br>
+                                <strong>Forma de Pagamento:</strong> Será informada após aprovação da matrícula
+                            </p>
+                        </div>
+                        
+                        <!-- Botões -->
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <a href="{% url 'home' %}" class="btn btn-secondary me-md-2">
+                                <i class="bi bi-arrow-left me-2"></i>
+                                Voltar
+                            </a>
+                            <button type="submit" class="btn btn-primary">
                                 <i class="bi bi-check-circle me-2"></i>
-                                Finalizar Matrícula
+                                Solicitar Matrícula
                             </button>
                         </div>
                     </form>
