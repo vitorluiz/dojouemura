@@ -317,35 +317,46 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Validação de idade (6-18 anos para projeto social)
     dataNascimentoInput.addEventListener('change', function() {
-        if (!this.value) return; // Não validar se campo estiver vazio
+        // Limpar classes de validação
+        this.classList.remove('is-valid', 'is-invalid');
         
-        // Verificar se a data é válida (formato completo)
-        const dataParts = this.value.split('-');
-        if (dataParts.length !== 3 || dataParts[2] === 'aaaa') {
-            return; // Não validar datas incompletas
+        // Não validar se campo estiver vazio
+        if (!this.value) {
+            return;
         }
         
-        const hoje = new Date();
-        const nascimento = new Date(this.value);
+        // Verificar se a data está no formato correto (YYYY-MM-DD)
+        const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
+        if (!dateRegex.test(this.value)) {
+            return; // Formato inválido, não validar
+        }
         
         // Verificar se a data é válida
+        const nascimento = new Date(this.value);
         if (isNaN(nascimento.getTime())) {
             return; // Data inválida, não validar
         }
         
-        const idade = hoje.getFullYear() - nascimento.getFullYear();
+        // Verificar se a data não é no futuro
+        const hoje = new Date();
+        if (nascimento > hoje) {
+            return; // Data futura, não validar
+        }
+        
+        // Calcular idade
+        let idade = hoje.getFullYear() - nascimento.getFullYear();
         const mes = hoje.getMonth() - nascimento.getMonth();
         
         if (mes < 0 || (mes === 0 && hoje.getDate() < nascimento.getDate())) {
             idade--;
         }
         
+        // Validar faixa etária
         if (idade < 6 || idade > 18) {
+            this.classList.add('is-invalid');
             alert('Para o projeto social, o dependente deve ter entre 6 e 18 anos.');
             this.value = '';
-            this.classList.add('is-invalid');
         } else {
-            this.classList.remove('is-invalid');
             this.classList.add('is-valid');
         }
     });
