@@ -49,6 +49,7 @@ class Usuario(AbstractUser):
         )]
     )
 
+
     tipo_conta = models.CharField(
         max_length=20,
         choices=TipoConta.choices,
@@ -211,9 +212,7 @@ class Dependente(models.Model):
         'TipoMatricula',
         on_delete=models.PROTECT,
         verbose_name='Tipo de Matrícula',
-        help_text='Projeto Social (gratuito) ou Modalidade Paga',
-        null=True,  # Temporariamente null para permitir migração
-        blank=True
+        help_text='Projeto Social (gratuito) ou Modalidade Paga'
     )
     
     modalidade = models.ForeignKey(
@@ -228,14 +227,11 @@ class Dependente(models.Model):
     status_matricula = models.ForeignKey(
         'StatusMatricula',
         on_delete=models.PROTECT,
-        null=True,  # Temporariamente null para permitir migração
-        blank=True,
         verbose_name='Status da Matrícula'
     )
     
     data_matricula = models.DateField(
-        null=True,  # Temporariamente null para permitir migração
-        blank=True,
+        default=date.today,
         verbose_name='Data da Matrícula'
     )
     
