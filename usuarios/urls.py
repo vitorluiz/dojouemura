@@ -7,6 +7,7 @@ urlpatterns = [
     path('login/', views.login_usuario, name='login'),
     path('logout/', views.logout_usuario, name='logout'),
     path('verificar-email/<uidb64>/<token>/', views.verificar_email, name='verificar_email'),
+    path('dashboard/', views.dashboard, name='dashboard'),
     
     # Gestão de Dependentes
     path('cadastrar-dependente/', views.cadastrar_dependente, name='cadastrar_dependente'),

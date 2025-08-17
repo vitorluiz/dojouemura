@@ -159,8 +159,11 @@ def verificar_email(request, uidb64, token):
         usuario.email_verificado = True
         usuario.save()
         
-        messages.success(request, 'Email verificado com sucesso! Agora você pode fazer login.')
-        return redirect('login')
+        # Fazer login automático do usuário
+        login(request, usuario)
+        
+        messages.success(request, 'Email verificado com sucesso! Bem-vindo ao seu portal.')
+        return redirect('dashboard')
     else:
         messages.error(request, 'Link de verificação inválido ou expirado.')
         return redirect('login')

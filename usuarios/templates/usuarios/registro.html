@@ -116,9 +116,13 @@
                         </div>
                         
                         <div class="d-grid mb-3">
-                            <button type="submit" class="btn btn-primary btn-lg">
+                            <button type="submit" class="btn btn-primary btn-lg" id="btn-criar-conta">
                                 <i class="bi bi-check-circle me-2"></i>
-                                Criar Conta
+                                <span id="btn-text">Criar Conta</span>
+                                <span id="btn-loading" class="d-none">
+                                    <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                                    Criando conta...
+                                </span>
                             </button>
                         </div>
                     </form>
@@ -186,5 +190,29 @@
         </div>
     </div>
 </div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.querySelector('form');
+    const btnCriarConta = document.getElementById('btn-criar-conta');
+    const btnText = document.getElementById('btn-text');
+    const btnLoading = document.getElementById('btn-loading');
+    
+    form.addEventListener('submit', function(e) {
+        // Mostrar estado de carregamento
+        btnCriarConta.disabled = true;
+        btnText.classList.add('d-none');
+        btnLoading.classList.remove('d-none');
+        
+        // Adicionar classe de carregamento ao botão
+        btnCriarConta.classList.add('btn-loading');
+        
+        // O formulário será enviado normalmente
+        // O Django processará e redirecionará
+    });
+});
+</script>
 {% endblock %}
 
