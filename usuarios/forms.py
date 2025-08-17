@@ -57,25 +57,9 @@ class UsuarioRegistroForm(UserCreationForm):
         })
     )
     
-    password1 = forms.CharField(
-        label='Senha',
-        widget=forms.PasswordInput(attrs={
-            'class': 'form-control',
-            'placeholder': 'Senha'
-        })
-    )
-    
-    password2 = forms.CharField(
-        label='Confirmar Senha',
-        widget=forms.PasswordInput(attrs={
-            'class': 'form-control',
-            'placeholder': 'Confirmar senha'
-        })
-    )
-    
     class Meta:
         model = Usuario
-        fields = ('first_name', 'last_name', 'email', 'data_nascimento', 'cpf', 'telefone', 'password1', 'password2')
+        fields = ('first_name', 'last_name', 'email', 'data_nascimento', 'cpf', 'telefone')
     
     def clean_cpf(self):
         cpf = self.cleaned_data.get('cpf')

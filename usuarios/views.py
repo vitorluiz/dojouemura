@@ -31,11 +31,18 @@ def registro_usuario(request):
             usuario = form.save(commit=False)
             # Usar email como username temporariamente
             usuario.username = usuario.email
+            
+            # Gerar senha temporária aleatória
+            import secrets
+            import string
+            senha_temp = ''.join(secrets.choice(string.ascii_letters + string.digits) for _ in range(12))
+            usuario.set_password(senha_temp)
+            
             usuario.is_active = False  # Usuário inativo até verificar email
             usuario.save()
             
-            # Enviar email de verificação
-            enviar_email_verificacao(request, usuario)
+            # Enviar email de verificação com senha temporária
+            enviar_email_verificacao(request, usuario, senha_temp)
             
             messages.success(request, 'Cadastro realizado com sucesso! Verifique seu email para ativar sua conta.')
             return redirect('login')
@@ -75,7 +82,7 @@ def logout_usuario(request):
     return redirect('login')
 
 
-def enviar_email_verificacao(request, usuario):
+def enviar_email_verificacao(request, usuario, senha_temporaria):
     """Envia email de verificação para o usuário"""
     token = default_token_generator.make_token(usuario)
     uid = urlsafe_base64_encode(force_bytes(usuario.pk))
@@ -91,6 +98,8 @@ def enviar_email_verificacao(request, usuario):
     
     Para ativar sua conta, clique no link abaixo:
     {verification_url}
+    
+    Sua senha temporária para login é: {senha_temporaria}
     
     Se você não se cadastrou em nosso site, ignore este email.
     
