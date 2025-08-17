@@ -25,8 +25,9 @@ class Usuario(AbstractUser):
 
     email_verificado = models.BooleanField(
         default=False,
-        verbose_name='Email Verificado'
-        )
+        verbose_name='Email Verificado',
+        help_text='Indica se o email foi verificado pelo usuário'
+    )
 
     cpf = models.CharField(
         max_length=14,
@@ -45,6 +46,12 @@ class Usuario(AbstractUser):
             regex=r'^\(\d{2}\)\s\d{4,5}-\d{4}$',
             message='Telefone deve estar no formato (XX) XXXXX-XXXX'
         )]
+    )
+
+    email_verificado = models.BooleanField(
+        default=False,
+        verbose_name='Email Verificado',
+        help_text='Indica se o email foi verificado pelo usuário'
     )
 
     tipo_conta = models.CharField(
