@@ -1,0 +1,308 @@
+{% extends 'usuarios/base.html' %}
+
+{% block title %}Matrícula - Projeto Social - Dojô Uemura{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-10 col-lg-8">
+            <div class="card border-0 shadow">
+                <div class="card-header bg-primary text-white text-center py-4">
+                    <div class="display-4 mb-3">
+                        <i class="bi bi-heart-fill"></i>
+                    </div>
+                    <h2 class="fw-bold mb-2">Projeto Social - Jiu-Jitsu</h2>
+                    <p class="mb-0">Matrícula gratuita para crianças e adolescentes</p>
+                </div>
+                
+                <div class="card-body p-5">
+                    <!-- Informações do Projeto -->
+                    <div class="alert alert-info mb-4">
+                        <h6 class="alert-heading fw-bold">
+                            <i class="bi bi-info-circle me-2"></i>
+                            Sobre o Projeto Social
+                        </h6>
+                        <ul class="mb-0">
+                            <li><strong>Gratuito:</strong> Apenas taxa de inscrição de R$ 50,00</li>
+                            <li><strong>Idade:</strong> Crianças e adolescentes de 6 a 18 anos</li>
+                            <li><strong>Requisito:</strong> Deve estar matriculado em escola regular</li>
+                            <li><strong>Modalidade:</strong> Jiu-Jitsu</li>
+                        </ul>
+                    </div>
+                    
+                    <!-- Formulário de Matrícula -->
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        
+                        <!-- Dados do Responsável -->
+                        <div class="row mb-4">
+                            <div class="col-12">
+                                <h5 class="fw-bold text-primary border-bottom pb-2 mb-3">
+                                    <i class="bi bi-person-circle me-2"></i>
+                                    Dados do Responsável
+                                </h5>
+                            </div>
+                            
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">Nome Completo</label>
+                                <input type="text" class="form-control" value="{{ user.nome_completo }}" readonly>
+                            </div>
+                            
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">Email</label>
+                                <input type="email" class="form-control" value="{{ user.email }}" readonly>
+                            </div>
+                        </div>
+                        
+                        <!-- Dados do Dependente -->
+                        <div class="row mb-4">
+                            <div class="col-12">
+                                <h5 class="fw-bold text-primary border-bottom pb-2 mb-3">
+                                    <i class="bi bi-person-plus me-2"></i>
+                                    Dados do Dependente
+                                </h5>
+                            </div>
+                            
+                            <div class="col-md-6 mb-3">
+                                <label for="nome_completo" class="form-label fw-bold">Nome Completo</label>
+                                <input type="text" class="form-control" id="nome_completo" name="nome_completo" required>
+                            </div>
+                            
+                            <div class="col-md-6 mb-3">
+                                <label for="data_nascimento" class="form-label fw-bold">Data de Nascimento</label>
+                                <input type="date" class="form-control" id="data_nascimento" name="data_nascimento" required>
+                                <small class="text-muted">Idade entre 6 e 18 anos</small>
+                            </div>
+                            
+                            <div class="col-md-6 mb-3">
+                                <label for="cpf" class="form-label fw-bold">CPF</label>
+                                <input type="text" class="form-control" id="cpf" name="cpf" placeholder="000.000.000-00" required>
+                            </div>
+                            
+                            <div class="col-md-6 mb-3">
+                                <label for="parentesco" class="form-label fw-bold">Parentesco</label>
+                                <select class="form-control" id="parentesco" name="parentesco" required>
+                                    <option value="">Selecione...</option>
+                                    <option value="filho">Filho(a)</option>
+                                    <option value="enteado">Enteado(a)</option>
+                                    <option value="neto">Neto(a)</option>
+                                    <option value="sobrinho">Sobrinho(a)</option>
+                                    <option value="outro">Outro</option>
+                                </select>
+                            </div>
+                            
+                            <div class="col-12 mb-3">
+                                <label for="foto" class="form-label fw-bold">Foto do Dependente</label>
+                                <input type="file" class="form-control" id="foto" name="foto" accept="image/*" required>
+                                <small class="text-muted">Foto obrigatória para confecção da carteira do atleta</small>
+                            </div>
+                        </div>
+                        
+                        <!-- Dados Escolares -->
+                        <div class="row mb-4">
+                            <div class="col-12">
+                                <h5 class="fw-bold text-primary border-bottom pb-2 mb-3">
+                                    <i class="bi bi-mortarboard me-2"></i>
+                                    Dados Escolares
+                                </h5>
+                            </div>
+                            
+                            <div class="col-md-6 mb-3">
+                                <label for="escolaridade" class="form-label fw-bold">Escolaridade</label>
+                                <select class="form-control" id="escolaridade" name="escolaridade" required>
+                                    <option value="">Selecione...</option>
+                                    <option value="fundamental_1">Ensino Fundamental I (1º ao 5º ano)</option>
+                                    <option value="fundamental_2">Ensino Fundamental II (6º ao 9º ano)</option>
+                                    <option value="medio">Ensino Médio</option>
+                                    <option value="tecnico">Ensino Técnico</option>
+                                </select>
+                            </div>
+                            
+                            <div class="col-md-6 mb-3">
+                                <label for="escola" class="form-label fw-bold">Nome da Escola</label>
+                                <input type="text" class="form-control" id="escola" name="escola" required>
+                            </div>
+                            
+                            <div class="col-md-6 mb-3">
+                                <label for="turno" class="form-label fw-bold">Turno</label>
+                                <select class="form-control" id="turno" name="turno" required>
+                                    <option value="">Selecione...</option>
+                                    <option value="matutino">Matutino</option>
+                                    <option value="vespertino">Vespertino</option>
+                                    <option value="noturno">Noturno</option>
+                                    <option value="integral">Integral</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <!-- Endereço -->
+                        <div class="row mb-4">
+                            <div class="col-12">
+                                <h5 class="fw-bold text-primary border-bottom pb-2 mb-3">
+                                    <i class="bi bi-geo-alt me-2"></i>
+                                    Endereço
+                                </h5>
+                            </div>
+                            
+                            <div class="col-md-4 mb-3">
+                                <label for="cep" class="form-label fw-bold">CEP</label>
+                                <input type="text" class="form-control" id="cep" name="cep" placeholder="00000-000" required>
+                            </div>
+                            
+                            <div class="col-md-8 mb-3">
+                                <label for="logradouro" class="form-label fw-bold">Logradouro</label>
+                                <input type="text" class="form-control" id="logradouro" name="logradouro" required>
+                            </div>
+                            
+                            <div class="col-md-4 mb-3">
+                                <label for="numero" class="form-label fw-bold">Número</label>
+                                <input type="text" class="form-control" id="numero" name="numero" required>
+                            </div>
+                            
+                            <div class="col-md-8 mb-3">
+                                <label for="complemento" class="form-label fw-bold">Complemento</label>
+                                <input type="text" class="form-control" id="complemento" name="complemento" placeholder="Apartamento, bloco, etc. (opcional)">
+                            </div>
+                            
+                            <div class="col-md-4 mb-3">
+                                <label for="bairro" class="form-label fw-bold">Bairro</label>
+                                <input type="text" class="form-control" id="bairro" name="bairro" required>
+                            </div>
+                            
+                            <div class="col-md-4 mb-3">
+                                <label for="cidade" class="form-label fw-bold">Cidade</label>
+                                <input type="text" class="form-control" id="cidade" name="cidade" required>
+                            </div>
+                            
+                            <div class="col-md-4 mb-3">
+                                <label for="uf" class="form-label fw-bold">UF</label>
+                                <input type="text" class="form-control" id="uf" name="uf" maxlength="2" placeholder="MT" required>
+                            </div>
+                        </div>
+                        
+                        <!-- Informações de Saúde -->
+                        <div class="row mb-4">
+                            <div class="col-12">
+                                <h5 class="fw-bold text-primary border-bottom pb-2 mb-3">
+                                    <i class="bi bi-heart-pulse me-2"></i>
+                                    Informações de Saúde
+                                </h5>
+                            </div>
+                            
+                            <div class="col-12 mb-3">
+                                <label for="condicoes_medicas" class="form-label fw-bold">Condições Médicas</label>
+                                <textarea class="form-control" id="condicoes_medicas" name="condicoes_medicas" rows="4" 
+                                          placeholder="Descreva qualquer condição médica relevante para a prática de esportes (opcional)"></textarea>
+                            </div>
+                        </div>
+                        
+                        <!-- Termos e Condições -->
+                        <div class="row mb-4">
+                            <div class="col-12">
+                                <h5 class="fw-bold text-primary border-bottom pb-2 mb-3">
+                                    <i class="bi bi-file-check me-2"></i>
+                                    Termos e Condições
+                                </h5>
+                            </div>
+                            
+                            <div class="col-12 mb-3">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="termo_responsabilidade" name="termo_responsabilidade" required>
+                                    <label class="form-check-label" for="termo_responsabilidade">
+                                        <strong>Declaro que sou responsável pelo dependente</strong> e autorizo sua participação nas atividades do projeto social de Jiu-Jitsu.
+                                    </label>
+                                </div>
+                            </div>
+                            
+                            <div class="col-12 mb-3">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="termo_uso_imagem" name="termo_uso_imagem" required>
+                                    <label class="form-check-label" for="termo_uso_imagem">
+                                        <strong>Autorizo o uso de imagem</strong> do dependente para fins promocionais e educacionais do projeto.
+                                    </label>
+                                </div>
+                            </div>
+                            
+                            <div class="col-12 mb-3">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="termo_saude" name="termo_saude" required>
+                                    <label class="form-check-label" for="termo_saude">
+                                        <strong>Declaro que o dependente</strong> não possui restrições médicas que impeçam a prática de esportes.
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Taxa de Inscrição -->
+                        <div class="alert alert-warning mb-4">
+                            <h6 class="alert-heading fw-bold">
+                                <i class="bi bi-exclamation-triangle me-2"></i>
+                                Taxa de Inscrição
+                            </h6>
+                            <p class="mb-0">
+                                <strong>Valor:</strong> R$ 50,00 (taxa única)<br>
+                                <strong>Forma de Pagamento:</strong> Será informada após aprovação da matrícula
+                            </p>
+                        </div>
+                        
+                        <!-- Botões -->
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <a href="{% url 'home' %}" class="btn btn-secondary me-md-2">
+                                <i class="bi bi-arrow-left me-2"></i>
+                                Voltar
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-check-circle me-2"></i>
+                                Solicitar Matrícula
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Validação de idade
+document.getElementById('data_nascimento').addEventListener('change', function() {
+    const dataNascimento = new Date(this.value);
+    const hoje = new Date();
+    const idade = hoje.getFullYear() - dataNascimento.getFullYear();
+    const mes = hoje.getMonth() - dataNascimento.getMonth();
+    
+    if (mes < 0 || (mes === 0 && hoje.getDate() < dataNascimento.getDate())) {
+        idade--;
+    }
+    
+    if (idade < 6 || idade > 18) {
+        alert('O dependente deve ter entre 6 e 18 anos para participar do projeto social.');
+        this.value = '';
+    }
+});
+
+// Máscara para CPF
+document.getElementById('cpf').addEventListener('input', function(e) {
+    let value = e.target.value.replace(/\D/g, '');
+    if (value.length <= 11) {
+        value = value.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
+        e.target.value = value;
+    }
+});
+
+// Máscara para CEP
+document.getElementById('cep').addEventListener('input', function(e) {
+    let value = e.target.value.replace(/\D/g, '');
+    if (value.length <= 8) {
+        value = value.replace(/(\d{5})(\d{3})/, '$1-$2');
+        e.target.value = value;
+    }
+});
+
+// Máscara para UF
+document.getElementById('uf').addEventListener('input', function(e) {
+    e.target.value = e.target.value.toUpperCase();
+});
+</script>
+
+{% endblock %}
