@@ -49,12 +49,6 @@ class Usuario(AbstractUser):
         )]
     )
 
-    email_verificado = models.BooleanField(
-        default=False,
-        verbose_name='Email Verificado',
-        help_text='Indica se o email foi verificado pelo usuário'
-    )
-
     tipo_conta = models.CharField(
         max_length=20,
         choices=TipoConta.choices,
