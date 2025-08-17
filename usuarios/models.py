@@ -14,8 +14,9 @@ class Usuario(AbstractUser):
 
     class TipoConta(models.TextChoices):
         RESPONSAVEL = 'RESPONSAVEL', 'Responsável'
-        ATLETA = 'ATLETA', 'Atleta'
         PROFESSOR = 'PROFESSOR', 'Professor'
+        GESTOR = 'GESTOR', 'Gestor'
+        FUNCIONARIO = 'FUNCIONARIO', 'Funcionário'
 
     
     email = models.EmailField(
@@ -97,27 +98,6 @@ class Dependente(models.Model):
         ('vespertino', 'Vespertino'),
         ('noturno', 'Noturno'),
         ('integral', 'Integral'),
-    ]
-    
-    # NOVOS CAMPOS DE MATRÍCULA
-    TIPO_MATRICULA_CHOICES = [
-        ('projeto_social', 'Projeto Social'),
-        ('modalidade_paga', 'Modalidade Paga'),
-    ]
-    
-    MODALIDADE_CHOICES = [
-        ('jiujitsu', 'Jiu-Jitsu'),
-        ('judo', 'Judô'),
-        ('muaythai', 'Muay Thai'),
-        ('boxe', 'Boxe'),
-        ('capoeira', 'Capoeira'),
-    ]
-    
-    STATUS_MATRICULA_CHOICES = [
-        ('pendente', 'Pendente'),
-        ('ativa', 'Ativa'),
-        ('suspensa', 'Suspensa'),
-        ('cancelada', 'Cancelada'),
     ]
     
     # Relacionamento com usuário
@@ -233,25 +213,26 @@ class Dependente(models.Model):
     )
     
     # NOVOS CAMPOS DE MATRÍCULA
-    tipo_matricula = models.CharField(
-        max_length=20,
-        choices=TIPO_MATRICULA_CHOICES,
+    tipo_matricula = models.ForeignKey(
+        'TipoMatricula',
+        on_delete=models.PROTECT,
         verbose_name='Tipo de Matrícula',
         help_text='Projeto Social (gratuito) ou Modalidade Paga'
     )
     
-    modalidade = models.CharField(
-        max_length=20,
-        choices=MODALIDADE_CHOICES,
+    modalidade = models.ForeignKey(
+        'Modalidade',
+        on_delete=models.PROTECT,
         blank=True,
+        null=True,
         verbose_name='Modalidade',
         help_text='Modalidade escolhida (apenas para matrícula paga)'
     )
     
-    status_matricula = models.CharField(
-        max_length=20,
-        choices=STATUS_MATRICULA_CHOICES,
-        default='pendente',
+    status_matricula = models.ForeignKey(
+        'StatusMatricula',
+        on_delete=models.PROTECT,
+        default=1,  # ID do status 'pendente'
         verbose_name='Status da Matrícula'
     )
     
@@ -327,3 +308,65 @@ class Dependente(models.Model):
 
     def __str__(self):
         return f"{self.nome_completo} ({self.usuario.nome_completo})"
+
+
+# MODELOS PARA CHOICES - Permitem gerenciar opções via admin
+class Modalidade(models.Model):
+    """Modelo para modalidades esportivas disponíveis"""
+    nome = models.CharField(max_length=50, unique=True, verbose_name='Nome da Modalidade')
+    descricao = models.TextField(blank=True, verbose_name='Descrição')
+    ativa = models.BooleanField(default=True, verbose_name='Modalidade Ativa')
+    ordem = models.PositiveIntegerField(default=0, verbose_name='Ordem de Exibição')
+    
+    class Meta:
+        verbose_name = 'Modalidade'
+        verbose_name_plural = 'Modalidades'
+        ordering = ['ordem', 'nome']
+    
+    def __str__(self):
+        return self.nome
+
+
+class TipoMatricula(models.Model):
+    """Modelo para tipos de matrícula disponíveis"""
+    nome = models.CharField(max_length=50, unique=True, verbose_name='Nome do Tipo')
+    descricao = models.TextField(blank=True, verbose_name='Descrição')
+    gratuito = models.BooleanField(default=False, verbose_name='Matrícula Gratuita')
+    taxa_inscricao = models.DecimalField(
+        max_digits=8, 
+        decimal_places=2, 
+        default=0.00,
+        verbose_name='Taxa de Inscrição'
+    )
+    ativo = models.BooleanField(default=True, verbose_name='Tipo Ativo')
+    ordem = models.PositiveIntegerField(default=0, verbose_name='Ordem de Exibição')
+    
+    class Meta:
+        verbose_name = 'Tipo de Matrícula'
+        verbose_name_plural = 'Tipos de Matrícula'
+        ordering = ['ordem', 'nome']
+    
+    def __str__(self):
+        return self.nome
+
+
+class StatusMatricula(models.Model):
+    """Modelo para status de matrícula disponíveis"""
+    nome = models.CharField(max_length=50, unique=True, verbose_name='Nome do Status')
+    descricao = models.TextField(blank=True, verbose_name='Descrição')
+    cor = models.CharField(
+        max_length=7, 
+        default='#007bff',
+        verbose_name='Cor do Status',
+        help_text='Código hexadecimal da cor (ex: #007bff)'
+    )
+    ativo = models.BooleanField(default=True, verbose_name='Status Ativo')
+    ordem = models.PositiveIntegerField(default=0, verbose_name='Ordem de Exibição')
+    
+    class Meta:
+        verbose_name = 'Status de Matrícula'
+        verbose_name_plural = 'Status de Matrícula'
+        ordering = ['ordem', 'nome']
+    
+    def __str__(self):
+        return self.nome
