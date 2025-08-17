@@ -246,6 +246,36 @@ class DependenteForm(forms.ModelForm):
         })
     )
     
+    # NOVOS CAMPOS DE MATRÍCULA
+    tipo_matricula = forms.ModelChoiceField(
+        queryset=None,  # Será definido no __init__
+        widget=forms.Select(attrs={
+            'class': 'form-control',
+            'id': 'id_tipo_matricula'
+        }),
+        label='Tipo de Matrícula',
+        help_text='Escolha entre Projeto Social (gratuito) ou Modalidade Paga'
+    )
+    
+    modalidade = forms.ModelChoiceField(
+        queryset=None,  # Será definido no __init__
+        required=False,
+        widget=forms.Select(attrs={
+            'class': 'form-control',
+            'id': 'id_modalidade'
+        }),
+        label='Modalidade',
+        help_text='Escolha a modalidade esportiva (apenas para matrícula paga)'
+    )
+    
+    status_matricula = forms.ModelChoiceField(
+        queryset=None,  # Será definido no __init__
+        widget=forms.Select(attrs={
+            'class': 'form-control'
+        }),
+        label='Status da Matrícula'
+    )
+    
     condicoes_medicas = forms.CharField(
         required=False,
         widget=forms.Textarea(attrs={
@@ -278,13 +308,26 @@ class DependenteForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         self.usuario = kwargs.pop('usuario', None)
         super().__init__(*args, **kwargs)
+        
+        # Definir querysets para os campos de matrícula
+        from .models import TipoMatricula, Modalidade, StatusMatricula
+        
+        self.fields['tipo_matricula'].queryset = TipoMatricula.objects.filter(ativo=True)
+        self.fields['modalidade'].queryset = Modalidade.objects.filter(ativa=True)
+        self.fields['status_matricula'].queryset = StatusMatricula.objects.filter(ativo=True)
+        
+        # Definir valor padrão para status (Pendente)
+        status_pendente = StatusMatricula.objects.filter(nome='Pendente').first()
+        if status_pendente:
+            self.fields['status_matricula'].initial = status_pendente
     
     class Meta:
         model = Dependente
         fields = [
-            'nome_completo', 'data_nascimento','cpf', 'parentesco', 'foto',
+            'nome_completo', 'data_nascimento', 'cpf', 'parentesco', 'foto',
             'cep', 'logradouro', 'numero', 'complemento', 'bairro', 'cidade', 'uf',
             'escolaridade', 'escola', 'turno',
+            'tipo_matricula', 'modalidade', 'status_matricula',
             'condicoes_medicas', 'termo_responsabilidade', 'termo_uso_imagem'
         ]
     
