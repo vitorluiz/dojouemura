@@ -41,88 +41,24 @@
                             Home
                         </a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'home' %}#contato">
-                            Contato
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'home' %}#professores">
-                            Professores
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'galeria_completa' %}">
-                            Galeria
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'home' %}#modalidades">
-                            Modalidades
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'home' %}#projeto-social">
-                            Projeto Social
-                        </a>
-                    </li>
                 </ul>
                 
                 <ul class="navbar-nav ms-auto">
                     {% if user.is_authenticated %}
                         <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="adminDropdown" role="button" data-bs-toggle="dropdown">
-                                Painel Admin
-                            </a>
-                            <ul class="dropdown-menu dropdown-menu-end">
-                                <li><h6 class="dropdown-header">Cadastros</h6></li>
-                                <li><a class="dropdown-item" href="#alunos">
-                                    Alunos
-                                </a></li>
-                                <li><a class="dropdown-item" href="#professores-admin">
-                                    Professores
-                                </a></li>
-                                <li><a class="dropdown-item" href="#modalidades-admin">
-                                    Modalidades
-                                </a></li>
-                                <li><a class="dropdown-item" href="#turmas">
-                                    Turmas
-                                </a></li>
-                                <li><hr class="dropdown-divider"></li>
-                                <li><h6 class="dropdown-header">Gestão</h6></li>
-                                <li><a class="dropdown-item" href="#financeiro">
-                                    Financeiro
-                                </a></li>
-                                <li><a class="dropdown-item" href="#frequencia">
-                                    Frequência
-                                </a></li>
-                                <li><a class="dropdown-item" href="#mensagens">
-                                    Mensagens
-                                </a></li>
-                                <li><a class="dropdown-item" href="#estoque">
-                                    Estoque
-                                </a></li>
-                            </ul>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'dashboard' %}">
-                                Dashboard
-                            </a>
-                        </li>
-                        <!-- Link Cadastrar Dependente removido conforme solicitado -->
-                        <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown">
-                                {{ user.nome_completo }}
+                                <i class="bi bi-person-circle me-1"></i>
+                                {{ user.first_name }}
                             </a>
                             <ul class="dropdown-menu dropdown-menu-end">
-                                <li><a class="dropdown-item" href="#perfil">
-                                    Meu Perfil
-                                </a></li>
-                                <li><a class="dropdown-item" href="#configuracoes">
-                                    Configurações
+                                <li><h6 class="dropdown-header">Minha Conta</h6></li>
+                                <li><a class="dropdown-item" href="{% url 'dashboard' %}">
+                                    <i class="bi bi-speedometer2 me-2"></i>
+                                    Dashboard
                                 </a></li>
                                 <li><hr class="dropdown-divider"></li>
                                 <li><a class="dropdown-item" href="{% url 'logout' %}">
+                                    <i class="bi bi-box-arrow-right me-2"></i>
                                     Sair
                                 </a></li>
                             </ul>
