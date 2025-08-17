@@ -249,13 +249,13 @@ class Dependente(models.Model):
     class Meta:
         constraints = [
             models.UniqueConstraint(
-                fields=['usuario', 'nome_completo', 'cpf'],
+                fields=['usuario', 'cpf'],
                 name='unique_dependente_por_usuario'
             )
         ]
         verbose_name = 'Dependente'
         verbose_name_plural = 'Dependentes'
-        ordering = ['nome_completo']
+        ordering = ['usuario__first_name', 'data_nascimento']
    
     def clean(self):
         """Validações customizadas"""
