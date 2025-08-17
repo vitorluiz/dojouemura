@@ -383,28 +383,44 @@ def matricula_modalidade_paga(request):
         if 'buscar_cpf' in request.POST:
             # Busca por CPF existente - NÃO LIMPAR O CPF!
             cpf_busca = request.POST.get('cpf_busca', '').strip()
-            logger.info(f"Buscando atleta por CPF: {cpf_busca}")
+            logger.info(f"=== BUSCA POR CPF INICIADA ===")
+            logger.info(f"CPF recebido: '{cpf_busca}'")
+            logger.info(f"Tipo do CPF: {type(cpf_busca)}")
+            logger.info(f"Tamanho do CPF: {len(cpf_busca)}")
             
             try:
                 # Buscar primeiro pelo CPF exato (com formatação)
+                logger.info(f"Tentando buscar pelo CPF exato: '{cpf_busca}'")
                 atleta_existente = Dependente.objects.get(cpf=cpf_busca)
-                logger.info(f"Atleta encontrado pelo CPF exato: {atleta_existente.nome}")
+                logger.info(f"✅ ATLETA ENCONTRADO pelo CPF exato: {atleta_existente.nome}")
+                logger.info(f"   CPF no banco: '{atleta_existente.cpf}'")
+                logger.info(f"   Tipo CPF no banco: {type(atleta_existente.cpf)}")
                 
             except Dependente.DoesNotExist:
+                logger.info(f"❌ CPF exato não encontrado, tentando limpo...")
                 try:
                     # Se não encontrar, tentar com CPF limpo
                     cpf_limpo = cpf_busca.replace('.', '').replace('-', '')
+                    logger.info(f"Tentando buscar pelo CPF limpo: '{cpf_limpo}'")
                     atleta_existente = Dependente.objects.get(cpf=cpf_limpo)
-                    logger.info(f"Atleta encontrado pelo CPF limpo: {atleta_existente.nome}")
+                    logger.info(f"✅ ATLETA ENCONTRADO pelo CPF limpo: {atleta_existente.nome}")
+                    logger.info(f"   CPF no banco: '{atleta_existente.cpf}'")
                     
                 except Dependente.DoesNotExist:
-                    logger.warning(f"CPF não encontrado: {cpf_busca}")
+                    logger.warning(f"❌ CPF não encontrado nem exato nem limpo: '{cpf_busca}'")
+                    logger.info(f"CPFs no banco:")
+                    for dep in Dependente.objects.all():
+                        logger.info(f"   '{dep.cpf}' - {dep.nome}")
+                    
                     return render(request, 'usuarios/matricula_modalidade_paga.html', {
                         'modalidades': Modalidade.objects.all(),
                         'error_message': 'CPF não encontrado. Preencha todos os dados para nova matrícula.'
                     })
             
             # Retornar dados do atleta para preenchimento automático
+            logger.info(f"🎯 Retornando template com atleta_existente: {atleta_existente.nome}")
+            logger.info(f"   Contexto: atleta_existente={atleta_existente}, modalidades={Modalidade.objects.count()}")
+            
             return render(request, 'usuarios/matricula_modalidade_paga.html', {
                 'atleta_existente': atleta_existente,
                 'modalidades': Modalidade.objects.all(),
