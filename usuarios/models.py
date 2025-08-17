@@ -111,6 +111,10 @@ class Dependente(models.Model):
     codigo_alfanumerico = models.CharField(max_length=9, unique=True, editable=False)
 
     # Dados pessoais
+    nome = models.CharField(
+        max_length=200,
+        verbose_name='Nome Completo do Dependente'
+    )
     
     data_nascimento = models.DateField(
         verbose_name='Data de Nascimento',
@@ -277,8 +281,8 @@ class Dependente(models.Model):
     # Dentro da classe Usuario(AbstractUser)
     @property
     def nome_completo(self):
-        """Retorna o nome completo do usuário"""
-        return f"{self.first_name} {self.last_name}".strip() or self.email
+        """Retorna o nome completo do dependente"""
+        return self.nome
 
     @property
     def idade(self):

@@ -334,8 +334,7 @@ def matricula_projeto_social(request):
             # Criar dependente
             dependente = Dependente.objects.create(
                 usuario=request.user,
-                first_name=nome_completo.split()[0] if nome_completo else '',  # Primeiro nome
-                last_name=' '.join(nome_completo.split()[1:]) if nome_completo and len(nome_completo.split()) > 1 else '',  # Sobrenome
+                nome=nome_completo,
                 data_nascimento=data_nascimento,
                 cpf=cpf,
                 parentesco=parentesco,
