@@ -104,14 +104,14 @@ class DependenteAdmin(admin.ModelAdmin):
     
     # Campos exibidos na listagem
     list_display = [
-        'get_nome_completo', 'usuario_link', 'idade_display', 
+        'nome', 'usuario_link', 'idade_display', 
         'parentesco', 'escola', 'cidade_uf', 'foto_thumbnail',
         'termos_aceitos', 'data_cadastro'
     ]
     
     # Campos para busca
     search_fields = [
-        'get_nome_completo', 'usuario__first_name', 'usuario__last_name', 'usuario__email',
+        'nome', 'usuario__first_name', 'usuario__last_name', 'usuario__email',
         'escola', 'cidade', 'bairro'
     ]
     
@@ -134,7 +134,7 @@ class DependenteAdmin(admin.ModelAdmin):
     # Configuração dos fieldsets
     fieldsets = (
         ('Dados Pessoais', {
-            'fields': ('usuario', 'get_nome_completo', 'data_nascimento', 'idade_display', 'parentesco')
+            'fields': ('usuario', 'nome', 'data_nascimento', 'idade_display', 'parentesco')
         }),
         ('Foto', {
             'fields': ('foto', 'foto_preview'),
@@ -170,12 +170,6 @@ class DependenteAdmin(admin.ModelAdmin):
     # Configurações de paginação
     list_per_page = 25
     list_max_show_all = 100
-    
-    def get_nome_completo(self, obj):
-        """Retorna o nome completo do dependente"""
-        return obj.nome_completo if hasattr(obj, 'nome_completo') else f"{obj.usuario.first_name} {obj.usuario.last_name}".strip()
-    get_nome_completo.short_description = 'Nome Completo'
-    get_nome_completo.admin_order_field = 'usuario__first_name'
     
     def usuario_link(self, obj):
         """Link para o usuário responsável"""
