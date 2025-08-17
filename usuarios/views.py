@@ -431,6 +431,14 @@ def matricula_modalidade_paga(request):
         cpf = request.POST.get('cpf', '').replace('.', '').replace('-', '')
         modalidade_id = request.POST.get('modalidade')
         
+        # Verificar se atleta já existe
+        atleta_existente = None
+        try:
+            atleta_existente = Dependente.objects.get(cpf=cpf)
+            logger.info(f"Atleta existente encontrado: {atleta_existente.nome}")
+        except Dependente.DoesNotExist:
+            logger.info("Novo atleta sendo cadastrado")
+        
         # Verificar campos obrigatórios baseado no tipo de matrícula
         required_fields = ['nome', 'data_nascimento', 'cpf', 'parentesco', 'modalidade']
         
@@ -464,13 +472,6 @@ def matricula_modalidade_paga(request):
         logger.info("Todos os campos obrigatórios estão preenchidos")
         
         try:
-            # Verificar se atleta já existe
-            atleta_existente = None
-            try:
-                atleta_existente = Dependente.objects.get(cpf=cpf)
-                logger.info(f"Atleta existente encontrado: {atleta_existente.nome}")
-            except Dependente.DoesNotExist:
-                logger.info("Novo atleta sendo cadastrado")
             
             # Processar dados do formulário
             nome_completo = request.POST.get('nome')
