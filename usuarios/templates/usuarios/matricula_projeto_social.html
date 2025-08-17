@@ -30,6 +30,17 @@
                         </ul>
                     </div>
                     
+                    <!-- Mensagens de Erro -->
+                    {% if error_message %}
+                    <div class="alert alert-danger mb-4">
+                        <h6 class="alert-heading fw-bold">
+                            <i class="bi bi-exclamation-triangle me-2"></i>
+                            Erro no Formulário
+                        </h6>
+                        <p class="mb-0">{{ error_message }}</p>
+                    </div>
+                    {% endif %}
+                    
                     <!-- Formulário de Matrícula -->
                     <form method="post" enctype="multipart/form-data" id="matriculaProjetoSocialForm">
                         {% csrf_token %}
@@ -372,7 +383,18 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Validação do formulário
     form.addEventListener('submit', function(e) {
-        console.log('=== VALIDAÇÃO DO FORMULÁRIO ===');
+        // Criar área de debug se não existir
+        let debugArea = document.getElementById('debug-area');
+        if (!debugArea) {
+            debugArea = document.createElement('div');
+            debugArea.id = 'debug-area';
+            debugArea.className = 'alert alert-info mt-3';
+            debugArea.innerHTML = '<h6><i class="bi bi-bug me-2"></i>Debug do Formulário</h6><div id="debug-content"></div>';
+            form.parentNode.insertBefore(debugArea, form.nextSibling);
+        }
+        
+        const debugContent = document.getElementById('debug-content');
+        debugContent.innerHTML = '<div class="small">=== VALIDAÇÃO DO FORMULÁRIO ===</div>';
         
         const requiredFields = form.querySelectorAll('[required]');
         let isValid = true;
@@ -382,7 +404,8 @@ document.addEventListener('DOMContentLoaded', function() {
             const fieldValue = field.value.trim();
             const fieldName = field.name || field.id || 'Campo sem nome';
             
-            console.log(`Campo: ${fieldName}, Valor: "${fieldValue}", Vazio: ${!fieldValue}`);
+            const logLine = `<div class="small">Campo: ${fieldName}, Valor: "${fieldValue}", Vazio: ${!fieldValue}</div>`;
+            debugContent.innerHTML += logLine;
             
             if (!fieldValue) {
                 isValid = false;
@@ -393,14 +416,15 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
         
-        console.log('Campos vazios:', emptyFields);
-        console.log('Formulário válido:', isValid);
+        const summaryLine = `<div class="small fw-bold mt-2">Campos vazios: ${emptyFields.join(', ')}</div>`;
+        const validLine = `<div class="small">Formulário válido: ${isValid}</div>`;
+        debugContent.innerHTML += summaryLine + validLine;
         
         if (!isValid) {
             e.preventDefault();
             alert(`Por favor, preencha todos os campos obrigatórios.\n\nCampos vazios:\n${emptyFields.join('\n')}`);
         } else {
-            console.log('Formulário enviado com sucesso!');
+            debugContent.innerHTML += '<div class="small text-success fw-bold">✅ Formulário enviado com sucesso!</div>';
         }
     });
 });

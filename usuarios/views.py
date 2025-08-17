@@ -13,6 +13,10 @@ from .models import Usuario, Dependente
 from .forms import UsuarioRegistroForm, UsuarioLoginForm, DependenteForm
 import requests
 from datetime import date, datetime
+import logging
+
+# Configurar logger
+logger = logging.getLogger(__name__)
 
 
 def home(request):
@@ -268,55 +272,75 @@ def galeria_completa(request):
 @login_required
 def matricula_projeto_social(request):
     if request.method == 'POST':
-        # Processar dados do formulário
-        nome_completo = request.POST.get('nome_completo')
-        data_nascimento = request.POST.get('data_nascimento')
-        cpf = request.POST.get('cpf')
-        escola = request.POST.get('escola')
-        turma = request.POST.get('turma')
-        turno = request.POST.get('turno')
-        cep = request.POST.get('cep')
-        logradouro = request.POST.get('logradouro')
-        numero = request.POST.get('numero')
-        bairro = request.POST.get('bairro')
-        cidade = request.POST.get('cidade')
-        uf = request.POST.get('uf')
+        logger.info("=== INÍCIO DO PROCESSAMENTO DE MATRÍCULA PROJETO SOCIAL ===")
         
-        # Validações básicas
-        if not all([nome_completo, data_nascimento, cpf, escola, turma, turno, cep, logradouro, numero, bairro, cidade, uf]):
-            messages.error(request, 'Todos os campos obrigatórios devem ser preenchidos.')
-            return render(request, 'usuarios/matricula_projeto_social.html')
+        # Log de todos os dados recebidos
+        logger.info(f"POST data recebida: {request.POST}")
+        logger.info(f"FILES data recebida: {request.FILES}")
         
-        # Validar idade (6-18 anos para projeto social)
-        try:
-            data_nasc = datetime.strptime(data_nascimento, '%Y-%m-%d').date()
-            idade = (date.today() - data_nasc).days // 365
-            if idade < 6 or idade > 18:
-                messages.error(request, 'Para o projeto social, o dependente deve ter entre 6 e 18 anos.')
-                return render(request, 'usuarios/matricula_projeto_social.html')
-        except ValueError:
-            messages.error(request, 'Data de nascimento inválida.')
-            return render(request, 'usuarios/matricula_projeto_social.html')
+        # Verificar campos obrigatórios
+        required_fields = [
+            'nome_completo', 'data_nascimento', 'cpf', 'parentesco', 'foto',
+            'escolaridade', 'escola', 'turno', 'cep', 'logradouro', 'numero',
+            'bairro', 'cidade', 'uf', 'termo_responsabilidade', 'termo_uso_imagem', 'termo_saude'
+        ]
         
-        # Validar se escola foi informada (obrigatória para projeto social)
-        if not escola.strip():
-            messages.error(request, 'A escola é obrigatória para o projeto social.')
-            return render(request, 'usuarios/matricula_projeto_social.html')
+        missing_fields = []
+        for field in required_fields:
+            if field == 'foto':
+                if field not in request.FILES:
+                    missing_fields.append(field)
+                    logger.warning(f"Campo obrigatório ausente: {field}")
+            else:
+                if not request.POST.get(field):
+                    missing_fields.append(field)
+                    logger.warning(f"Campo obrigatório ausente: {field}")
+        
+        if missing_fields:
+            logger.error(f"Campos obrigatórios ausentes: {missing_fields}")
+            return render(request, 'usuarios/matricula_projeto_social.html', {
+                'error_message': f'Campos obrigatórios ausentes: {", ".join(missing_fields)}'
+            })
+        
+        logger.info("Todos os campos obrigatórios estão preenchidos")
         
         try:
-            # Buscar os objetos necessários
-            tipo_matricula = TipoMatricula.objects.get(nome='Projeto Social')
-            status_matricula = StatusMatricula.objects.get(nome='Pendente')
-            modalidade_jiujitsu = Modalidade.objects.get(nome='Jiu-Jitsu')
+            # Processar dados do formulário
+            nome_completo = request.POST.get('nome_completo')
+            data_nascimento = request.POST.get('data_nascimento')
+            cpf = request.POST.get('cpf')
+            parentesco = request.POST.get('parentesco')
+            foto = request.FILES.get('foto')
+            escolaridade = request.POST.get('escolaridade')
+            escola = request.POST.get('escola')
+            turno = request.POST.get('turno')
+            cep = request.POST.get('cep')
+            logradouro = request.POST.get('logradouro')
+            numero = request.POST.get('numero')
+            bairro = request.POST.get('bairro')
+            cidade = request.POST.get('cidade')
+            uf = request.POST.get('uf')
+            condicoes_medicas = request.POST.get('condicoes_medicas', '')
             
-            # Criar o dependente
+            logger.info(f"Dados processados - Nome: {nome_completo}, Data: {data_nascimento}, CPF: {cpf}")
+            
+            # Validações
+            if not request.user.is_authenticated:
+                logger.error("Usuário não autenticado")
+                return render(request, 'usuarios/matricula_projeto_social.html', {
+                    'error_message': 'Usuário não autenticado'
+                })
+            
+            # Criar dependente
             dependente = Dependente.objects.create(
                 usuario=request.user,
                 nome_completo=nome_completo,
-                data_nascimento=data_nasc,
+                data_nascimento=data_nascimento,
                 cpf=cpf,
+                parentesco=parentesco,
+                foto=foto,
+                escolaridade=escolaridade,
                 escola=escola,
-                turma=turma,
                 turno=turno,
                 cep=cep,
                 logradouro=logradouro,
@@ -324,20 +348,25 @@ def matricula_projeto_social(request):
                 bairro=bairro,
                 cidade=cidade,
                 uf=uf,
-                tipo_matricula=tipo_matricula,
-                modalidade=modalidade_jiujitsu,  # Projeto social sempre é Jiu-Jitsu
-                status_matricula=status_matricula,
+                condicoes_medicas=condicoes_medicas,
+                tipo_matricula=TipoMatricula.objects.get(nome='Projeto Social'),
+                modalidade=Modalidade.objects.get(nome='Jiu-Jitsu'),
+                status_matricula=StatusMatricula.objects.get(nome='Pendente'),
                 data_matricula=date.today()
             )
             
-            messages.success(request, f'Matrícula no projeto social realizada com sucesso! {nome_completo} está inscrito no Jiu-Jitsu gratuito.')
+            logger.info(f"Dependente criado com sucesso: {dependente.id}")
+            
+            # Redirecionar para dashboard
             return redirect('dashboard')
             
-        except (TipoMatricula.DoesNotExist, StatusMatricula.DoesNotExist, Modalidade.DoesNotExist):
-            messages.error(request, 'Erro ao processar a matrícula. Tente novamente.')
         except Exception as e:
-            messages.error(request, f'Erro inesperado: {str(e)}')
+            logger.error(f"Erro ao criar dependente: {str(e)}")
+            return render(request, 'usuarios/matricula_projeto_social.html', {
+                'error_message': f'Erro ao processar matrícula: {str(e)}'
+            })
     
+    logger.info("Renderizando formulário de matrícula projeto social")
     return render(request, 'usuarios/matricula_projeto_social.html')
 
 
