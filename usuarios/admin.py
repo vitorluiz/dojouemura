@@ -84,13 +84,13 @@ class UsuarioAdmin(UserAdmin):
     get_nome_completo.admin_order_field = 'first_name'
     
     def dependentes_count(self, obj):
-        """Conta quantos dependentes o usuário possui"""
+        """Conta quantos atletas o usuário possui"""
         count = obj.dependentes.count()
         if count > 0:
             url = reverse('admin:usuarios_dependente_changelist') + f'?usuario__id__exact={obj.id}'
-            return format_html('<a href="{}">{} dependente(s)</a>', url, count)
-        return '0 dependentes'
-    dependentes_count.short_description = 'Dependentes'
+            return format_html('<a href="{}">{} atleta(s)</a>', url, count)
+        return '0 atletas'
+    dependentes_count.short_description = 'Atletas'
     
     def get_queryset(self, request):
         """Otimiza consultas com prefetch_related"""
@@ -100,30 +100,32 @@ class UsuarioAdmin(UserAdmin):
 
 @admin.register(Dependente)
 class DependenteAdmin(admin.ModelAdmin):
-    """Configuração do admin para o modelo Dependente"""
+    """Configuração do admin para o modelo Atleta"""
     
     # Campos exibidos na listagem
     list_display = [
         'nome', 'usuario_link', 'idade_display', 
         'parentesco', 'escola', 'cidade_uf', 'foto_thumbnail',
+        'tipo_matricula', 'modalidade', 'status_matricula', 'data_matricula',
         'termos_aceitos', 'data_cadastro'
     ]
     
     # Campos para busca
     search_fields = [
         'nome', 'usuario__first_name', 'usuario__last_name', 'usuario__email',
-        'escola', 'cidade', 'bairro'
+        'escola', 'cidade', 'bairro', 'tipo_matricula__nome', 'modalidade__nome'
     ]
     
     # Filtros laterais
     list_filter = [
         'parentesco', 'escolaridade', 'turno', 'uf', 
+        'tipo_matricula', 'modalidade', 'status_matricula',
         'termo_responsabilidade', 'termo_uso_imagem',
         'data_cadastro', 'usuario__email_verificado'
     ]
     
     # Campos editáveis na listagem
-    list_editable = ['parentesco']
+    list_editable = ['parentesco', 'status_matricula']
     
     # Ordenação padrão
     ordering = ['-data_cadastro', 'usuario__first_name']
@@ -150,6 +152,10 @@ class DependenteAdmin(admin.ModelAdmin):
         }),
         ('Dados Escolares', {
             'fields': ('escolaridade', 'escola', 'turno')
+        }),
+        ('Matrícula', {
+            'fields': ('tipo_matricula', 'modalidade', 'status_matricula', 'data_matricula'),
+            'classes': ('wide',)
         }),
         ('Informações Médicas', {
             'fields': ('condicoes_medicas',),

@@ -263,8 +263,8 @@ class Dependente(models.Model):
                 name='unique_dependente_por_usuario'
             )
         ]
-        verbose_name = 'Dependente'
-        verbose_name_plural = 'Dependentes'
+        verbose_name = 'Atleta'
+        verbose_name_plural = 'Atletas'
         ordering = ['usuario__first_name', 'data_nascimento']
    
     def clean(self):
