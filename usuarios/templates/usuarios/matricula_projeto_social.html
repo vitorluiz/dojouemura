@@ -361,23 +361,46 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
     
+    // Adicionar validação também no evento 'input' para teclado numérico
+    dataNascimentoInput.addEventListener('input', function() {
+        // Só validar se o campo tiver 10 caracteres (formato completo: YYYY-MM-DD)
+        if (this.value.length === 10) {
+            // Simular o evento 'change' para validar
+            this.dispatchEvent(new Event('change'));
+        }
+    });
+    
     // Validação do formulário
     form.addEventListener('submit', function(e) {
+        console.log('=== VALIDAÇÃO DO FORMULÁRIO ===');
+        
         const requiredFields = form.querySelectorAll('[required]');
         let isValid = true;
+        let emptyFields = [];
         
         requiredFields.forEach(field => {
-            if (!field.value.trim()) {
+            const fieldValue = field.value.trim();
+            const fieldName = field.name || field.id || 'Campo sem nome';
+            
+            console.log(`Campo: ${fieldName}, Valor: "${fieldValue}", Vazio: ${!fieldValue}`);
+            
+            if (!fieldValue) {
                 isValid = false;
+                emptyFields.push(fieldName);
                 field.classList.add('is-invalid');
             } else {
                 field.classList.remove('is-invalid');
             }
         });
         
+        console.log('Campos vazios:', emptyFields);
+        console.log('Formulário válido:', isValid);
+        
         if (!isValid) {
             e.preventDefault();
-            alert('Por favor, preencha todos os campos obrigatórios.');
+            alert(`Por favor, preencha todos os campos obrigatórios.\n\nCampos vazios:\n${emptyFields.join('\n')}`);
+        } else {
+            console.log('Formulário enviado com sucesso!');
         }
     });
 });
