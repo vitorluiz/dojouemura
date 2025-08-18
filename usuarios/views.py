@@ -428,29 +428,25 @@ def matricula_modalidade_paga(request):
             })
         
         # Processar matrícula (nova ou existente)
-        cpf = request.POST.get('cpf', '').replace('.', '').replace('-', '')
+        cpf_original = request.POST.get('cpf', '')
+        cpf_limpo = cpf_original.replace('.', '').replace('-', '')
         modalidade_id = request.POST.get('modalidade')
+        
+        logger.info(f"[CPF] CPF original recebido: '{cpf_original}'")
+        logger.info(f"[CPF] CPF limpo para busca: '{cpf_limpo}'")
         
         # VARIÁVEL DE CONTROLE: Verificar se atleta já existe
         is_atleta_existente = False
         atleta_existente = None
         
-        # Buscar atleta por CPF (formatado ou limpo)
+        # Buscar atleta por CPF (sempre limpo)
         try:
-            # Primeiro: tentar CPF exato
-            atleta_existente = Dependente.objects.get(cpf=cpf)
+            atleta_existente = Dependente.objects.get(cpf=cpf_limpo)
             is_atleta_existente = True
-            logger.info(f"[SUCESSO] ATLETA EXISTENTE encontrado pelo CPF exato: {atleta_existente.nome}")
+            logger.info(f"[SUCESSO] ATLETA EXISTENTE encontrado pelo CPF limpo: {atleta_existente.nome}")
         except Dependente.DoesNotExist:
-            try:
-                # Segundo: tentar CPF limpo
-                cpf_limpo = cpf.replace('.', '').replace('-', '')
-                atleta_existente = Dependente.objects.get(cpf=cpf_limpo)
-                is_atleta_existente = True
-                logger.info(f"[SUCESSO] ATLETA EXISTENTE encontrado pelo CPF limpo: {atleta_existente.nome}")
-            except Dependente.DoesNotExist:
-                is_atleta_existente = False
-                logger.info("Novo atleta sendo cadastrado")
+            is_atleta_existente = False
+            logger.info("Novo atleta sendo cadastrado")
         
         # LOGGING DE CONTROLE
         logger.info(f"[CONTROLE] VARIÁVEL DE CONTROLE: is_atleta_existente = {is_atleta_existente}")
