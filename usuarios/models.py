@@ -6,11 +6,18 @@ from datetime import date, timedelta
 from utils.get_alphanumeric import get_alphanumeric
 
 from utils.validacoes import validar_cpf, validar_idade_usuario, validar_idade_dependente
+from utils.uuid7 import uuid7
 
 
 
 
 class Usuario(AbstractUser):
+    id = models.UUIDField(
+        primary_key=True,
+        default=uuid7,
+        editable=False,
+        verbose_name='ID'
+    )
 
     class TipoConta(models.TextChoices):
         RESPONSAVEL = 'RESPONSAVEL', 'Responsável'
@@ -78,6 +85,12 @@ class Usuario(AbstractUser):
 
 class Dependente(models.Model):
     """Modelo para dependentes dos usuários"""
+    id = models.UUIDField(
+        primary_key=True,
+        default=uuid7,
+        editable=False,
+        verbose_name='ID'
+    )
     
     PARENTESCO_CHOICES = [
         ('filho', 'Filho(a)'),
@@ -297,6 +310,12 @@ class Dependente(models.Model):
 # MODELOS PARA CHOICES - Permitem gerenciar opções via admin
 class Modalidade(models.Model):
     """Modelo para modalidades esportivas disponíveis"""
+    id = models.UUIDField(
+        primary_key=True,
+        default=uuid7,
+        editable=False,
+        verbose_name='ID'
+    )
     nome = models.CharField(max_length=50, unique=True, verbose_name='Nome da Modalidade')
     descricao = models.TextField(blank=True, verbose_name='Descrição')
     ativa = models.BooleanField(default=True, verbose_name='Modalidade Ativa')
@@ -313,6 +332,12 @@ class Modalidade(models.Model):
 
 class TipoMatricula(models.Model):
     """Modelo para tipos de matrícula disponíveis"""
+    id = models.UUIDField(
+        primary_key=True,
+        default=uuid7,
+        editable=False,
+        verbose_name='ID'
+    )
     nome = models.CharField(max_length=50, unique=True, verbose_name='Nome do Tipo')
     descricao = models.TextField(blank=True, verbose_name='Descrição')
     gratuito = models.BooleanField(default=False, verbose_name='Matrícula Gratuita')
@@ -336,6 +361,12 @@ class TipoMatricula(models.Model):
 
 class StatusMatricula(models.Model):
     """Modelo para status de matrícula disponíveis"""
+    id = models.UUIDField(
+        primary_key=True,
+        default=uuid7,
+        editable=False,
+        verbose_name='ID'
+    )
     nome = models.CharField(max_length=50, unique=True, verbose_name='Nome do Status')
     descricao = models.TextField(blank=True, verbose_name='Descrição')
     cor = models.CharField(
@@ -358,6 +389,12 @@ class StatusMatricula(models.Model):
 
 class Matricula(models.Model):
     """Modelo para matrículas dos atletas - permite múltiplas matrículas por atleta"""
+    id = models.UUIDField(
+        primary_key=True,
+        default=uuid7,
+        editable=False,
+        verbose_name='ID'
+    )
     atleta = models.ForeignKey(
         'Dependente',
         on_delete=models.CASCADE,
