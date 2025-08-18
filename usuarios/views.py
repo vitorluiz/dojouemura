@@ -331,7 +331,9 @@ def matricula_projeto_social(request):
                     'error_message': 'Usuário não autenticado'
                 })
             
-            # Criar dependente
+            # ✅ Criar dependente E sua primeira matrícula
+            from .models import Matricula
+            
             dependente = Dependente.objects.create(
                 usuario=request.user,
                 nome=nome_completo,
@@ -348,14 +350,19 @@ def matricula_projeto_social(request):
                 bairro=bairro,
                 cidade=cidade,
                 uf=uf,
-                condicoes_medicas=condicoes_medicas,
+                condicoes_medicas=condicoes_medicas
+            )
+            
+            # Criar primeira matrícula (Projeto Social)
+            primeira_matricula = Matricula.objects.create(
+                atleta=dependente,
                 tipo_matricula=TipoMatricula.objects.get(nome='Projeto Social'),
                 modalidade=Modalidade.objects.get(nome='Jiu-Jitsu'),
                 status_matricula=StatusMatricula.objects.get(nome='Pendente'),
                 data_matricula=date.today()
             )
             
-            logger.info(f"Dependente criado com sucesso: {dependente.id}")
+            logger.info(f"Dependente criado com primeira matrícula: {dependente.id} - Matrícula: {primeira_matricula.id}")
             
             # Redirecionar para dashboard
             return redirect('dashboard')
@@ -523,17 +530,38 @@ def matricula_modalidade_paga(request):
                 })
             
             if atleta_existente:
-                # Atualizar atleta existente com nova modalidade
-                atleta_existente.modalidade = Modalidade.objects.get(id=modalidade_id)
-                atleta_existente.tipo_matricula = TipoMatricula.objects.get(nome='Modalidade Paga')
-                atleta_existente.status_matricula = StatusMatricula.objects.get(nome='Pendente')
-                atleta_existente.data_matricula = date.today()
-                atleta_existente.save()
+                # ✅ CRIAR NOVA MATRÍCULA para atleta existente
+                from .models import Matricula
                 
-                logger.info(f"Atleta existente atualizado com nova modalidade: {atleta_existente.id}")
+                # Verificar se já existe matrícula ativa para esta modalidade
+                matricula_existente = Matricula.objects.filter(
+                    atleta=atleta_existente,
+                    modalidade_id=modalidade_id,
+                    ativa=True
+                ).first()
+                
+                if matricula_existente:
+                    logger.info(f"Matrícula já existe para esta modalidade: {matricula_existente.id}")
+                    return render(request, 'usuarios/matricula_modalidade_paga.html', {
+                        'modalidades': Modalidade.objects.all(),
+                        'error_message': f'Atleta já possui matrícula ativa na modalidade {matricula_existente.modalidade.nome}'
+                    })
+                
+                # Criar nova matrícula
+                nova_matricula = Matricula.objects.create(
+                    atleta=atleta_existente,
+                    tipo_matricula=TipoMatricula.objects.get(nome='Modalidade Paga'),
+                    modalidade=Modalidade.objects.get(id=modalidade_id),
+                    status_matricula=StatusMatricula.objects.get(nome='Pendente'),
+                    data_matricula=date.today()
+                )
+                
+                logger.info(f"Nova matrícula criada para atleta existente: {nova_matricula.id}")
                 
             else:
-                # Criar novo atleta
+                # ✅ Criar novo atleta E sua primeira matrícula
+                from .models import Matricula
+                
                 dependente = Dependente.objects.create(
                     usuario=request.user,
                     nome=nome_completo,
@@ -550,14 +578,19 @@ def matricula_modalidade_paga(request):
                     bairro=bairro,
                     cidade=cidade,
                     uf=uf,
-                    condicoes_medicas=condicoes_medicas,
+                    condicoes_medicas=condicoes_medicas
+                )
+                
+                # Criar primeira matrícula
+                primeira_matricula = Matricula.objects.create(
+                    atleta=dependente,
                     tipo_matricula=TipoMatricula.objects.get(nome='Modalidade Paga'),
                     modalidade=Modalidade.objects.get(id=modalidade_id),
                     status_matricula=StatusMatricula.objects.get(nome='Pendente'),
                     data_matricula=date.today()
                 )
                 
-                logger.info(f"Novo atleta criado: {dependente.id}")
+                logger.info(f"Novo atleta criado com primeira matrícula: {dependente.id} - Matrícula: {primeira_matricula.id}")
             
             # Redirecionar para dashboard
             return redirect('dashboard')
@@ -578,7 +611,7 @@ def matricula_modalidade_paga(request):
 def dashboard(request):
     """Dashboard do usuário logado"""
     usuario = request.user
-    dependentes = Dependente.objects.filter(usuario=usuario)
+    dependentes = Dependente.objects.filter(usuario=usuario).prefetch_related('matriculas__modalidade', 'matriculas__tipo_matricula', 'matriculas__status_matricula')
     
     context = {
         'usuario': usuario,
