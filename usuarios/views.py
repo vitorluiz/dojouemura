@@ -434,10 +434,17 @@ def matricula_modalidade_paga(request):
         # Verificar se atleta já existe
         atleta_existente = None
         try:
+            # Buscar primeiro pelo CPF exato (com formatação)
             atleta_existente = Dependente.objects.get(cpf=cpf)
-            logger.info(f"Atleta existente encontrado: {atleta_existente.nome}")
+            logger.info(f"✅ ATLETA EXISTENTE encontrado pelo CPF exato: {atleta_existente.nome}")
         except Dependente.DoesNotExist:
-            logger.info("Novo atleta sendo cadastrado")
+            try:
+                # Se não encontrar, tentar com CPF limpo
+                cpf_limpo = cpf.replace('.', '').replace('-', '')
+                atleta_existente = Dependente.objects.get(cpf=cpf_limpo)
+                logger.info(f"✅ ATLETA EXISTENTE encontrado pelo CPF limpo: {atleta_existente.nome}")
+            except Dependente.DoesNotExist:
+                logger.info("Novo atleta sendo cadastrado")
         
         # Verificar campos obrigatórios baseado no tipo de matrícula
         required_fields = ['nome', 'data_nascimento', 'cpf', 'parentesco', 'modalidade']
@@ -447,14 +454,15 @@ def matricula_modalidade_paga(request):
             logger.info("Modalidade paga: campos escolares são opcionais")
         
         # Foto só é obrigatória para novos atletas
-        if not atleta_existente and 'foto' not in request.FILES:
+        if not atleta_existente:
             required_fields.append('foto')
-            logger.warning("Foto obrigatória para novo atleta")
+            logger.info("Foto obrigatória para novo atleta")
         
         missing_fields = []
         for field in required_fields:
             if field == 'foto':
-                if field not in request.FILES:
+                # Só validar foto se for obrigatória (novo atleta)
+                if field in required_fields and field not in request.FILES:
                     missing_fields.append(field)
                     logger.warning(f"Campo obrigatório ausente: {field}")
             else:
