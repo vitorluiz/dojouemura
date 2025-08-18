@@ -3,7 +3,7 @@ from django.contrib.auth.admin import UserAdmin
 from django.utils.html import format_html
 from django.urls import reverse
 from django.utils.safestring import mark_safe
-from .models import Usuario, Dependente, Modalidade, TipoMatricula, StatusMatricula
+from .models import Usuario, Dependente, Modalidade, TipoMatricula, StatusMatricula, Matricula
 
 
 @admin.register(Usuario)
@@ -106,26 +106,24 @@ class DependenteAdmin(admin.ModelAdmin):
     list_display = [
         'nome', 'usuario_link', 'idade_display', 
         'parentesco', 'escola', 'cidade_uf', 'foto_thumbnail',
-        'tipo_matricula', 'modalidade', 'status_matricula', 'data_matricula',
-        'termos_aceitos', 'data_cadastro'
+        'matriculas_count', 'termos_aceitos', 'data_cadastro'
     ]
     
     # Campos para busca
     search_fields = [
         'nome', 'usuario__first_name', 'usuario__last_name', 'usuario__email',
-        'escola', 'cidade', 'bairro', 'tipo_matricula__nome', 'modalidade__nome'
+        'escola', 'cidade', 'bairro'
     ]
     
     # Filtros laterais
     list_filter = [
         'parentesco', 'escolaridade', 'turno', 'uf', 
-        'tipo_matricula', 'modalidade', 'status_matricula',
         'termo_responsabilidade', 'termo_uso_imagem',
         'data_cadastro', 'usuario__email_verificado'
     ]
     
     # Campos editáveis na listagem
-    list_editable = ['parentesco', 'status_matricula']
+    list_editable = ['parentesco']
     
     # Ordenação padrão
     ordering = ['-data_cadastro', 'usuario__first_name']
@@ -153,8 +151,8 @@ class DependenteAdmin(admin.ModelAdmin):
         ('Dados Escolares', {
             'fields': ('escolaridade', 'escola', 'turno')
         }),
-        ('Matrícula', {
-            'fields': ('tipo_matricula', 'modalidade', 'status_matricula', 'data_matricula'),
+        ('Matrículas', {
+            'fields': ('matriculas_count',),
             'classes': ('wide',)
         }),
         ('Informações Médicas', {
@@ -202,6 +200,15 @@ class DependenteAdmin(admin.ModelAdmin):
         return f"{obj.cidade}/{obj.uf}"
     cidade_uf.short_description = 'Cidade/UF'
     cidade_uf.admin_order_field = 'cidade'
+    
+    def matriculas_count(self, obj):
+        """Conta quantas matrículas o atleta possui"""
+        count = obj.matriculas.count()
+        if count > 0:
+            url = reverse('admin:usuarios_matricula_changelist') + f'?atleta__id__exact={obj.id}'
+            return format_html('<a href="{}">{} matrícula(s)</a>', url, count)
+        return '0 matrículas'
+    matriculas_count.short_description = 'Matrículas'
     
     def foto_thumbnail(self, obj):
         """Exibe miniatura da foto"""
@@ -323,6 +330,57 @@ class StatusMatriculaAdmin(admin.ModelAdmin):
         )
     cor_display.short_description = 'Cor'
 
+
+@admin.register(Matricula)
+class MatriculaAdmin(admin.ModelAdmin):
+    """Configuração do admin para o modelo Matricula"""
+    
+    list_display = [
+        'atleta', 'modalidade', 'tipo_matricula', 'status_matricula', 
+        'data_matricula', 'ativa', 'duracao_dias_display'
+    ]
+    list_filter = [
+        'tipo_matricula', 'modalidade', 'status_matricula', 'ativa', 
+        'data_matricula', 'data_inicio', 'data_fim'
+    ]
+    search_fields = [
+        'atleta__nome', 'atleta__usuario__first_name', 'atleta__usuario__last_name',
+        'modalidade__nome', 'tipo_matricula__nome', 'status_matricula__nome'
+    ]
+    list_editable = ['status_matricula', 'ativa']
+    ordering = ['-data_matricula', 'atleta__nome']
+    
+    fieldsets = (
+        ('Informações do Atleta', {
+            'fields': ('atleta',)
+        }),
+        ('Detalhes da Matrícula', {
+            'fields': ('tipo_matricula', 'modalidade', 'status_matricula', 'data_matricula')
+        }),
+        ('Período de Aulas', {
+            'fields': ('data_inicio', 'data_fim'),
+            'classes': ('collapse',)
+        }),
+        ('Controle', {
+            'fields': ('ativa', 'observacoes'),
+            'classes': ('collapse',)
+        }),
+    )
+    
+    def duracao_dias_display(self, obj):
+        """Exibe a duração da matrícula em dias"""
+        duracao = obj.duracao_dias
+        if duracao is not None:
+            return f"{duracao} dias"
+        return "-"
+    duracao_dias_display.short_description = 'Duração'
+    
+    def get_queryset(self, request):
+        """Otimiza consultas com select_related"""
+        queryset = super().get_queryset(request)
+        return queryset.select_related(
+            'atleta', 'atleta__usuario', 'modalidade', 'tipo_matricula', 'status_matricula'
+        )
 
 # Configurações globais do admin
 admin.site.site_header = "Administração - Cadastro de Pessoas"

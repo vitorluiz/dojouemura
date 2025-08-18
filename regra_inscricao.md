@@ -17,3 +17,16 @@
 - não ter restrições médicas que proibem a prática do esporte;
 - aceitar os termos de responsabilidade, condições médicas, uso de imagem (opcional);
 - realizar o pagamento da mensalidade da modalidade que escolheu e confeção do cartão do atleta.
+
+
+
+
+
+
+
+
+
+
+
+
+

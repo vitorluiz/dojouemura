@@ -219,33 +219,8 @@ class Dependente(models.Model):
         verbose_name='Autorizo o Uso de Imagem'
     )
     
-    # NOVOS CAMPOS DE MATRÍCULA
-    tipo_matricula = models.ForeignKey(
-        'TipoMatricula',
-        on_delete=models.PROTECT,
-        verbose_name='Tipo de Matrícula',
-        help_text='Projeto Social (gratuito) ou Modalidade Paga'
-    )
-    
-    modalidade = models.ForeignKey(
-        'Modalidade',
-        on_delete=models.PROTECT,
-        blank=True,
-        null=True,
-        verbose_name='Modalidade',
-        help_text='Modalidade escolhida (apenas para matrícula paga)'
-    )
-    
-    status_matricula = models.ForeignKey(
-        'StatusMatricula',
-        on_delete=models.PROTECT,
-        verbose_name='Status da Matrícula'
-    )
-    
-    data_matricula = models.DateField(
-        default=date.today,
-        verbose_name='Data da Matrícula'
-    )
+    # Campos de matrícula foram movidos para o modelo Matricula
+    # Agora um atleta pode ter múltiplas matrículas simultâneas
     
     # Metadados
     data_cadastro = models.DateTimeField(
@@ -379,3 +354,72 @@ class StatusMatricula(models.Model):
     
     def __str__(self):
         return self.nome
+
+
+class Matricula(models.Model):
+    """Modelo para matrículas dos atletas - permite múltiplas matrículas por atleta"""
+    atleta = models.ForeignKey(
+        'Dependente',
+        on_delete=models.CASCADE,
+        related_name='matriculas',
+        verbose_name='Atleta'
+    )
+    tipo_matricula = models.ForeignKey(
+        TipoMatricula,
+        on_delete=models.PROTECT,
+        verbose_name='Tipo de Matrícula'
+    )
+    modalidade = models.ForeignKey(
+        Modalidade,
+        on_delete=models.PROTECT,
+        verbose_name='Modalidade'
+    )
+    status_matricula = models.ForeignKey(
+        StatusMatricula,
+        on_delete=models.PROTECT,
+        verbose_name='Status da Matrícula'
+    )
+    data_matricula = models.DateField(
+        default=date.today,
+        verbose_name='Data da Matrícula'
+    )
+    data_inicio = models.DateField(
+        null=True,
+        blank=True,
+        verbose_name='Data de Início das Aulas'
+    )
+    data_fim = models.DateField(
+        null=True,
+        blank=True,
+        verbose_name='Data de Término das Aulas'
+    )
+    observacoes = models.TextField(
+        blank=True,
+        verbose_name='Observações'
+    )
+    ativa = models.BooleanField(
+        default=True,
+        verbose_name='Matrícula Ativa'
+    )
+    
+    class Meta:
+        verbose_name = 'Matrícula'
+        verbose_name_plural = 'Matrículas'
+        ordering = ['-data_matricula', 'atleta__nome']
+        # Um atleta pode ter apenas uma matrícula ativa por modalidade
+        unique_together = ['atleta', 'modalidade', 'ativa']
+    
+    def __str__(self):
+        return f"{self.atleta.nome} - {self.modalidade.nome} ({self.tipo_matricula.nome})"
+    
+    @property
+    def duracao_dias(self):
+        """Retorna a duração da matrícula em dias"""
+        if self.data_inicio and self.data_fim:
+            return (self.data_fim - self.data_inicio).days
+        return None
+    
+    @property
+    def status_color(self):
+        """Retorna a cor do status da matrícula"""
+        return self.status_matricula.cor if self.status_matricula else '#007bff'
