@@ -136,7 +136,9 @@ class Dependente(models.Model):
     foto = models.ImageField(
         upload_to='dependentes/fotos/',
         verbose_name='Foto',
-        help_text='Foto do dependente (opcional)'
+        help_text='Foto do dependente (opcional)',
+        null=True,
+        blank=True
     )
     
     # Endereço
