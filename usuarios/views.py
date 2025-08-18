@@ -431,32 +431,44 @@ def matricula_modalidade_paga(request):
         cpf = request.POST.get('cpf', '').replace('.', '').replace('-', '')
         modalidade_id = request.POST.get('modalidade')
         
-        # Verificar se atleta já existe
+        # VARIÁVEL DE CONTROLE: Verificar se atleta já existe
+        is_atleta_existente = False
         atleta_existente = None
+        
+        # Buscar atleta por CPF (formatado ou limpo)
         try:
-            # Buscar primeiro pelo CPF exato (com formatação)
+            # Primeiro: tentar CPF exato
             atleta_existente = Dependente.objects.get(cpf=cpf)
+            is_atleta_existente = True
             logger.info(f"✅ ATLETA EXISTENTE encontrado pelo CPF exato: {atleta_existente.nome}")
         except Dependente.DoesNotExist:
             try:
-                # Se não encontrar, tentar com CPF limpo
+                # Segundo: tentar CPF limpo
                 cpf_limpo = cpf.replace('.', '').replace('-', '')
                 atleta_existente = Dependente.objects.get(cpf=cpf_limpo)
+                is_atleta_existente = True
                 logger.info(f"✅ ATLETA EXISTENTE encontrado pelo CPF limpo: {atleta_existente.nome}")
             except Dependente.DoesNotExist:
+                is_atleta_existente = False
                 logger.info("Novo atleta sendo cadastrado")
         
-        # Verificar campos obrigatórios baseado no tipo de matrícula
+        # LOGGING DE CONTROLE
+        logger.info(f"🎯 VARIÁVEL DE CONTROLE: is_atleta_existente = {is_atleta_existente}")
+        logger.info(f"🎯 Atleta existente: {atleta_existente.nome if atleta_existente else 'Nenhum'}")
+        
+        # Verificar campos obrigatórios baseado na variável de controle
         required_fields = ['nome', 'data_nascimento', 'cpf', 'parentesco', 'modalidade']
         
         # Para modalidade paga, escola, turma e turno são opcionais
         if not request.POST.get('escola') or not request.POST.get('turno'):
             logger.info("Modalidade paga: campos escolares são opcionais")
         
-        # Foto só é obrigatória para novos atletas
-        if not atleta_existente:
+        # Foto só é obrigatória para novos atletas (usando variável de controle)
+        if not is_atleta_existente:
             required_fields.append('foto')
-            logger.info("Foto obrigatória para novo atleta")
+            logger.info("📸 Foto obrigatória para NOVO atleta")
+        else:
+            logger.info("📸 Foto OPCIONAL para atleta EXISTENTE")
         
         missing_fields = []
         for field in required_fields:
@@ -464,11 +476,11 @@ def matricula_modalidade_paga(request):
                 # Só validar foto se for obrigatória (novo atleta)
                 if field in required_fields and field not in request.FILES:
                     missing_fields.append(field)
-                    logger.warning(f"Campo obrigatório ausente: {field}")
+                    logger.warning(f"❌ Campo obrigatório ausente: {field}")
             else:
                 if not request.POST.get(field):
                     missing_fields.append(field)
-                    logger.warning(f"Campo obrigatório ausente: {field}")
+                    logger.warning(f"❌ Campo obrigatório ausente: {field}")
         
         if missing_fields:
             logger.error(f"Campos obrigatórios ausentes: {missing_fields}")
