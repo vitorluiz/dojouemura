@@ -439,14 +439,21 @@ def matricula_modalidade_paga(request):
         is_atleta_existente = False
         atleta_existente = None
         
-        # Buscar atleta por CPF (sempre limpo)
+        # Buscar atleta por CPF (usando a mesma lógica da busca)
         try:
-            atleta_existente = Dependente.objects.get(cpf=cpf_limpo)
+            # Primeiro: tentar CPF exato (com formatação)
+            atleta_existente = Dependente.objects.get(cpf=cpf_original)
             is_atleta_existente = True
-            logger.info(f"[SUCESSO] ATLETA EXISTENTE encontrado pelo CPF limpo: {atleta_existente.nome}")
+            logger.info(f"[SUCESSO] ATLETA EXISTENTE encontrado pelo CPF exato: {atleta_existente.nome}")
         except Dependente.DoesNotExist:
-            is_atleta_existente = False
-            logger.info("Novo atleta sendo cadastrado")
+            try:
+                # Segundo: tentar CPF limpo
+                atleta_existente = Dependente.objects.get(cpf=cpf_limpo)
+                is_atleta_existente = True
+                logger.info(f"[SUCESSO] ATLETA EXISTENTE encontrado pelo CPF limpo: {atleta_existente.nome}")
+            except Dependente.DoesNotExist:
+                is_atleta_existente = False
+                logger.info("Novo atleta sendo cadastrado")
         
         # LOGGING DE CONTROLE
         logger.info(f"[CONTROLE] VARIÁVEL DE CONTROLE: is_atleta_existente = {is_atleta_existente}")
