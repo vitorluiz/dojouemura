@@ -392,22 +392,22 @@ def matricula_modalidade_paga(request):
                 # Buscar primeiro pelo CPF exato (com formatação)
                 logger.info(f"Tentando buscar pelo CPF exato: '{cpf_busca}'")
                 atleta_existente = Dependente.objects.get(cpf=cpf_busca)
-                logger.info(f"✅ ATLETA ENCONTRADO pelo CPF exato: {atleta_existente.nome}")
+                logger.info(f"[SUCESSO] ATLETA ENCONTRADO pelo CPF exato: {atleta_existente.nome}")
                 logger.info(f"   CPF no banco: '{atleta_existente.cpf}'")
                 logger.info(f"   Tipo CPF no banco: {type(atleta_existente.cpf)}")
                 
             except Dependente.DoesNotExist:
-                logger.info(f"❌ CPF exato não encontrado, tentando limpo...")
+                logger.info(f"[BUSCA] CPF exato não encontrado, tentando limpo...")
                 try:
                     # Se não encontrar, tentar com CPF limpo
                     cpf_limpo = cpf_busca.replace('.', '').replace('-', '')
                     logger.info(f"Tentando buscar pelo CPF limpo: '{cpf_limpo}'")
                     atleta_existente = Dependente.objects.get(cpf=cpf_limpo)
-                    logger.info(f"✅ ATLETA ENCONTRADO pelo CPF limpo: {atleta_existente.nome}")
+                    logger.info(f"[SUCESSO] ATLETA ENCONTRADO pelo CPF limpo: {atleta_existente.nome}")
                     logger.info(f"   CPF no banco: '{atleta_existente.cpf}'")
                     
                 except Dependente.DoesNotExist:
-                    logger.warning(f"❌ CPF não encontrado nem exato nem limpo: '{cpf_busca}'")
+                    logger.warning(f"[ERRO] CPF não encontrado nem exato nem limpo: '{cpf_busca}'")
                     logger.info(f"CPFs no banco:")
                     for dep in Dependente.objects.all():
                         logger.info(f"   '{dep.cpf}' - {dep.nome}")
@@ -418,7 +418,7 @@ def matricula_modalidade_paga(request):
                     })
             
             # Retornar dados do atleta para preenchimento automático
-            logger.info(f"🎯 Retornando template com atleta_existente: {atleta_existente.nome}")
+            logger.info(f"[CONTROLE] Retornando template com atleta_existente: {atleta_existente.nome}")
             logger.info(f"   Contexto: atleta_existente={atleta_existente}, modalidades={Modalidade.objects.count()}")
             
             return render(request, 'usuarios/matricula_modalidade_paga.html', {
@@ -440,21 +440,21 @@ def matricula_modalidade_paga(request):
             # Primeiro: tentar CPF exato
             atleta_existente = Dependente.objects.get(cpf=cpf)
             is_atleta_existente = True
-            logger.info(f"✅ ATLETA EXISTENTE encontrado pelo CPF exato: {atleta_existente.nome}")
+            logger.info(f"[SUCESSO] ATLETA EXISTENTE encontrado pelo CPF exato: {atleta_existente.nome}")
         except Dependente.DoesNotExist:
             try:
                 # Segundo: tentar CPF limpo
                 cpf_limpo = cpf.replace('.', '').replace('-', '')
                 atleta_existente = Dependente.objects.get(cpf=cpf_limpo)
                 is_atleta_existente = True
-                logger.info(f"✅ ATLETA EXISTENTE encontrado pelo CPF limpo: {atleta_existente.nome}")
+                logger.info(f"[SUCESSO] ATLETA EXISTENTE encontrado pelo CPF limpo: {atleta_existente.nome}")
             except Dependente.DoesNotExist:
                 is_atleta_existente = False
                 logger.info("Novo atleta sendo cadastrado")
         
         # LOGGING DE CONTROLE
-        logger.info(f"🎯 VARIÁVEL DE CONTROLE: is_atleta_existente = {is_atleta_existente}")
-        logger.info(f"🎯 Atleta existente: {atleta_existente.nome if atleta_existente else 'Nenhum'}")
+        logger.info(f"[CONTROLE] VARIÁVEL DE CONTROLE: is_atleta_existente = {is_atleta_existente}")
+        logger.info(f"[CONTROLE] Atleta existente: {atleta_existente.nome if atleta_existente else 'Nenhum'}")
         
         # Verificar campos obrigatórios baseado na variável de controle
         required_fields = ['nome', 'data_nascimento', 'cpf', 'parentesco', 'modalidade']
@@ -466,9 +466,9 @@ def matricula_modalidade_paga(request):
         # Foto só é obrigatória para novos atletas (usando variável de controle)
         if not is_atleta_existente:
             required_fields.append('foto')
-            logger.info("📸 Foto obrigatória para NOVO atleta")
+            logger.info("[FOTO] Foto obrigatória para NOVO atleta")
         else:
-            logger.info("📸 Foto OPCIONAL para atleta EXISTENTE")
+            logger.info("[FOTO] Foto OPCIONAL para atleta EXISTENTE")
         
         missing_fields = []
         for field in required_fields:
@@ -476,11 +476,11 @@ def matricula_modalidade_paga(request):
                 # Só validar foto se for obrigatória (novo atleta)
                 if field in required_fields and field not in request.FILES:
                     missing_fields.append(field)
-                    logger.warning(f"❌ Campo obrigatório ausente: {field}")
+                    logger.warning(f"[ERRO] Campo obrigatório ausente: {field}")
             else:
                 if not request.POST.get(field):
                     missing_fields.append(field)
-                    logger.warning(f"❌ Campo obrigatório ausente: {field}")
+                    logger.warning(f"[ERRO] Campo obrigatório ausente: {field}")
         
         if missing_fields:
             logger.error(f"Campos obrigatórios ausentes: {missing_fields}")
