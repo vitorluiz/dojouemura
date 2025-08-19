@@ -31,7 +31,7 @@
                         <i class="bi bi-people-fill"></i>
                     </div>
                     <h3 class="fw-bold">{{ dependentes.count }}</h3>
-                    <p class="text-muted mb-0">Dependente{{ dependentes.count|pluralize }}</p>
+                    <p class="text-muted mb-0">Atleta{{ dependentes.count|pluralize }}</p>
                 </div>
             </div>
         </div>
@@ -136,17 +136,17 @@
         </div>
     </div>
 
-    <!-- Seção de Dependentes -->
+    <!-- Seção de Atletas -->
     <div class="row">
         <div class="col-12">
             <div class="card">
                 <div class="card-header d-flex justify-content-between align-items-center">
                     <h4 class="mb-0 fw-bold">
                         <i class="bi bi-people me-2"></i>
-                        Meus Dependentes
+                        Meus Atletas
                     </h4>
                     {% if dependentes %}
-                        <span class="badge bg-primary">{{ dependentes.count }} dependente{{ dependentes.count|pluralize }}</span>
+                        <span class="badge bg-primary">{{ dependentes.count }} atleta{{ dependentes.count|pluralize }}</span>
                     {% endif %}
                 </div>
                 
@@ -217,12 +217,12 @@
                                             <td>{{ dependente.cidade }}/{{ dependente.uf }}</td>
                                             <td>
                                                 <div class="btn-group btn-group-sm">
-                                                    <a href="{% url 'editar_dependente' dependente.id %}" 
+                                                    <a href="{% url 'usuarios:editar_dependente' dependente.id %}" 
                                                        class="btn btn-outline-primary" 
                                                        title="Editar">
                                                         <i class="bi bi-pencil"></i>
                                                     </a>
-                                                    <a href="{% url 'excluir_dependente' dependente.id %}" 
+                                                    <a href="{% url 'usuarios:excluir_dependente' dependente.id %}" 
                                                        class="btn btn-outline-danger" 
                                                        title="Excluir">
                                                         <i class="bi bi-trash"></i>
@@ -239,14 +239,14 @@
                             <div class="display-1 text-muted mb-3">
                                 <i class="bi bi-person-plus"></i>
                             </div>
-                            <h4 class="text-muted mb-3">Nenhum dependente cadastrado</h4>
+                            <h4 class="text-muted mb-3">Nenhum atleta cadastrado</h4>
                             <p class="text-muted mb-4">
-                                Você ainda não cadastrou nenhum dependente. 
+                                Você ainda não cadastrou nenhum atleta. 
                                 Clique no botão abaixo para começar.
                             </p>
-                            <a href="{% url 'cadastrar_dependente' %}" class="btn btn-primary">
+                            <a href="{% url 'usuarios:cadastrar_dependente' %}" class="btn btn-primary">
                                 <i class="bi bi-person-plus me-2"></i>
-                                Cadastrar Primeiro Dependente
+                                Cadastrar Primeiro Atleta
                             </a>
                         </div>
                     {% endif %}

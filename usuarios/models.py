@@ -5,10 +5,8 @@ from django.core.exceptions import ValidationError
 from datetime import date, timedelta
 from utils.get_alphanumeric import get_alphanumeric
 
-from utils.validacoes import validar_cpf, validar_idade_usuario, validar_idade_dependente
+from utils.validacoes import validar_cpf, validar_idade_usuario, validar_idade_atleta,buscar_cep,validar_cep
 from utils.uuid7 import uuid7
-
-
 
 
 class Usuario(AbstractUser):
@@ -81,10 +79,15 @@ class Usuario(AbstractUser):
     
     def __str__(self):
         return f"{self.first_name} {self.last_name}".strip() or self.email
+    
+    @property
+    def nome_completo(self):
+        """Retorna o nome completo do usuário"""
+        return f"{self.first_name} {self.last_name}".strip() or self.email
 
 
-class Dependente(models.Model):
-    """Modelo para dependentes dos usuários"""
+class Atleta(models.Model):
+    """Modelo para atletas dos usuários"""
     id = models.UUIDField(
         primary_key=True,
         default=uuid7,
@@ -118,7 +121,7 @@ class Dependente(models.Model):
     usuario = models.ForeignKey(
         Usuario,
         on_delete=models.PROTECT,
-        related_name='dependentes',
+        related_name='atletas',
         verbose_name='Usuário Responsável'
     )
     codigo_alfanumerico = models.CharField(max_length=9, unique=True, editable=False)
@@ -126,12 +129,12 @@ class Dependente(models.Model):
     # Dados pessoais
     nome = models.CharField(
         max_length=200,
-        verbose_name='Nome Completo do Dependente'
+        verbose_name='Nome Completo do atleta'
     )
     
     data_nascimento = models.DateField(
         verbose_name='Data de Nascimento',
-        validators=[validar_idade_dependente]
+        validators=[validar_idade_atleta]
     )
     cpf = models.CharField(
         max_length=14,
@@ -147,9 +150,9 @@ class Dependente(models.Model):
     
     # Foto
     foto = models.ImageField(
-        upload_to='dependentes/fotos/',
+        upload_to='atletas/fotos/',
         verbose_name='Foto',
-        help_text='Foto do dependente (opcional)',
+        help_text='Foto do atleta (obrigatório)',
         null=True,
         blank=True
     )
@@ -158,10 +161,7 @@ class Dependente(models.Model):
     cep = models.CharField(
         max_length=9,
         verbose_name='CEP',
-        validators=[RegexValidator(
-            regex=r'^\d{5}-\d{3}$',
-            message='CEP deve estar no formato XXXXX-XXX'
-        )]
+        validators=[validar_cep]
     )
     
     logradouro = models.CharField(
@@ -232,8 +232,6 @@ class Dependente(models.Model):
         verbose_name='Autorizo o Uso de Imagem'
     )
     
-    # Campos de matrícula foram movidos para o modelo Matricula
-    # Agora um atleta pode ter múltiplas matrículas simultâneas
     
     # Metadados
     data_cadastro = models.DateTimeField(
@@ -250,7 +248,7 @@ class Dependente(models.Model):
         constraints = [
             models.UniqueConstraint(
                 fields=['usuario', 'cpf'],
-                name='unique_dependente_por_usuario'
+                name='unique_atleta_por_usuario'
             )
         ]
         verbose_name = 'Atleta'
@@ -271,12 +269,12 @@ class Dependente(models.Model):
     # Dentro da classe Usuario(AbstractUser)
     @property
     def nome_completo(self):
-        """Retorna o nome completo do dependente"""
+        """Retorna o nome completo do atleta"""
         return self.nome
 
     @property
     def idade(self):
-        """Calcula a idade do dependente"""
+        """Calcula a idade do atleta"""
         hoje = date.today()
         return hoje.year - self.data_nascimento.year - ((hoje.month, hoje.day) < (self.data_nascimento.month, self.data_nascimento.day))
     
@@ -290,21 +288,21 @@ class Dependente(models.Model):
         return endereco
     
     def save(self, *args, **kwargs):
-        """Gera um código alfanumérico único antes de salvar o dependente se ele não existir."""
+        """Gera um código alfanumérico único antes de salvar o atleta se ele não existir."""
         if not self.codigo_alfanumerico:
             # Loop para garantir que o código gerado seja único
             while True:
                 codigo = get_alphanumeric()
-                # Verifica se já existe um dependente com este código
-                if not Dependente.objects.filter(codigo_alfanumerico=codigo).exists():
+                # Verifica se já existe um atleta com este código
+                if not Atleta.objects.filter(codigo_alfanumerico=codigo).exists():
                     self.codigo_alfanumerico = codigo
                     break
         super().save(*args, **kwargs)
 
     def __str__(self):
-        nome_dependente = self.nome_completo if hasattr(self, 'nome_completo') else "Dependente"
+        nome_atleta = self.nome_completo if hasattr(self, 'nome_completo') else "atleta"
         nome_usuario = f"{self.usuario.first_name} {self.usuario.last_name}".strip() or self.usuario.email
-        return f"{nome_dependente} ({nome_usuario})"
+        return f"{nome_atleta} ({nome_usuario})"
 
 
 # MODELOS PARA CHOICES - Permitem gerenciar opções via admin
@@ -403,7 +401,7 @@ class Matricula(models.Model):
         verbose_name='ID'
     )
     atleta = models.ForeignKey(
-        'Dependente',
+        'atleta',
         on_delete=models.CASCADE,
         related_name='matriculas',
         verbose_name='Atleta'

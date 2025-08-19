@@ -39,13 +39,13 @@ def validar_idade_usuario(data_nascimento):
         raise ValidationError('Usuário deve ser maior de idade (18 anos ou mais)')
 
 
-def validar_idade_dependente(data_nascimento):
-    """Valida se o dependente tem entre 6 e 18 anos"""
+def validar_idade_atleta(data_nascimento):
+    """Valida se o atleta tem entre 6 e 18 anos"""
     hoje = date.today()
     idade = hoje.year - data_nascimento.year - ((hoje.month, hoje.day) < (data_nascimento.month, data_nascimento.day))
     
     if idade < 6 or idade > 18:
-        raise ValidationError('Dependente deve ter entre 6 e 18 anos')
+        raise ValidationError('atleta deve ter entre 6 e 18 anos')
 
 
 def buscar_cep(cep):

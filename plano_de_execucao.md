@@ -1,7 +1,67 @@
+
+O SISTEMA DE GESTÃO DO DOJÔ UEMURA, PERMITE AO GESTOR TER A VISÃO MACRO DO SEU NEGOCIO.
+O DOJÔ UEMURA CONTA COM OFERTAS DE AULAS GRATUIRAS DE JIU-JITSU PARA CRIANÇAS E ADOLECENETES DE 6 A 18 ANOS. OFERECE OUTRA MODALIDADES DE ESPORTES COMO JUDÔ, MUAY THAI, PARA CRIANÇAS E ADULTOS COM MENSALIDADES QUE CABEM NO BOLSO. 
+TEMOS AGENDAS NOS 3 PERIODOS PARA ATENDER A TODOS A TODA SOCIEDADE CHAPADENSE.
+O CADASTRO PARA TURMAS DE JIU-JITSU SÃO REALIZADAS VIA WEB, PELO SITE DO DOJÔ EM PERIODOS DE INSCRIÇÃO ABERTOS. NOSSAS TURMAS TEM X ALUNOS, NOSSOS PROFESSORES SÃO GRADUADOS.
+PARA OS PAIS E RESPONSÁVEL TEMOS O CONTROLE DE FREQUENCIA DO SEU FILHO, QUE ENVIA A NOTIFICAÇÃO QUANDO SEU FILHO ENTRA E SAI DO DOJO. 
+O RESPONSÁVEL PODERÁ ACOMPANHAR O SEU DEPENDENTE AO VIVO, NA HORA SUA AULA. ATRAVES DO NOSSO PORTAL DO ALUNO. 
+PARA ALUNOS QUE DESEJAM SER ALUNOS MENSALISTA PODEM SOLICITAR SUA AULA NO SITE, ASSIM PODERÁ MARCAR SUA AULA.
+O PROCESSO É SIMPLES NO NOSSO SITE EM AGENDAMENTO INFORME SEU EMAIL VOCE RECEBERÁ UMA SENHA QUE EXPIRA EM 24 HORAS, FAÇA O SEU AGENDAMENTO E RECEBER O CÓDIGO PARA SUA AULA EXPERIMENTAL.
+QUER SER ALUNO FALE COM NOSSOS COLABORADORES QUE TEREMOS O MAIRO PRAZER EM TER VOCE COMO NOSSO ALUNO.
+ATENÇÃO O PROJETO SOCIAL SÓ PODEM PARTICIPAR CRIANÇAS E ADOLECENTES DE 06 A 18 ANOS, MATRICULADOS NA ESCOLA RELUGAR E OBRIGATORIAMENTE SER MATRICULADO POR SEU RESPONSÁVEL LEGAL. 
+TEREMOS UMA CARTEIRA DO ATLETA QUE IDENTICARA O ALUNO COM UM CÓDIGO ALFANUMERICO DE 10 DIGITOS QUE SERÁ GERADO UM QRCODE PARA FACILITAR A SUA LEITURA, IREMOS DISPONIBILIZAR UMA LEITOR NA PORTARIA QUE FARA A SUA LEITURA E PERMISSÃO PARA REALIZAR AS AULAS, AO ALUNOS MENSALISTA SERÁ REALIZADO O CONTROLE DA FREQUENCIA E MENSALIDADES POR ESTE QR. TODOS OS ALUNOS DEVEM TER SUA FOTO NO CARTÃO DO ATLETA. DADOS MÉDICOS COMO TIPO SANGUINEO E ALERGIAS, CONDIÇÕES MÉDICAS, QUE OS PROFESSORES DEVEM SABER. SEU CONTATO DE EMERGENCIA.  SE É INICIANTE OU JÁ PRATICANTE DE ESPORTES. 
+NOSSOS PROFESSORES TERAM ACESSO AS AULAS PODENDO GERENCIA ALUNOS MATRICULADOS EM SUA AULA, MANDAR NOTIFICAÇÕES PARA OS RESPONSÁVEIS E ALUNOS MENSALISTA MATRICULADOS NA TURMA. 
+TEMOS UMA GALERIA DE FOTOS DOS EVENTOS E CAMPEONATOS DO DOJÔ. 
+
+
+# INSCRIÇÃO DO PROJETO SOCIAL
+
+- realizar sua inscrição no periodo de inscrição
+- ser menor de idade, (06 - 18 anos);
+- ter uma responsável legal;
+- estar matriculado e frequentando escola regular;
+- não ter restrições médicas que proibem a prática do esporte;
+- aceitar os termos de responsabilidade, uso de imagem, condições médicas.
+- pagar a taxa de inscrição R$ 50,00.
+
+# INSCRIÇÃO POR MODALIDADE
+
+- realizar sua inscrição no site;
+- apartir de 06 anos;
+- ser ou ter responsável financeiro;
+- não ter restrições médicas que proibem a prática do esporte;
+- aceitar os termos de responsabilidade, condições médicas, uso de imagem (opcional);
+- realizar o pagamento da mensalidade da modalidade que escolheu e confeção do cartão do atleta.
+
+### Municipais
+- Escola Municipal Água Branca
+- Escola Municipal Casca III
+- Escola Municipal Córrego do Campo
+- Escola Municipal Cristo Rei
+- Escola Municipal JJ
+- Escola Municipal Monteiro Lobato
+- Escola Municipal Professor Jacondino Bezerra
+- Escola Municipal Professora Abinel Freitas Pereira
+- Escola Municipal Professora Elba Xavier Ferreira
+- Escola Municipal Professora Irene Ferreira da Silva
+- Escola Municipal Professora Maria Luiza de Araújo Gomes
+- Escola Municipal Santa Helena
+- Escola Municipal Thermozina de Siqueira
+
+### Estaduais
+- Escola Estadual Cel Rafael de Siqueira
+- Escola Estadual Professor Ana Tereza Albernaz
+- Escola Estadual Reunidas de Cachoeira Rica
+- Escola Estadual São José
+
+## Privadas
+- Colégio Tales de Mileto
+- Centro Educacional Sebastião Albernaz
+
 # 📋 PLANO DE EXECUÇÃO - SISTEMA DE FREQUÊNCIA DOJÔ UEMURA
 
 ## 🎯 **OBJETIVO PRINCIPAL**
-Implementar um sistema completo de controle de frequência que permita aos responsáveis acompanhar em tempo real quando seus dependentes entram e saem do Dojô, incluindo notificações automáticas e controle de acesso via QR Code.
+Implementar um sistema completo de controle de frequência que permita aos responsáveis acompanhar em tempo real quando seus atletas entram e saem do Dojô, incluindo notificações automáticas e controle de acesso via QR Code.
 
 ## 🚀 **FASE 1: SISTEMA DE FREQUÊNCIA (PRIORIDADE MÁXIMA)**
 
@@ -10,7 +70,7 @@ Implementar um sistema completo de controle de frequência que permita aos respo
 #### **Modelo: Frequencia**
 ```python
 class Frequencia(models.Model):
-    dependente = models.ForeignKey(Dependente, on_delete=models.CASCADE)
+    atleta = models.ForeignKey(Dependente, on_delete=models.CASCADE)
     data_entrada = models.DateTimeField()
     data_saida = models.DateTimeField(null=True, blank=True)
     turma = models.ForeignKey('Turma', on_delete=models.CASCADE)
@@ -45,7 +105,7 @@ class Professor(models.Model):
 #### **Modelo: Matricula**
 ```python
 class Matricula(models.Model):
-    dependente = models.ForeignKey(Dependente, on_delete=models.CASCADE)
+    atleta = models.ForeignKey(Dependente, on_delete=models.CASCADE)
     turma = models.ForeignKey(Turma, on_delete=models.CASCADE)
     data_matricula = models.DateField(auto_now_add=True)
     ativa = models.BooleanField(default=True)
@@ -55,7 +115,7 @@ class Matricula(models.Model):
 ### **1.2 Sistema de QR Code**
 
 #### **Geração de QR Code**
-- **Código Alfanumérico**: 10 dígitos únicos por dependente
+- **Código Alfanumérico**: 10 dígitos únicos por atleta
 - **QR Code**: Gerado automaticamente e atualizado na carteira do atleta
 - **Validação**: Verificação de validade e permissões
 
@@ -84,9 +144,9 @@ class Matricula(models.Model):
 ### **2.1 Notificações em Tempo Real**
 
 #### **Para Responsáveis**
-- **Entrada**: "Seu dependente [NOME] entrou no Dojô às [HORA]"
-- **Saída**: "Seu dependente [NOME] saiu do Dojô às [HORA]"
-- **Atraso**: "Seu dependente [NOME] não compareceu à aula de hoje"
+- **Entrada**: "Seu atleta [NOME] entrou no Dojô às [HORA]"
+- **Saída**: "Seu atleta [NOME] saiu do Dojô às [HORA]"
+- **Atraso**: "Seu atleta [NOME] não compareceu à aula de hoje"
 - **Frequência**: Relatório semanal de presenças
 
 #### **Para Professores**
@@ -231,3 +291,141 @@ class Matricula(models.Model):
 **Responsável**: Equipe de Desenvolvimento  
 **Data de Início**: [DATA]  
 **Data de Conclusão**: [DATA + 12 semanas]
+
+
+
+# 📋 **TODO - Dojô Uemura**
+
+## 🎯 **OBJETIVO DO PROJETO**
+Sistema completo de gestão para Dojô Uemura, incluindo matrículas, frequência, financeiro e eventos.
+
+---
+
+## ✅ **TAREFAS CONCLUÍDAS**
+
+### **🏗️ Estrutura Base**
+- [ ] Configuração inicial do projeto Django
+- [ ] App `usuarios` como central de autenticação
+- [ ] Modelo `Usuario` customizado com `AbstractUser`
+- [ ] Modelo `Atleta` para atletas
+- [ ] Sistema de tipos de conta (RESPONSAVEL, PROFESSOR, GESTOR, FUNCIONARIO)
+
+### **🔐 Sistema de Autenticação**
+- [ ] Views de registro e login
+- [ ] Verificação de email
+- [ ] Templates de autenticação
+- [ ] Sistema de mensagens
+
+### **📊 Modelos de Dados**
+- [ ] Modelos `Modalidade`, `TipoMatricula`, `StatusMatricula`
+- [ ] Campos de matrícula no modelo `Atleta`
+- [ ] Relacionamentos entre modelos
+- [ ] Migrações do banco de dados
+
+### **🎨 Interface e Navegação**
+- [ ] Template home com fluxo claro de navegação
+- [ ] Botões "Registre-se" e "Portal do Aluno" na home
+- [ ] Seção Portal do Aluno com explicações claras
+- [ ] Dashboard com informações do usuário
+
+### **📝 Sistema de Matrículas**
+- [ ] Views para projeto social e modalidade paga
+- [ ] Template específico para projeto social
+- [ ] Template específico para modalidade paga
+- [ ] Validações específicas por tipo de matrícula
+- [ ] Dashboard com opções de matrícula
+
+---
+
+## 🔄 **TAREFAS EM ANDAMENTO**
+
+### **⚡ Views e Lógica de Negócio**
+- [ ] ~~Implementar view `matricula_projeto_social`~~ ✅ **CONCLUÍDO**
+- [ ] ~~Implementar view `matricula_modalidade_paga`~~ ✅ **CONCLUÍDO**
+- [ ] ~~Atualizar view `cadastrar_atleta` para usar novos campos~~ ✅ **CONCLUÍDO**
+- [ ] ~~Validações específicas por tipo de matrícula~~ ✅ **CONCLUÍDO**
+
+---
+
+## 📋 **PRÓXIMAS TAREFAS (PRIORIDADE ALTA)**
+
+### **📱 Controle de Frequência**
+- [ ] **Sistema de QR Code** - Check-in/check-out dos alunos
+- [ ] **Notificações em tempo real** - Avisos para responsáveis
+- [ ] **Relatórios de presença** - Estatísticas de frequência
+
+### **🔧 Melhorias no Sistema de Matrículas**
+- [ ] **Validações de CPF** - Implementar validação real de CPF
+- [ ] **Upload de fotos** - Configurar media files para fotos dos atletas
+- [ ] **Validações de CEP** - Integrar com API de CEP para autocompletar endereço
+- [ ] **Termos legais** - Criar templates para termos de responsabilidade e uso de imagem
+
+
+### **💰 Sistema de Pagamentos (PRIORIDADE MÉDIA)**
+- [ ] **Integração com PIX** - Configurar gateway de pagamento
+- [ ] **Sistema de Boletos** - Geração automática de boletos
+- [ ] **Controle de mensalidades** - Sistema de cobrança recorrente
+- [ ] **Relatórios financeiros** - Dashboard para gestores
+
+### **📧 Notificações e Comunicação (PRIORIDADE MÉDIA)**
+- [ ] **Email automático** - Confirmação de matrícula e status
+- [ ] **SMS (futuro)** - Notificações importantes
+- [ ] **WhatsApp Business** - Comunicação direta com responsáveis
+
+## 📋 **TAREFAS FUTURAS (PRIORIDADE BAIXA)**
+
+### **📊 Relatórios e Analytics**
+- [ ] **Dashboard do Gestor** - Visão geral do Dojô
+- [ ] **Relatórios financeiros** - Análise de receita e despesas
+- [ ] **Estatísticas de alunos** - Crescimento e retenção
+
+### **🎉 Sistema de Eventos**
+- [ ] **Gestão de competições** - Inscrições e resultados
+- [ ] **Graduações** - Controle de faixas e progressão
+- [ ] **Eventos especiais** - Workshops e seminários
+
+---
+
+## 🚀 **PRÓXIMOS PASSOS RECOMENDADOS**
+
+### **1. Validações e Melhorias (SEMANA ATUAL)**
+- [ ] Implementar validação real de CPF
+- [ ] Configurar upload de fotos
+- [ ] Integrar validação de CEP
+- [ ] Testar fluxo completo de matrículas
+
+### **2. Sistema de Pagamentos (PRÓXIMA SEMANA)**
+- [ ] Configurar gateway PIX
+- [ ] Implementar sistema de boletos
+- [ ] Criar controle de mensalidades
+- [ ] Testar fluxo de pagamento
+
+### **3. Notificações (TERCEIRA SEMANA)**
+- [ ] Configurar emails automáticos
+- [ ] Implementar sistema de mensagens
+- [ ] Testar notificações
+
+---
+
+## 📅 **CRONOGRAMA ESTIMADO**
+
+- **Semana 1**: Validações e melhorias ✅ **EM ANDAMENTO**
+- **Semana 2**: Sistema de pagamentos
+- **Semana 3**: Notificações e comunicação
+- **Semana 4**: Controle de frequência
+- **Semana 5**: Relatórios e analytics
+- **Semana 6**: Sistema de eventos
+
+---
+
+## 🎯 **MÉTRICAS DE SUCESSO**
+
+- [ ] **Usabilidade**: Fluxo de matrícula em menos de 5 minutos
+- [ ] **Performance**: Página carrega em menos de 3 segundos
+- [ ] **Segurança**: 100% das validações funcionando
+- [ ] **Satisfação**: Teste com usuários reais
+
+---
+
+**Última atualização**: 17/08/2025 - Implementação das validações específicas por tipo de matrícula concluída ✅
+

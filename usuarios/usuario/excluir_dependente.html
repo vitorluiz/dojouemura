@@ -1,6 +1,6 @@
 {% extends 'publico/base.html' %}
 
-{% block title %}Excluir Dependente - Cadastro de Pessoas{% endblock %}
+{% block title %}Excluir Atleta - Cadastro de Pessoas{% endblock %}
 
 {% block content %}
 <div class="container py-5">
@@ -12,7 +12,7 @@
                         <div class="display-4 text-danger mb-3">
                             <i class="bi bi-exclamation-triangle"></i>
                         </div>
-                        <h2 class="fw-bold text-danger">Excluir Dependente</h2>
+                        <h2 class="fw-bold text-danger">Excluir Atleta</h2>
                         <p class="text-muted">Esta ação não pode ser desfeita</p>
                     </div>
                     
@@ -22,7 +22,7 @@
                             Atenção!
                         </h5>
                         <p class="mb-0">
-                            Você está prestes a excluir permanentemente o dependente 
+                            Você está prestes a excluir permanentemente o atleta 
                             <strong>{{ dependente.nome_completo }}</strong>. 
                             Todos os dados relacionados serão perdidos.
                         </p>
@@ -31,7 +31,7 @@
                     <!-- Informações do Dependente -->
                     <div class="card mb-4">
                         <div class="card-body">
-                            <h6 class="fw-bold mb-3">Dados do Dependente:</h6>
+                            <h6 class="fw-bold mb-3">Dados do Atleta:</h6>
                             <div class="row">
                                 <div class="col-12 mb-2">
                                     <strong>Nome:</strong> {{ dependente.nome_completo }}
@@ -61,7 +61,7 @@
                         <div class="d-flex gap-3 justify-content-center">
                             <button type="submit" class="btn btn-danger btn-lg">
                                 <i class="bi bi-trash me-2"></i>
-                                Sim, Excluir Dependente
+                                Sim, Excluir Atleta
                             </button>
                             <a href="{% url 'home' %}" class="btn btn-outline-secondary btn-lg">
                                 <i class="bi bi-arrow-left me-2"></i>

@@ -20,6 +20,7 @@ Esta pasta contém todos os scripts necessários para configurar e inicializar o
 
 ### **📧 Testes e Utilitários**
 - **`teste_email.py`** - Testa configuração de email
+- **`testar_recuperacao_senha.py`** - Testa funcionalidades de recuperação de senha
 - **`setup_dados_iniciais.py`** - Configura dados iniciais do sistema
 
 ## 🎯 Ordem de Execução Recomendada

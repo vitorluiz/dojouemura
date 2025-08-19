@@ -11,13 +11,13 @@ urlpatterns = [
     path('logout/', views.logout_usuario, name='logout'),
     path('verificar-email/<uidb64>/<token>/', views.verificar_email, name='verificar_email'),
     
-    # Painel do Atleta (antigo dashboard)
-    path('painel/', views.dashboard, name='dashboard'),
+    # Painel do Atleta (antigo painel-atleta)
+    path('painel/', views.painel-atleta, name='painel-atleta'),
     
-    # Gestão de Dependentes
-    path('cadastrar-dependente/', views.cadastrar_dependente, name='cadastrar_dependente'),
-    path('editar-dependente/<int:dependente_id>/', views.editar_dependente, name='editar_dependente'),
-    path('excluir-dependente/<int:dependente_id>/', views.excluir_dependente, name='excluir_dependente'),
+    # Gestão de Atletas
+    path('cadastrar-atleta/', views.cadastrar_atleta, name='cadastrar_atleta'),
+    path('editar-atleta/<uuid:atleta_id>/', views.editar_atleta, name='editar_atleta'),
+    path('excluir-atleta/<uuid:atleta_id>/', views.excluir_atleta, name='excluir_atleta'),
     
     # Matrículas
     path('matricula/projeto-social/', views.matricula_projeto_social, name='matricula_projeto_social'),
@@ -25,6 +25,7 @@ urlpatterns = [
     
     # Recuperação de senha
     path('esqueceu-senha/', views.esqueceu_senha, name='esqueceu_senha'),
+    path('reenviar-verificacao/', views.reenviar_verificacao, name='reenviar_verificacao'),
     path('reset-senha/<uidb64>/<token>/', views.reset_senha, name='reset_senha'),
     
     # Utilitários

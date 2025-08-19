@@ -51,16 +51,51 @@
                                 </label>
                                 <input type="email" class="form-control form-control-lg" 
                                        name="email" id="email" required 
-                                       placeholder="seu@email.com">
+                                       placeholder="seu@email.com"
+                                       value="{{ email|default:'' }}">
                                 <small class="text-muted">Digite o mesmo email usado no cadastro</small>
                             </div>
                             
-                            <div class="d-grid mb-4">
-                                <button type="submit" class="btn btn-warning btn-lg text-dark">
-                                    <i class="bi bi-send me-2"></i>
-                                    Enviar Email de Recuperação
-                                </button>
-                            </div>
+                            {% if usuario_nao_verificado %}
+                                <!-- Opções para usuário não verificado -->
+                                <div class="alert alert-warning">
+                                    <i class="bi bi-exclamation-triangle me-2"></i>
+                                    <strong>Atenção!</strong> Este email ainda não foi verificado.
+                                </div>
+                                
+                                <div class="row g-3 mb-4">
+                                    <div class="col-md-6">
+                                        <button type="submit" name="acao" value="reenviar_verificacao" 
+                                                class="btn btn-primary btn-lg w-100">
+                                            <i class="bi bi-envelope me-2"></i>
+                                            Reenviar Verificação
+                                        </button>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <button type="submit" name="acao" value="recuperar" 
+                                                class="btn btn-warning btn-lg w-100 text-dark">
+                                            <i class="bi bi-key me-2"></i>
+                                            Recuperar Senha
+                                        </button>
+                                    </div>
+                                </div>
+                                
+                                <div class="text-center">
+                                    <small class="text-muted">
+                                        <i class="bi bi-info-circle me-1"></i>
+                                        <strong>Reenviar Verificação:</strong> Receberá um novo email com link para verificar sua conta.<br>
+                                        <strong>Recuperar Senha:</strong> Receberá um link para redefinir sua senha (conta permanecerá não verificada).
+                                    </small>
+                                </div>
+                            {% else %}
+                                <!-- Formulário normal para usuários verificados -->
+                                <div class="d-grid mb-4">
+                                    <button type="submit" name="acao" value="recuperar" class="btn btn-warning btn-lg text-dark">
+                                        <i class="bi bi-send me-2"></i>
+                                        Enviar Email de Recuperação
+                                    </button>
+                                </div>
+                            {% endif %}
                         </form>
                         
                         <hr class="my-4">

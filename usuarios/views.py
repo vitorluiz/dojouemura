@@ -9,11 +9,14 @@ from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_str
 from django.contrib.auth.tokens import default_token_generator
 from django.http import HttpResponse, JsonResponse
-from .models import Usuario, Dependente, TipoMatricula, Modalidade, StatusMatricula
-from .forms import UsuarioRegistroForm, UsuarioLoginForm, DependenteForm
+from .models import Usuario, Atleta, TipoMatricula, Modalidade, StatusMatricula
+from .forms import UsuarioRegistroForm, UsuarioLoginForm, AtletaForm
+from utils.validacoes import buscar_cep
 import requests
 from datetime import date, datetime
 import logging
+import secrets
+import string
 
 # Configurar logger
 logger = logging.getLogger(__name__)
@@ -22,8 +25,8 @@ logger = logging.getLogger(__name__)
 def home(request):
     """Página inicial"""
     if request.user.is_authenticated:
-        dependentes = Dependente.objects.filter(usuario=request.user)
-        return render(request, 'usuarios/usuario/painel.html', {'dependentes': dependentes})
+        atletas = Atleta.objects.filter(usuario=request.user)
+        return render(request, 'usuarios/usuario/painel.html', {'atletas': atletas})
     return render(request, 'usuarios/usuario/home.html')
 
 
@@ -44,8 +47,6 @@ def registro_usuario(request):
             usuario.username = usuario.email
             
             # Gerar senha temporária aleatória
-            import secrets
-            import string
             senha_temp = ''.join(secrets.choice(string.ascii_letters + string.digits) for _ in range(12))
             usuario.set_password(senha_temp)
             
@@ -100,49 +101,95 @@ def esqueceu_senha(request):
     """Recuperação de senha"""
     if request.method == 'POST':
         email = request.POST.get('email')
+        acao = request.POST.get('acao', 'recuperar')  # 'recuperar' ou 'reenviar_verificacao'
+        
         try:
             usuario = Usuario.objects.get(email=email)
-            if usuario.email_verificado:
-                # Gerar token para reset de senha
-                token = default_token_generator.make_token(usuario)
-                uid = urlsafe_base64_encode(force_bytes(usuario.pk))
+            
+            if acao == 'reenviar_verificacao' and not usuario.email_verificado:
+                # Reenviar email de verificação
+                senha_temp = ''.join(secrets.choice(string.ascii_letters + string.digits) for _ in range(12))
+                usuario.set_password(senha_temp)
+                usuario.save()
                 
-                # Enviar email com link para reset
-                reset_url = request.build_absolute_uri(
-                    reverse('usuarios:reset_senha', kwargs={'uidb64': uid, 'token': token})
-                )
-                
-                assunto = "Recuperação de Senha - Dojô Uemura"
-                mensagem = f"""
-                Olá {usuario.first_name},
-                
-                Você solicitou a recuperação de senha para sua conta no Dojô Uemura.
-                
-                Para redefinir sua senha, clique no link abaixo:
-                {reset_url}
-                
-                Se você não solicitou esta recuperação, ignore este email.
-                
-                Atenciosamente,
-                Equipe Dojô Uemura
-                """
-                
-                send_mail(
-                    subject=assunto,
-                    message=mensagem,
-                    from_email=settings.DEFAULT_FROM_EMAIL,
-                    recipient_list=[email],
-                    fail_silently=False,
-                )
-                
-                messages.success(request, 'Email de recuperação enviado! Verifique sua caixa de entrada.')
+                enviar_email_verificacao(request, usuario, senha_temp)
+                messages.success(request, 'Email de verificação reenviado! Verifique sua caixa de entrada.')
                 return redirect('usuarios:login')
-            else:
-                messages.error(request, 'Este email ainda não foi verificado. Verifique sua caixa de entrada primeiro.')
+                
+            elif acao == 'recuperar':
+                if usuario.email_verificado:
+                    # Usuário verificado - processo normal de recuperação
+                    token = default_token_generator.make_token(usuario)
+                    uid = urlsafe_base64_encode(force_bytes(usuario.pk))
+                    
+                    reset_url = request.build_absolute_uri(
+                        reverse('usuarios:reset_senha', kwargs={'uidb64': uid, 'token': token})
+                    )
+                    
+                    assunto = "Recuperação de Senha - Dojô Uemura"
+                    mensagem = f"""
+                    Olá {usuario.first_name},
+                    
+                    Você solicitou a recuperação de senha para sua conta no Dojô Uemura.
+                    
+                    Para redefinir sua senha, clique no link abaixo:
+                    {reset_url}
+                    
+                    Se você não solicitou esta recuperação, ignore este email.
+                    
+                    Atenciosamente,
+                    Equipe Dojô Uemura
+                    """
+                    
+                    send_mail(
+                        subject=assunto,
+                        message=mensagem,
+                        from_email=settings.DEFAULT_FROM_EMAIL,
+                        recipient_list=[email],
+                        fail_silently=False,
+                    )
+                    
+                    messages.success(request, 'Email de recuperação enviado! Verifique sua caixa de entrada.')
+                    return redirect('usuarios:login')
+                else:
+                    # Usuário não verificado - mostrar opções
+                    messages.warning(request, 'Este email ainda não foi verificado. Você pode reenviar o email de verificação ou prosseguir com a recuperação de senha.')
+                    return render(request, 'usuarios/esqueceu_senha.html', {
+                        'email': email,
+                        'usuario_nao_verificado': True,
+                        'usuario': usuario
+                    })
+                    
         except Usuario.DoesNotExist:
             messages.error(request, 'Email não encontrado em nossa base de dados.')
     
     return render(request, 'usuarios/esqueceu_senha.html')
+
+
+def reenviar_verificacao(request):
+    """Reenvia email de verificação para usuário não verificado"""
+    if request.method == 'POST':
+        email = request.POST.get('email')
+        try:
+            usuario = Usuario.objects.get(email=email)
+            if not usuario.email_verificado:
+                # Gerar nova senha temporária
+                import secrets
+                import string
+                senha_temp = ''.join(secrets.choice(string.ascii_letters + string.digits) for _ in range(12))
+                usuario.set_password(senha_temp)
+                usuario.save()
+                
+                enviar_email_verificacao(request, usuario, senha_temp)
+                messages.success(request, 'Email de verificação reenviado! Verifique sua caixa de entrada.')
+                return redirect('usuarios:login')
+            else:
+                messages.info(request, 'Este email já foi verificado.')
+                return redirect('usuarios:login')
+        except Usuario.DoesNotExist:
+            messages.error(request, 'Email não encontrado em nossa base de dados.')
+    
+    return redirect('usuarios:esqueceu_senha')
 
 
 def reset_senha(request, uidb64, token):
@@ -250,82 +297,81 @@ def verificar_email(request, uidb64, token):
 
 
 @login_required
-def cadastrar_dependente(request):
-    """Cadastro de dependente"""
+def cadastrar_atleta(request):
+    """Cadastro de atleta"""
     if request.method == 'POST':
-        form = DependenteForm(request.POST, request.FILES)
+        form = AtletaForm(request.POST, request.FILES, usuario=request.user)
         if form.is_valid():
-            dependente = form.save(commit=False)
-            dependente.usuario = request.user
+            atleta = form.save(commit=False)
+            atleta.usuario = request.user
+            
+            # Se "outra" escola foi selecionada, usar o valor do campo escola_outra
+            if atleta.escola == 'outra':
+                escola_outra = request.POST.get('escola_outra', '')
+                if escola_outra:
+                    atleta.escola = escola_outra
             
             # Buscar dados do CEP
-            cep_data = buscar_cep(dependente.cep.replace('-', ''))
+            cep_data = buscar_cep(atleta.cep.replace('-', ''))
             if cep_data:
-                dependente.logradouro = cep_data.get('logradouro', dependente.logradouro)
-                dependente.bairro = cep_data.get('bairro', dependente.bairro)
-                dependente.cidade = cep_data.get('localidade', dependente.cidade)
-                dependente.uf = cep_data.get('uf', dependente.uf)
+                atleta.logradouro = cep_data.get('logradouro', atleta.logradouro)
+                atleta.bairro = cep_data.get('bairro', atleta.bairro)
+                atleta.cidade = cep_data.get('localidade', atleta.cidade)
+                atleta.uf = cep_data.get('uf', atleta.uf)
             
-            dependente.save()
-            messages.success(request, 'Dependente cadastrado com sucesso!')
-            return redirect('home')
+            atleta.save()
+            messages.success(request, 'Atleta cadastrado com sucesso!')
+            return redirect('usuarios:home')
     else:
-        form = DependenteForm()
+        form = AtletaForm(usuario=request.user)
     
-    return render(request, 'usuarios/cadastrar_dependente.html', {'form': form})
+    return render(request, 'usuarios/cadastrar_atleta.html', {'form': form})
 
 
 @login_required
-def editar_dependente(request, dependente_id):
-    """Editar dependente"""
-    dependente = get_object_or_404(Dependente, id=dependente_id, usuario=request.user)
+def editar_atleta(request, atleta_id):
+    """Editar atleta"""
+    atleta = get_object_or_404(Atleta, id=atleta_id, usuario=request.user)
     
     if request.method == 'POST':
-        form = DependenteForm(request.POST, request.FILES, instance=dependente)
+        form = AtletaForm(request.POST, request.FILES, instance=atleta, usuario=request.user)
         if form.is_valid():
-            dependente = form.save(commit=False)
+            atleta = form.save(commit=False)
+            
+            # Se "outra" escola foi selecionada, usar o valor do campo escola_outra
+            if atleta.escola == 'outra':
+                escola_outra = request.POST.get('escola_outra', '')
+                if escola_outra:
+                    atleta.escola = escola_outra
             
             # Buscar dados do CEP se foi alterado
-            cep_data = buscar_cep(dependente.cep.replace('-', ''))
+            cep_data = buscar_cep(atleta.cep.replace('-', ''))
             if cep_data:
-                dependente.logradouro = cep_data.get('logradouro', dependente.logradouro)
-                dependente.bairro = cep_data.get('bairro', dependente.bairro)
-                dependente.cidade = cep_data.get('localidade', dependente.cidade)
-                dependente.uf = cep_data.get('uf', dependente.uf)
+                atleta.logradouro = cep_data.get('logradouro', atleta.logradouro)
+                atleta.bairro = cep_data.get('bairro', atleta.bairro)
+                atleta.cidade = cep_data.get('localidade', atleta.cidade)
+                atleta.uf = cep_data.get('uf', atleta.uf)
             
-            dependente.save()
-            messages.success(request, 'Dependente atualizado com sucesso!')
-            return redirect('home')
+            atleta.save()
+            messages.success(request, 'Atleta atualizado com sucesso!')
+            return redirect('usuarios:home')
     else:
-        form = DependenteForm(instance=dependente)
+        form = AtletaForm(instance=atleta, usuario=request.user)
     
-    return render(request, 'usuarios/editar_dependente.html', {'form': form, 'dependente': dependente})
+    return render(request, 'usuarios/editar_atleta.html', {'form': form, 'atleta': atleta})
 
 
 @login_required
-def excluir_dependente(request, dependente_id):
-    """Excluir dependente"""
-    dependente = get_object_or_404(Dependente, id=dependente_id, usuario=request.user)
+def excluir_atleta(request, atleta_id):
+    """Excluir atleta"""
+    atleta = get_object_or_404(Atleta, id=atleta_id, usuario=request.user)
     
     if request.method == 'POST':
-        dependente.delete()
-        messages.success(request, 'Dependente excluído com sucesso!')
-        return redirect('home')
+        atleta.delete()
+        messages.success(request, 'Atleta excluído com sucesso!')
+        return redirect('usuarios:home')
     
-    return render(request, 'usuarios/excluir_dependente.html', {'dependente': dependente})
-
-
-def buscar_cep(cep):
-    """Busca dados do CEP na API ViaCEP"""
-    try:
-        response = requests.get(f'https://viacep.com.br/ws/{cep}/json/', timeout=5)
-        if response.status_code == 200:
-            data = response.json()
-            if 'erro' not in data:
-                return data
-    except requests.RequestException:
-        pass
-    return None
+    return render(request, 'usuarios/excluir_atleta.html', {'atleta': atleta})
 
 
 def buscar_cep_ajax(request):
@@ -407,10 +453,10 @@ def matricula_projeto_social(request):
                     'error_message': 'Usuário não autenticado'
                 })
             
-            # ✅ Criar dependente E sua primeira matrícula
+            # ✅ Criar atleta E sua primeira matrícula
             from .models import Matricula
             
-            dependente = Dependente.objects.create(
+            atleta = Atleta.objects.create(
                 usuario=request.user,
                 nome=nome_completo,
                 data_nascimento=data_nascimento,
@@ -431,20 +477,20 @@ def matricula_projeto_social(request):
             
             # Criar primeira matrícula (Projeto Social)
             primeira_matricula = Matricula.objects.create(
-                atleta=dependente,
+                atleta=atleta,
                 tipo_matricula=TipoMatricula.objects.get(nome='Projeto Social'),
                 modalidade=Modalidade.objects.get(nome='Jiu-Jitsu'),
                 status_matricula=StatusMatricula.objects.get(nome='Pendente'),
                 data_matricula=date.today()
             )
             
-            logger.info(f"Dependente criado com primeira matrícula: {dependente.id} - Matrícula: {primeira_matricula.id}")
+            logger.info(f"Atleta criado com primeira matrícula: {atleta.id} - Matrícula: {primeira_matricula.id}")
             
             # Redirecionar para dashboard
             return redirect('usuarios:dashboard')
             
         except Exception as e:
-            logger.error(f"Erro ao criar dependente: {str(e)}")
+            logger.error(f"Erro ao criar atleta: {str(e)}")
             return render(request, 'usuarios/matricula_projeto_social.html', {
                 'error_message': f'Erro ao processar matrícula: {str(e)}'
             })
@@ -474,25 +520,25 @@ def matricula_modalidade_paga(request):
             try:
                 # Buscar primeiro pelo CPF exato (com formatação)
                 logger.info(f"Tentando buscar pelo CPF exato: '{cpf_busca}'")
-                atleta_existente = Dependente.objects.get(cpf=cpf_busca)
+                atleta_existente = Atleta.objects.get(cpf=cpf_busca)
                 logger.info(f"[SUCESSO] ATLETA ENCONTRADO pelo CPF exato: {atleta_existente.nome}")
                 logger.info(f"   CPF no banco: '{atleta_existente.cpf}'")
                 logger.info(f"   Tipo CPF no banco: {type(atleta_existente.cpf)}")
                 
-            except Dependente.DoesNotExist:
+            except Atleta.DoesNotExist:
                 logger.info(f"[BUSCA] CPF exato não encontrado, tentando limpo...")
                 try:
                     # Se não encontrar, tentar com CPF limpo
                     cpf_limpo = cpf_busca.replace('.', '').replace('-', '')
                     logger.info(f"Tentando buscar pelo CPF limpo: '{cpf_limpo}'")
-                    atleta_existente = Dependente.objects.get(cpf=cpf_limpo)
+                    atleta_existente = Atleta.objects.get(cpf=cpf_limpo)
                     logger.info(f"[SUCESSO] ATLETA ENCONTRADO pelo CPF limpo: {atleta_existente.nome}")
                     logger.info(f"   CPF no banco: '{atleta_existente.cpf}'")
                     
-                except Dependente.DoesNotExist:
+                except Atleta.DoesNotExist:
                     logger.warning(f"[ERRO] CPF não encontrado nem exato nem limpo: '{cpf_busca}'")
                     logger.info(f"CPFs no banco:")
-                    for dep in Dependente.objects.all():
+                    for dep in Atleta.objects.all():
                         logger.info(f"   '{dep.cpf}' - {dep.nome}")
                     
                     return render(request, 'usuarios/matricula_modalidade_paga.html', {
@@ -525,16 +571,16 @@ def matricula_modalidade_paga(request):
         # Buscar atleta por CPF (usando a mesma lógica da busca)
         try:
             # Primeiro: tentar CPF exato (com formatação)
-            atleta_existente = Dependente.objects.get(cpf=cpf_original)
+            atleta_existente = Atleta.objects.get(cpf=cpf_original)
             is_atleta_existente = True
             logger.info(f"[SUCESSO] ATLETA EXISTENTE encontrado pelo CPF exato: {atleta_existente.nome}")
-        except Dependente.DoesNotExist:
+        except Atleta.DoesNotExist:
             try:
                 # Segundo: tentar CPF limpo
-                atleta_existente = Dependente.objects.get(cpf=cpf_limpo)
+                atleta_existente = Atleta.objects.get(cpf=cpf_limpo)
                 is_atleta_existente = True
                 logger.info(f"[SUCESSO] ATLETA EXISTENTE encontrado pelo CPF limpo: {atleta_existente.nome}")
-            except Dependente.DoesNotExist:
+            except Atleta.DoesNotExist:
                 is_atleta_existente = False
                 logger.info("Novo atleta sendo cadastrado")
         
@@ -582,6 +628,7 @@ def matricula_modalidade_paga(request):
             # Processar dados do formulário
             nome_completo = request.POST.get('nome')
             data_nascimento = request.POST.get('data_nascimento')
+            cpf = request.POST.get('cpf')  # Definir a variável cpf aqui
             parentesco = request.POST.get('parentesco')
             foto = request.FILES.get('foto')
             escolaridade = request.POST.get('escolaridade', '')
@@ -638,7 +685,7 @@ def matricula_modalidade_paga(request):
                 # ✅ Criar novo atleta E sua primeira matrícula
                 from .models import Matricula
                 
-                dependente = Dependente.objects.create(
+                atleta = Atleta.objects.create(
                     usuario=request.user,
                     nome=nome_completo,
                     data_nascimento=data_nascimento,
@@ -659,14 +706,14 @@ def matricula_modalidade_paga(request):
                 
                 # Criar primeira matrícula
                 primeira_matricula = Matricula.objects.create(
-                    atleta=dependente,
+                    atleta=atleta,
                     tipo_matricula=TipoMatricula.objects.get(nome='Modalidade Paga'),
                     modalidade=Modalidade.objects.get(id=modalidade_id),
                     status_matricula=StatusMatricula.objects.get(nome='Pendente'),
                     data_matricula=date.today()
                 )
                 
-                logger.info(f"Novo atleta criado com primeira matrícula: {dependente.id} - Matrícula: {primeira_matricula.id}")
+                logger.info(f"Novo atleta criado com primeira matrícula: {atleta.id} - Matrícula: {primeira_matricula.id}")
             
             # Redirecionar para dashboard
             return redirect('usuarios:dashboard')
@@ -687,11 +734,11 @@ def matricula_modalidade_paga(request):
 def dashboard(request):
     """Dashboard do usuário logado"""
     usuario = request.user
-    dependentes = Dependente.objects.filter(usuario=usuario).prefetch_related('matriculas__modalidade', 'matriculas__tipo_matricula', 'matriculas__status_matricula')
+    atletas = Atleta.objects.filter(usuario=usuario).prefetch_related('matriculas__modalidade', 'matriculas__tipo_matricula', 'matriculas__status_matricula')
     
     context = {
         'usuario': usuario,
-        'dependentes': dependentes,
+        'atletas': atletas,
         'nome_completo': f"{usuario.first_name} {usuario.last_name}".strip() or usuario.email
     }
     

@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.core.exceptions import ValidationError
-from .models import Usuario, Dependente
+from .models import Usuario, Atleta
 from utils.validacoes import validar_cpf
 import re
 
@@ -117,14 +117,14 @@ class UsuarioLoginForm(forms.Form):
     )
 
 
-class DependenteForm(forms.ModelForm):
-    """Formulário de cadastro/edição de dependente"""
+class AtletaForm(forms.ModelForm):
+    """Formulário de cadastro/edição de atleta"""
     
-    nome_completo = forms.CharField(
+    nome = forms.CharField(
         max_length=200,
         widget=forms.TextInput(attrs={
             'class': 'form-control',
-            'placeholder': 'Nome completo do dependente'
+            'placeholder': 'Nome completo do atleta'
         })
     )
     
@@ -144,7 +144,7 @@ class DependenteForm(forms.ModelForm):
     )
     
     parentesco = forms.ChoiceField(
-        choices=Dependente.PARENTESCO_CHOICES,
+        choices=Atleta.PARENTESCO_CHOICES,
         widget=forms.Select(attrs={
             'class': 'form-control'
         })
@@ -156,7 +156,7 @@ class DependenteForm(forms.ModelForm):
             'class': 'form-control',
             'accept': 'image/*'
         }),
-        help_text='Foto do dependente (Obrigatória para cadastro de dependentes)'
+        help_text='Foto do atleta (obrigatório)'
     )
     
     cep = forms.CharField(
@@ -224,55 +224,46 @@ class DependenteForm(forms.ModelForm):
     )
     
     escolaridade = forms.ChoiceField(
-        choices=Dependente.ESCOLARIDADE_CHOICES,
+        choices=Atleta.ESCOLARIDADE_CHOICES,
         widget=forms.Select(attrs={
             'class': 'form-control'
         })
     )
     
-    escola = forms.CharField(
-        max_length=200,
-        widget=forms.TextInput(attrs={
-            'class': 'form-control',
-            'placeholder': 'Nome da escola'
+    escola = forms.ChoiceField(
+        choices=[
+            ('', 'Selecione a escola...'),
+            ('Escola Municipal Água Branca', 'Escola Municipal Água Branca'),
+            ('Escola Municipal Casca III', 'Escola Municipal Casca III'),
+            ('Escola Municipal Córrego do Campo', 'Escola Municipal Córrego do Campo'),
+            ('Escola Municipal Cristo Rei', 'Escola Municipal Cristo Rei'),
+            ('Escola Municipal JJ', 'Escola Municipal JJ'),
+            ('Escola Municipal Monteiro Lobato', 'Escola Municipal Monteiro Lobato'),
+            ('Escola Municipal Professor Jacondino Bezerra', 'Escola Municipal Professor Jacondino Bezerra'),
+            ('Escola Municipal Professora Abinel Freitas Pereira', 'Escola Municipal Professora Abinel Freitas Pereira'),
+            ('Escola Municipal Professora Elba Xavier Ferreira', 'Escola Municipal Professora Elba Xavier Ferreira'),
+            ('Escola Municipal Professora Irene Ferreira da Silva', 'Escola Municipal Professora Irene Ferreira da Silva'),
+            ('Escola Municipal Professora Maria Luiza de Araújo Gomes', 'Escola Municipal Professora Maria Luiza de Araújo Gomes'),
+            ('Escola Municipal Santa Helena', 'Escola Municipal Santa Helena'),
+            ('Escola Municipal Thermozina de Siqueira', 'Escola Municipal Thermozina de Siqueira'),
+            ('Escola Estadual Cel Rafael de Siqueira', 'Escola Estadual Cel Rafael de Siqueira'),
+            ('Escola Estadual Professor Ana Tereza Albernaz', 'Escola Estadual Professor Ana Tereza Albernaz'),
+            ('Escola Estadual Reunidas de Cachoeira Rica', 'Escola Estadual Reunidas de Cachoeira Rica'),
+            ('Escola Estadual São José', 'Escola Estadual São José'),
+            ('Colégio Tales de Mileto', 'Colégio Tales de Mileto'),
+            ('Centro Educacional Sebastião Albernaz', 'Centro Educacional Sebastião Albernaz'),
+            ('outra', 'Outra escola (especificar)'),
+        ],
+        widget=forms.Select(attrs={
+            'class': 'form-control'
         })
     )
     
     turno = forms.ChoiceField(
-        choices=Dependente.TURNO_CHOICES,
+        choices=Atleta.TURNO_CHOICES,
         widget=forms.Select(attrs={
             'class': 'form-control'
         })
-    )
-    
-    # NOVOS CAMPOS DE MATRÍCULA
-    tipo_matricula = forms.ModelChoiceField(
-        queryset=None,  # Será definido no __init__
-        widget=forms.Select(attrs={
-            'class': 'form-control',
-            'id': 'id_tipo_matricula'
-        }),
-        label='Tipo de Matrícula',
-        help_text='Escolha entre Projeto Social (gratuito) ou Modalidade Paga'
-    )
-    
-    modalidade = forms.ModelChoiceField(
-        queryset=None,  # Será definido no __init__
-        required=False,
-        widget=forms.Select(attrs={
-            'class': 'form-control',
-            'id': 'id_modalidade'
-        }),
-        label='Modalidade',
-        help_text='Escolha a modalidade esportiva (apenas para matrícula paga)'
-    )
-    
-    status_matricula = forms.ModelChoiceField(
-        queryset=None,  # Será definido no __init__
-        widget=forms.Select(attrs={
-            'class': 'form-control'
-        }),
-        label='Status da Matrícula'
     )
     
     condicoes_medicas = forms.CharField(
@@ -307,26 +298,13 @@ class DependenteForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         self.usuario = kwargs.pop('usuario', None)
         super().__init__(*args, **kwargs)
-        
-        # Definir querysets para os campos de matrícula
-        from .models import TipoMatricula, Modalidade, StatusMatricula
-        
-        self.fields['tipo_matricula'].queryset = TipoMatricula.objects.filter(ativo=True)
-        self.fields['modalidade'].queryset = Modalidade.objects.filter(ativa=True)
-        self.fields['status_matricula'].queryset = StatusMatricula.objects.filter(ativo=True)
-        
-        # Definir valor padrão para status (Pendente)
-        status_pendente = StatusMatricula.objects.filter(nome='Pendente').first()
-        if status_pendente:
-            self.fields['status_matricula'].initial = status_pendente
     
     class Meta:
-        model = Dependente
+        model = Atleta
         fields = [
-            'nome_completo', 'data_nascimento', 'cpf', 'parentesco', 'foto',
+            'nome', 'data_nascimento', 'cpf', 'parentesco', 'foto',
             'cep', 'logradouro', 'numero', 'complemento', 'bairro', 'cidade', 'uf',
             'escolaridade', 'escola', 'turno',
-            'tipo_matricula', 'modalidade', 'status_matricula',
             'condicoes_medicas', 'termo_responsabilidade', 'termo_uso_imagem'
         ]
     
@@ -345,8 +323,8 @@ class DependenteForm(forms.ModelForm):
         cpf_formatado = f"{cpf_numeros[:3]}.{cpf_numeros[3:6]}.{cpf_numeros[6:9]}-{cpf_numeros[9:]}"
         
         # checa duplicata para ESTE USUÁRIO
-        if Dependente.objects.filter(usuario=self.usuario, cpf=cpf_formatado).exists():
-            raise ValidationError('Você já cadastrou um dependente com este CPF.')
+        if Atleta.objects.filter(usuario=self.usuario, cpf=cpf_formatado).exists():
+            raise ValidationError('Você já cadastrou um atleta com este CPF.')
 
         return cpf_formatado
 

@@ -1,7 +1,7 @@
 {% extends 'publico/base.html' %}
 {% load static %}
 
-{% block title %}Editar Dependente - Dojô Uemura{% endblock %}
+{% block title %}Editar Atleta - Dojô Uemura{% endblock %}
 
 {% block extra_css %}
     <link rel="stylesheet" href="{% static 'assets/css/forms.css' %}">
@@ -13,10 +13,10 @@
     <div class="container">
         <div class="row justify-content-center text-center">
             <div class="col-lg-8">
-                <h1 class="display-4 fw-bold mb-4">
-                    <i class="bi bi-pencil-square"></i> Editar Dependente
-                </h1>
-                <p class="lead mb-0">Atualize as informações do dependente</p>
+                                 <h1 class="display-4 fw-bold mb-4">
+                     <i class="bi bi-pencil-square"></i> Editar Atleta
+                 </h1>
+                 <p class="lead mb-0">Atualize as informações do atleta</p>
             </div>
         </div>
     </div>
@@ -153,17 +153,80 @@
                                 </div>
                             </div>
                             
-                            <h5 class="text-primary mb-3">Informações Escolares</h5>
-                            <div class="row g-3 mb-4">
-                                <div class="col-md-6">
-                                    <label class="form-label">Escola onde estuda</label>
-                                    <input type="text" class="form-control" name="escola" value="{{ dependente.escola|default:'' }}" placeholder="Nome da escola">
-                                </div>
-                                <div class="col-md-6">
-                                    <label class="form-label">Série/Ano</label>
-                                    <input type="text" class="form-control" name="serie" value="{{ dependente.serie|default:'' }}" placeholder="Ex: 5º ano, 1º ano EM">
-                                </div>
-                            </div>
+                                                         <h5 class="text-primary mb-3">Informações Escolares</h5>
+                             <div class="row g-3 mb-4">
+                                 <div class="col-md-6">
+                                     <label class="form-label">Escola onde estuda</label>
+                                     <select class="form-select" name="escola" required>
+                                         <option value="">Selecione a escola...</option>
+                                         
+                                         <optgroup label="🏫 Escolas Municipais">
+                                             <option value="Escola Municipal Água Branca" {% if dependente.escola == 'Escola Municipal Água Branca' %}selected{% endif %}>Escola Municipal Água Branca</option>
+                                             <option value="Escola Municipal Casca III" {% if dependente.escola == 'Escola Municipal Casca III' %}selected{% endif %}>Escola Municipal Casca III</option>
+                                             <option value="Escola Municipal Córrego do Campo" {% if dependente.escola == 'Escola Municipal Córrego do Campo' %}selected{% endif %}>Escola Municipal Córrego do Campo</option>
+                                             <option value="Escola Municipal Cristo Rei" {% if dependente.escola == 'Escola Municipal Cristo Rei' %}selected{% endif %}>Escola Municipal Cristo Rei</option>
+                                             <option value="Escola Municipal JJ" {% if dependente.escola == 'Escola Municipal JJ' %}selected{% endif %}>Escola Municipal JJ</option>
+                                             <option value="Escola Municipal Monteiro Lobato" {% if dependente.escola == 'Escola Municipal Monteiro Lobato' %}selected{% endif %}>Escola Municipal Monteiro Lobato</option>
+                                             <option value="Escola Municipal Professor Jacondino Bezerra" {% if dependente.escola == 'Escola Municipal Professor Jacondino Bezerra' %}selected{% endif %}>Escola Municipal Professor Jacondino Bezerra</option>
+                                             <option value="Escola Municipal Professora Abinel Freitas Pereira" {% if dependente.escola == 'Escola Municipal Professora Abinel Freitas Pereira' %}selected{% endif %}>Escola Municipal Professora Abinel Freitas Pereira</option>
+                                             <option value="Escola Municipal Professora Elba Xavier Ferreira" {% if dependente.escola == 'Escola Municipal Professora Elba Xavier Ferreira' %}selected{% endif %}>Escola Municipal Professora Elba Xavier Ferreira</option>
+                                             <option value="Escola Municipal Professora Irene Ferreira da Silva" {% if dependente.escola == 'Escola Municipal Professora Irene Ferreira da Silva' %}selected{% endif %}>Escola Municipal Professora Irene Ferreira da Silva</option>
+                                             <option value="Escola Municipal Professora Maria Luiza de Araújo Gomes" {% if dependente.escola == 'Escola Municipal Professora Maria Luiza de Araújo Gomes' %}selected{% endif %}>Escola Municipal Professora Maria Luiza de Araújo Gomes</option>
+                                             <option value="Escola Municipal Santa Helena" {% if dependente.escola == 'Escola Municipal Santa Helena' %}selected{% endif %}>Escola Municipal Santa Helena</option>
+                                             <option value="Escola Municipal Thermozina de Siqueira" {% if dependente.escola == 'Escola Municipal Thermozina de Siqueira' %}selected{% endif %}>Escola Municipal Thermozina de Siqueira</option>
+                                         </optgroup>
+                                         
+                                         <optgroup label="🏛️ Escolas Estaduais">
+                                             <option value="Escola Estadual Cel Rafael de Siqueira" {% if dependente.escola == 'Escola Estadual Cel Rafael de Siqueira' %}selected{% endif %}>Escola Estadual Cel Rafael de Siqueira</option>
+                                             <option value="Escola Estadual Professor Ana Tereza Albernaz" {% if dependente.escola == 'Escola Estadual Professor Ana Tereza Albernaz' %}selected{% endif %}>Escola Estadual Professor Ana Tereza Albernaz</option>
+                                             <option value="Escola Estadual Reunidas de Cachoeira Rica" {% if dependente.escola == 'Escola Estadual Reunidas de Cachoeira Rica' %}selected{% endif %}>Escola Estadual Reunidas de Cachoeira Rica</option>
+                                             <option value="Escola Estadual São José" {% if dependente.escola == 'Escola Estadual São José' %}selected{% endif %}>Escola Estadual São José</option>
+                                         </optgroup>
+                                         
+                                         <optgroup label="🎓 Escolas Privadas">
+                                             <option value="Colégio Tales de Mileto" {% if dependente.escola == 'Colégio Tales de Mileto' %}selected{% endif %}>Colégio Tales de Mileto</option>
+                                             <option value="Centro Educacional Sebastião Albernaz" {% if dependente.escola == 'Centro Educacional Sebastião Albernaz' %}selected{% endif %}>Centro Educacional Sebastião Albernaz</option>
+                                         </optgroup>
+                                         
+                                         <option value="outra" {% if dependente.escola and dependente.escola not in 'Escola Municipal Água Branca,Escola Municipal Casca III,Escola Municipal Córrego do Campo,Escola Municipal Cristo Rei,Escola Municipal JJ,Escola Municipal Monteiro Lobato,Escola Municipal Professor Jacondino Bezerra,Escola Municipal Professora Abinel Freitas Pereira,Escola Municipal Professora Elba Xavier Ferreira,Escola Municipal Professora Irene Ferreira da Silva,Escola Municipal Professora Maria Luiza de Araújo Gomes,Escola Municipal Santa Helena,Escola Municipal Thermozina de Siqueira,Escola Estadual Cel Rafael de Siqueira,Escola Estadual Professor Ana Tereza Albernaz,Escola Estadual Reunidas de Cachoeira Rica,Escola Estadual São José,Colégio Tales de Mileto,Centro Educacional Sebastião Albernaz' %}selected{% endif %}>Outra escola (especificar)</option>
+                                     </select>
+                                 </div>
+                                 <div class="col-md-6">
+                                     <label class="form-label">Série/Ano</label>
+                                     <select class="form-select" name="serie" required>
+                                         <option value="">Selecione a série...</option>
+                                         
+                                         <optgroup label="📚 Ensino Fundamental I">
+                                             <option value="1º ano" {% if dependente.serie == '1º ano' %}selected{% endif %}>1º ano</option>
+                                             <option value="2º ano" {% if dependente.serie == '2º ano' %}selected{% endif %}>2º ano</option>
+                                             <option value="3º ano" {% if dependente.serie == '2º ano' %}selected{% endif %}>3º ano</option>
+                                             <option value="4º ano" {% if dependente.serie == '4º ano' %}selected{% endif %}>4º ano</option>
+                                             <option value="5º ano" {% if dependente.serie == '5º ano' %}selected{% endif %}>5º ano</option>
+                                         </optgroup>
+                                         
+                                         <optgroup label="📖 Ensino Fundamental II">
+                                             <option value="6º ano" {% if dependente.serie == '6º ano' %}selected{% endif %}>6º ano</option>
+                                             <option value="7º ano" {% if dependente.serie == '7º ano' %}selected{% endif %}>7º ano</option>
+                                             <option value="8º ano" {% if dependente.serie == '8º ano' %}selected{% endif %}>8º ano</option>
+                                             <option value="9º ano" {% if dependente.serie == '9º ano' %}selected{% endif %}>9º ano</option>
+                                         </optgroup>
+                                         
+                                         <optgroup label="🎓 Ensino Médio">
+                                             <option value="1º ano EM" {% if dependente.serie == '1º ano EM' %}selected{% endif %}>1º ano EM</option>
+                                             <option value="2º ano EM" {% if dependente.serie == '2º ano EM' %}selected{% endif %}>2º ano EM</option>
+                                             <option value="3º ano EM" {% if dependente.serie == '3º ano EM' %}selected{% endif %}>3º ano EM</option>
+                                         </optgroup>
+                                     </select>
+                                 </div>
+                             </div>
+                             
+                             <!-- Campo para escola personalizada (aparece quando "outra" é selecionado) -->
+                             <div class="row g-3 mb-4" id="outraEscola" style="display: {% if dependente.escola and dependente.escola not in 'Escola Municipal Água Branca,Escola Municipal Casca III,Escola Municipal Córrego do Campo,Escola Municipal Cristo Rei,Escola Municipal JJ,Escola Municipal Monteiro Lobato,Escola Municipal Professor Jacondino Bezerra,Escola Municipal Professora Abinel Freitas Pereira,Escola Municipal Professora Elba Xavier Ferreira,Escola Municipal Professora Irene Ferreira da Silva,Escola Municipal Professora Maria Luiza de Araújo Gomes,Escola Municipal Santa Helena,Escola Municipal Thermozina de Siqueira,Escola Estadual Cel Rafael de Siqueira,Escola Estadual Professor Ana Tereza Albernaz,Escola Estadual Reunidas de Cachoeira Rica,Escola Estadual São José,Colégio Tales de Mileto,Centro Educacional Sebastião Albernaz' %}block{% else %}none{% endif %};">
+                                 <div class="col-12">
+                                     <label class="form-label">Nome da escola</label>
+                                     <input type="text" class="form-control" name="escola_outra" value="{% if dependente.escola and dependente.escola not in 'Escola Municipal Água Branca,Escola Municipal Casca III,Escola Municipal Córrego do Campo,Escola Municipal Cristo Rei,Escola Municipal JJ,Escola Municipal Monteiro Lobato,Escola Municipal Professor Jacondino Bezerra,Escola Municipal Professora Abinel Freitas Pereira,Escola Municipal Professora Elba Xavier Ferreira,Escola Municipal Professora Irene Ferreira da Silva,Escola Municipal Professora Maria Luiza de Araújo Gomes,Escola Municipal Santa Helena,Escola Municipal Thermozina de Siqueira,Escola Estadual Cel Rafael de Siqueira,Escola Estadual Professor Ana Tereza Albernaz,Escola Estadual Reunidas de Cachoeira Rica,Escola Estadual São José,Colégio Tales de Mileto,Centro Educacional Sebastião Albernaz' %}{{ dependente.escola }}{% endif %}" placeholder="Digite o nome da escola">
+                                 </div>
+                             </div>
                             
                             <h5 class="text-primary mb-3">Informações Médicas</h5>
                             <div class="row g-3 mb-4">
@@ -194,7 +257,7 @@
                             <h5 class="text-primary mb-3">Foto</h5>
                             <div class="row g-3 mb-4">
                                 <div class="col-12">
-                                    <label class="form-label">Foto do Dependente</label>
+                                                                         <label class="form-label">Foto do Atleta</label>
                                     {% if dependente.foto %}
                                         <div class="mb-3">
                                             <img src="{{ dependente.foto.url }}" alt="Foto atual" class="img-thumbnail" style="max-width: 200px;">
@@ -211,7 +274,7 @@
                                     <i class="bi bi-check-circle me-2"></i>
                                     Salvar Alterações
                                 </button>
-                                <a href="{% url 'usuarios:painel' %}" class="btn btn-outline-secondary btn-lg">
+                                <a href="{% url 'usuarios:dashboard' %}" class="btn btn-outline-secondary btn-lg">
                                     <i class="bi bi-arrow-left me-2"></i>
                                     Cancelar
                                 </a>

@@ -45,12 +45,12 @@
                     <form method="post" enctype="multipart/form-data" id="matriculaProjetoSocialForm">
                         {% csrf_token %}
                         
-                        <!-- Dados do Dependente -->
+                        <!-- Dados do Atleta -->
                         <div class="row mb-4">
                             <div class="col-12">
                                 <h5 class="fw-bold text-primary border-bottom pb-2 mb-3">
                                     <i class="bi bi-person-plus me-2"></i>
-                                    Dados do Dependente
+                                    Dados do Atleta
                                 </h5>
                             </div>
                             
@@ -83,7 +83,7 @@
                             </div>
                             
                             <div class="col-12 mb-3">
-                                <label for="foto" class="form-label fw-bold">Foto do Dependente</label>
+                                <label for="foto" class="form-label fw-bold">Foto do Atleta</label>
                                 <input type="file" class="form-control" id="foto" name="foto" accept="image/*" required>
                                 <small class="text-muted">Foto obrigatória para confecção da carteira do atleta</small>
                             </div>
@@ -200,7 +200,7 @@
                                 <div class="form-check">
                                     <input class="form-check-input" type="checkbox" id="termo_responsabilidade" name="termo_responsabilidade" required>
                                     <label class="form-check-label" for="termo_responsabilidade">
-                                        <strong>Declaro que sou responsável pelo dependente</strong> e autorizo sua participação nas atividades do projeto social de Jiu-Jitsu.
+                                        <strong>Declaro que sou responsável pelo atleta</strong> e autorizo sua participação nas atividades do projeto social de Jiu-Jitsu.
                                     </label>
                                 </div>
                             </div>
@@ -209,7 +209,7 @@
                                 <div class="form-check">
                                     <input class="form-check-input" type="checkbox" id="termo_uso_imagem" name="termo_uso_imagem" required>
                                     <label class="form-check-label" for="termo_uso_imagem">
-                                        <strong>Autorizo o uso de imagem</strong> do dependente para fins promocionais e educacionais do projeto.
+                                        <strong>Autorizo o uso de imagem</strong> do atleta para fins promocionais e educacionais do projeto.
                                     </label>
                                 </div>
                             </div>
@@ -218,7 +218,7 @@
                                 <div class="form-check">
                                     <input class="form-check-input" type="checkbox" id="termo_saude" name="termo_saude" required>
                                     <label class="form-check-label" for="termo_saude">
-                                        <strong>Declaro que o dependente</strong> não possui restrições médicas que impeçam a prática de esportes.
+                                        <strong>Declaro que o atleta</strong> não possui restrições médicas que impeçam a prática de esportes.
                                     </label>
                                 </div>
                             </div>
@@ -365,7 +365,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // Validar faixa etária
         if (idade < 6 || idade > 18) {
             this.classList.add('is-invalid');
-            alert('Para o projeto social, o dependente deve ter entre 6 e 18 anos.');
+            alert('Para o projeto social, o atleta deve ter entre 6 e 18 anos.');
             this.value = '';
         } else {
             this.classList.add('is-valid');

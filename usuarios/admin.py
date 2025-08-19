@@ -3,7 +3,7 @@ from django.contrib.auth.admin import UserAdmin
 from django.utils.html import format_html
 from django.urls import reverse
 from django.utils.safestring import mark_safe
-from .models import Usuario, Dependente, Modalidade, TipoMatricula, StatusMatricula, Matricula
+from .models import Usuario, Atleta, Modalidade, TipoMatricula, StatusMatricula, Matricula
 
 
 @admin.register(Usuario)
@@ -14,7 +14,7 @@ class UsuarioAdmin(UserAdmin):
     list_display = [
         'email', 'get_nome_completo', 'cpf', 'telefone', 
         'data_nascimento', 'email_verificado', 'is_active', 
-        'date_joined', 'dependentes_count'
+        'date_joined', 'atletas_count'
     ]
     
     # Campos para busca
@@ -33,7 +33,7 @@ class UsuarioAdmin(UserAdmin):
     ordering = ['-date_joined']
     
     # Campos readonly
-    readonly_fields = ['date_joined', 'last_login', 'dependentes_count']
+    readonly_fields = ['date_joined', 'last_login', 'atletas_count']
     
     # Configuração dos fieldsets para o formulário de edição
     fieldsets = (
@@ -55,7 +55,7 @@ class UsuarioAdmin(UserAdmin):
             'classes': ('collapse',)
         }),
         ('Estatísticas', {
-            'fields': ('dependentes_count',),
+            'fields': ('atletas_count',),
             'classes': ('collapse',)
         }),
     )
@@ -83,30 +83,30 @@ class UsuarioAdmin(UserAdmin):
     get_nome_completo.short_description = 'Nome Completo'
     get_nome_completo.admin_order_field = 'first_name'
     
-    def dependentes_count(self, obj):
+    def atletas_count(self, obj):
         """Conta quantos atletas o usuário possui"""
-        count = obj.dependentes.count()
+        count = obj.atletas.count()
         if count > 0:
-            url = reverse('admin:usuarios_dependente_changelist') + f'?usuario__id__exact={obj.id}'
+            url = reverse('admin:usuarios_atleta_changelist') + f'?usuario__id__exact={obj.id}'
             return format_html('<a href="{}">{} atleta(s)</a>', url, count)
         return '0 atletas'
-    dependentes_count.short_description = 'Atletas'
+    atletas_count.short_description = 'Atletas'
     
     def get_queryset(self, request):
         """Otimiza consultas com prefetch_related"""
         queryset = super().get_queryset(request)
-        return queryset.prefetch_related('dependentes')
+        return queryset.prefetch_related('atletas')
 
 
-@admin.register(Dependente)
-class DependenteAdmin(admin.ModelAdmin):
+@admin.register(Atleta)
+class AtletaAdmin(admin.ModelAdmin):
     """Configuração do admin para o modelo Atleta"""
     
     # Campos exibidos na listagem
     list_display = [
         'nome', 'usuario_link', 'idade_display', 
         'parentesco', 'escola', 'cidade_uf', 'foto_thumbnail',
-        'matriculas_count', 'termos_aceitos', 'data_cadastro'
+        'termos_aceitos', 'data_cadastro'
     ]
     
     # Campos para busca
@@ -150,10 +150,6 @@ class DependenteAdmin(admin.ModelAdmin):
         }),
         ('Dados Escolares', {
             'fields': ('escolaridade', 'escola', 'turno')
-        }),
-        ('Matrículas', {
-            'fields': ('matriculas_count',),
-            'classes': ('wide',)
         }),
         ('Informações Médicas', {
             'fields': ('condicoes_medicas',),
@@ -217,7 +213,7 @@ class DependenteAdmin(admin.ModelAdmin):
                 '<img src="{}" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover;" />',
                 obj.foto.url
             )
-        # Usar primeira letra do nome do dependente ou do usuário responsável
+        # Usar primeira letra do nome do atleta ou do usuário responsável
         nome = obj.nome_completo if hasattr(obj, 'nome_completo') else f"{obj.usuario.first_name} {obj.usuario.last_name}".strip()
         primeira_letra = nome[0].upper() if nome else '?'
         return format_html('<div style="width: 40px; height: 40px; border-radius: 50%; background: #ddd; display: flex; align-items: center; justify-content: center; font-size: 12px;">{}</div>', primeira_letra)
@@ -249,28 +245,28 @@ class DependenteAdmin(admin.ModelAdmin):
         return queryset.select_related('usuario')
     
     # Ações personalizadas
-    actions = ['marcar_termos_aceitos', 'exportar_dependentes']
+    actions = ['marcar_termos_aceitos', 'exportar_atletas']
     
     def marcar_termos_aceitos(self, request, queryset):
-        """Marca todos os termos como aceitos para os dependentes selecionados"""
+        """Marca todos os termos como aceitos para os atletas selecionados"""
         updated = queryset.update(
             termo_responsabilidade=True,
             termo_uso_imagem=True
         )
         self.message_user(
             request,
-            f'{updated} dependente(s) tiveram os termos marcados como aceitos.'
+            f'{updated} atleta(s) tiveram os termos marcados como aceitos.'
         )
     marcar_termos_aceitos.short_description = "Marcar termos como aceitos"
     
-    def exportar_dependentes(self, request, queryset):
-        """Ação para exportar dependentes (placeholder)"""
+    def exportar_atletas(self, request, queryset):
+        """Ação para exportar atletas (placeholder)"""
         count = queryset.count()
         self.message_user(
             request,
-            f'Exportação de {count} dependente(s) iniciada. (Funcionalidade em desenvolvimento)'
+            f'Exportação de {count} atleta(s) iniciada. (Funcionalidade em desenvolvimento)'
         )
-    exportar_dependentes.short_description = "Exportar dependentes selecionados"
+    exportar_atletas.short_description = "Exportar atletas selecionados"
 
 
 @admin.register(Modalidade)
