@@ -11,8 +11,8 @@ urlpatterns = [
     path('logout/', views.logout_usuario, name='logout'),
     path('verificar-email/<uidb64>/<token>/', views.verificar_email, name='verificar_email'),
     
-    # Painel do Atleta (antigo painel-atleta)
-    path('painel/', views.painel-atleta, name='painel-atleta'),
+    # Dashboard do usuário
+    path('dashboard/', views.dashboard, name='dashboard'),
     
     # Gestão de Atletas
     path('cadastrar-atleta/', views.cadastrar_atleta, name='cadastrar_atleta'),

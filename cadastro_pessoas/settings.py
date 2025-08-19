@@ -33,6 +33,7 @@ INSTALLED_APPS = [
     'usuarios',
     'publico',
     'empresa',
+    'frequencia',
 ]
 
 MIDDLEWARE = [

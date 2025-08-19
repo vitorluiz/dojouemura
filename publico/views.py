@@ -1,13 +1,13 @@
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
-from usuarios.models import Modalidade, Dependente
+from usuarios.models import Modalidade, Atleta
 
 def home(request):
     """Página inicial pública"""
     context = {
         'title': 'Dojô Uemura - Formando Campeões no Tatame e na Vida',
         'modalidades': Modalidade.objects.filter(ativa=True),
-        'total_atletas': Dependente.objects.count(),
+        'total_atletas': Atleta.objects.count(),
     }
     return render(request, 'publico/home.html', context)
 
