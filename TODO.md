@@ -48,10 +48,10 @@ Sistema completo de gestão para Dojô Uemura, incluindo matrículas, controle d
 ## 🔄 **TAREFAS EM ANDAMENTO**
 
 ### **⚡ Sistema de Frequência (PRIORIDADE MÁXIMA)**
-- [ ] **Criar app `frequencia`** - Estrutura base para controle de frequência
-- [ ] **Modelo `Frequencia`** - Registro de entrada/saída dos atletas
-- [ ] **Modelo `Turma`** - Organização das turmas e horários
-- [ ] **Modelo `Professor`** - Gestão dos professores
+- [x] **Criar app `frequencia`** - Estrutura base para controle de frequência ✅
+- [x] **Modelo `Frequencia`** - Registro de entrada/saída dos atletas ✅
+- [x] **Modelo `Turma`** - Organização das turmas e horários ✅
+- [x] **Modelo `Professor`** - Gestão dos professores ✅
 - [ ] **Sistema de QR Code** - Geração e leitura de códigos únicos
 
 ---
@@ -59,12 +59,12 @@ Sistema completo de gestão para Dojô Uemura, incluindo matrículas, controle d
 ## 📋 **PRÓXIMAS TAREFAS (PRIORIDADE ALTA)**
 
 ### **📱 Controle de Frequência (SEMANA 1-2)**
-- [ ] **Criar app `frequencia`** - Estrutura Django para controle de frequência
-- [ ] **Implementar modelo `Frequencia`** - Com campos: atleta, data_entrada, data_saida, turma, professor, status, qr_code_utilizado
-- [ ] **Implementar modelo `Turma`** - Com campos: nome, modalidade, horario_inicio, horario_fim, professor, capacidade_maxima
-- [ ] **Implementar modelo `Professor`** - Com campos: usuario, graduacao, modalidades, ativo
+- [x] **Criar app `frequencia`** - Estrutura Django para controle de frequência ✅
+- [x] **Implementar modelo `Frequencia`** - Com campos: atleta, data_entrada, data_saida, turma, professor, status, qr_code_utilizado ✅
+- [x] **Implementar modelo `Turma`** - Com campos: nome, modalidade, horario_inicio, horario_fim, professor, capacidade_maxima ✅
+- [x] **Implementar modelo `Professor`** - Com campos: usuario, graduacao, modalidades, ativo ✅
 - [ ] **Atualizar modelo `Matricula`** - Adicionar relacionamento com Turma
-- [ ] **Criar migrações** - Estrutura do banco para frequência
+- [x] **Criar migrações** - Estrutura do banco para frequência ✅
 
 ### **🔧 Sistema de QR Code (SEMANA 3-4)**
 - [ ] **Geração de QR Code** - Código alfanumérico de 10 dígitos por atleta
@@ -220,24 +220,24 @@ Sistema completo de gestão para Dojô Uemura, incluindo matrículas, controle d
 
 ## 🚀 **PRÓXIMOS PASSOS IMEDIATOS**
 
-### **1. Criar app `frequencia` (HOJE)**
+### **1. Criar app `frequencia` (HOJE)** ✅
 ```bash
 python manage.py startapp frequencia
 ```
 
-### **2. Implementar modelos básicos (HOJE)**
-- `Frequencia`
-- `Turma`
-- `Professor`
+### **2. Implementar modelos básicos (HOJE)** ✅
+- `Frequencia` ✅
+- `Turma` ✅
+- `Professor` ✅
 
-### **3. Criar migrações (AMANHÃ)**
+### **3. Criar migrações (AMANHÃ)** ✅
 ```bash
 python manage.py makemigrations
 python manage.py migrate
 ```
 
-### **4. Configurar admin (AMANHÃ)**
-- Interface de gestão para novos modelos
+### **4. Configurar admin (AMANHÃ)** ✅
+- Interface de gestão para novos modelos ✅
 
 ### **5. Testar sistema básico (DEPOIS DE AMANHÃ)**
 - Verificar se não quebrou nada existente
@@ -267,7 +267,7 @@ python manage.py migrate
 
 ---
 
-**Status**: 📋 Planejado  
+**Status**: 🚧 Em Desenvolvimento  
 **Prioridade**: 🔴 Alta  
 **Responsável**: Equipe de Desenvolvimento  
 **Data de Início**: 17/08/2025  
@@ -275,4 +275,4 @@ python manage.py migrate
 
 ---
 
-**Última atualização**: 17/08/2025 - Análise do plano de execução e criação do TODO.md ✅
+**Última atualização**: 17/08/2025 - Implementação do app frequencia concluída ✅
