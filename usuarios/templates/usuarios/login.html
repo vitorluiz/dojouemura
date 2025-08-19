@@ -1,4 +1,4 @@
-{% extends 'usuarios/base.html' %}
+{% extends 'publico/base.html' %}
 
 {% block title %}Login - Cadastro de Pessoas{% endblock %}
 
@@ -56,7 +56,7 @@
                                     Lembrar de mim
                                 </label>
                             </div>
-                            <a href="#" class="text-decoration-none small text-primary">
+                            <a href="{% url 'usuarios:esqueceu_senha' %}" class="text-decoration-none small text-primary">
                                 Esqueceu a senha?
                             </a>
                         </div>
@@ -72,7 +72,7 @@
                     <div class="text-center">
                         <p class="text-muted mb-0">
                             Não tem uma conta? 
-                            <a href="{% url 'registro' %}" class="text-decoration-none fw-bold">
+                            <a href="{% url 'usuarios:registro' %}" class="text-decoration-none fw-bold">
                                 Cadastre-se aqui
                             </a>
                         </p>

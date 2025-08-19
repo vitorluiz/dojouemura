@@ -202,10 +202,10 @@
         left: 0 !important;
         right: 0 !important;
         bottom: 0 !important;
-        background-size: contain !important; /* Mostra imagem completa sem cortar */
+        background-size: cover !important; /* Mantém proporções e design */
         background-position: center center !important; /* Centraliza perfeitamente */
         background-repeat: no-repeat !important;
-        opacity: 0.4 !important; /* Aumenta um pouco a opacidade */
+        opacity: 0.3 !important; /* Opacidade sutil para não interferir no texto */
         z-index: 0 !important;
     }
     
@@ -217,7 +217,7 @@
         left: 0 !important;
         right: 0 !important;
         bottom: 0 !important;
-        background: linear-gradient(135deg, rgba(255, 255, 255, 0.85) 0%, rgba(255, 255, 255, 0.6) 100%) !important;
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.75) 100%) !important;
         z-index: 1 !important;
     }
     
@@ -231,13 +231,13 @@
     .hero-section {
         padding: 2rem 1rem 3rem 1rem !important; /* Reduz padding top para economizar espaço */
         text-align: center !important;
-        min-height: auto !important; /* Altura baseada no conteúdo */
+        min-height: 70vh !important; /* Altura equilibrada para mobile */
         display: flex !important;
         flex-direction: column !important;
         justify-content: center !important;
         align-items: center !important;
         position: relative !important;
-        overflow: visible !important; /* Permite que a imagem seja visível */
+        overflow: hidden !important; /* Controla o overflow para design limpo */
     }
     
     /* ===== CARDS MOBILE ===== */
@@ -391,14 +391,14 @@
     
     .hero-section {
         padding: 3rem 2rem 4rem 2rem !important;
-        min-height: auto !important; /* Altura baseada no conteúdo */
-        overflow: visible !important;
+        min-height: 75vh !important; /* Altura equilibrada para tablets pequenos */
+        overflow: hidden !important;
     }
     
     .hero-section .hero-image {
-        background-size: contain !important;
+        background-size: cover !important;
         background-position: center center !important;
-        opacity: 0.5 !important;
+        opacity: 0.4 !important;
     }
     
     .hero-section .lead {
@@ -436,14 +436,14 @@
     
     .hero-section {
         padding: 4rem 3rem 5rem 3rem !important;
-        min-height: auto !important; /* Altura baseada no conteúdo */
-        overflow: visible !important;
+        min-height: 80vh !important; /* Altura equilibrada para tablets */
+        overflow: hidden !important;
     }
     
     .hero-section .hero-image {
-        background-size: contain !important;
+        background-size: cover !important;
         background-position: center center !important;
-        opacity: 0.6 !important;
+        opacity: 0.5 !important;
     }
     
     .hero-section .lead {
@@ -481,14 +481,14 @@
     
     .hero-section {
         padding: 1.5rem 2rem 2rem 2rem !important;
-        min-height: auto !important; /* Altura baseada no conteúdo */
-        overflow: visible !important;
+        min-height: 60vh !important; /* Altura equilibrada para landscape */
+        overflow: hidden !important;
     }
     
     .hero-section .hero-image {
-        background-size: contain !important;
+        background-size: cover !important;
         background-position: center center !important;
-        opacity: 0.4 !important;
+        opacity: 0.35 !important;
     }
     
     .hero-section .lead {
@@ -627,5 +627,45 @@
     
     .touch-feedback:active {
         transform: scale(0.95) !important;
+    }
+}
+
+/* ===== DESIGN EQUILIBRADO PARA TODAS AS TELAS ===== */
+@media (max-width: 1200px) {
+    .hero-section {
+        background-size: cover !important;
+        background-position: center center !important;
+        background-repeat: no-repeat !important;
+        overflow: hidden !important;
+    }
+    
+    .hero-section .hero-image {
+        background-size: cover !important;
+        background-position: center center !important;
+        background-repeat: no-repeat !important;
+        opacity: 0.4 !important;
+    }
+}
+
+/* ===== TELAS EXTRA PEQUENAS ===== */
+@media (max-width: 360px) {
+    .hero-section {
+        padding: 1rem 0.5rem 2rem 0.5rem !important;
+        min-height: 65vh !important;
+        background-size: cover !important;
+        background-position: center center !important;
+        background-repeat: no-repeat !important;
+    }
+    
+    .hero-section .hero-image {
+        background-size: cover !important;
+        background-position: center center !important;
+        background-repeat: no-repeat !important;
+        opacity: 0.25 !important;
+    }
+    
+    .hero-buttons .btn {
+        padding: 0.875rem 1.5rem !important;
+        font-size: 1rem !important;
     }
 }

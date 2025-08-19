@@ -53,11 +53,17 @@ Sistema completo de gestão para Dojô Uemura, incluindo matrículas, frequênci
 
 ## 📋 **PRÓXIMAS TAREFAS (PRIORIDADE ALTA)**
 
+### **📱 Controle de Frequência**
+- [ ] **Sistema de QR Code** - Check-in/check-out dos alunos
+- [ ] **Notificações em tempo real** - Avisos para responsáveis
+- [ ] **Relatórios de presença** - Estatísticas de frequência
+
 ### **🔧 Melhorias no Sistema de Matrículas**
 - [ ] **Validações de CPF** - Implementar validação real de CPF
 - [ ] **Upload de fotos** - Configurar media files para fotos dos dependentes
 - [ ] **Validações de CEP** - Integrar com API de CEP para autocompletar endereço
 - [ ] **Termos legais** - Criar templates para termos de responsabilidade e uso de imagem
+
 
 ### **💰 Sistema de Pagamentos (PRIORIDADE MÉDIA)**
 - [ ] **Integração com PIX** - Configurar gateway de pagamento
@@ -70,14 +76,7 @@ Sistema completo de gestão para Dojô Uemura, incluindo matrículas, frequênci
 - [ ] **SMS (futuro)** - Notificações importantes
 - [ ] **WhatsApp Business** - Comunicação direta com responsáveis
 
----
-
 ## 📋 **TAREFAS FUTURAS (PRIORIDADE BAIXA)**
-
-### **📱 Controle de Frequência**
-- [ ] **Sistema de QR Code** - Check-in/check-out dos alunos
-- [ ] **Notificações em tempo real** - Avisos para responsáveis
-- [ ] **Relatórios de presença** - Estatísticas de frequência
 
 ### **📊 Relatórios e Analytics**
 - [ ] **Dashboard do Gestor** - Visão geral do Dojô

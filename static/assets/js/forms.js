@@ -29,12 +29,18 @@ document.addEventListener('DOMContentLoaded', function() {
     });
     
     // Máscara para telefone
-    const telefoneInputs = document.querySelectorAll('input[name="telefone"]');
+    const telefoneInputs = document.querySelectorAll('input[name="telefone"], input[name="telefone1"], input[name="telefone2"], input[type="tel"]');
     telefoneInputs.forEach(input => {
         input.addEventListener('input', function(e) {
             let value = e.target.value.replace(/\D/g, '');
             if (value.length <= 11) {
-                value = value.replace(/(\d{2})(\d{4,5})(\d{4})/, '($1) $2-$3');
+                if (value.length === 11) {
+                    // Celular: (00) 00000-0000
+                    value = value.replace(/(\d{2})(\d{5})(\d{4})/, '($1) $2-$3');
+                } else if (value.length === 10) {
+                    // Telefone fixo: (00) 0000-0000
+                    value = value.replace(/(\d{2})(\d{4})(\d{4})/, '($1) $2-$3');
+                }
                 e.target.value = value;
             }
         });

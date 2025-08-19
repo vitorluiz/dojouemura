@@ -1,0 +1,205 @@
+{% extends 'publico/base.html' %}
+{% load static %}
+
+{% block title %}Dojô Uemura - Formando Campeões no Tatame e na Vida{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'assets/css/home.css' %}">
+{% endblock %}
+
+{% block content %}
+<!-- ===== HERO SECTION ===== -->
+<section class="hero-section">
+    <div class="hero-image"></div>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8 text-center">
+                <div class="hero-logo mb-4">
+                    <img src="{% static 'assets/img/logo.svg' %}" alt="Dojô Uemura" height="120">
+                </div>
+                <h2 class="hero-title h3 mb-4">Formando Campeões no Tatame e na Vida</h2>
+                <p class="lead mb-5">Descubra o poder das artes marciais para transformar vidas e construir um futuro melhor através da disciplina, respeito e superação.</p>
+                <div class="hero-buttons d-flex justify-content-center gap-3">
+                    <a href="{% url 'publico:projeto_social' %}" class="btn btn-primary btn-lg">
+                        <i class="bi bi-heart"></i> Projeto Social
+                    </a>
+                    <a href="{% url 'publico:registro' %}" class="btn btn-outline-primary btn-lg">
+                        <i class="bi bi-person-plus"></i> Começar Agora
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Elementos decorativos -->
+    <div class="hero-decoration circle"></div>
+    <div class="hero-decoration triangle"></div>
+</section>
+
+<!-- ===== FEATURES SECTION ===== -->
+<section class="py-5 features-section">
+    <div class="container">
+        <div class="row text-center mb-5">
+            <div class="col-lg-8 mx-auto">
+                <h2 class="display-5 fw-bold text-primary mb-3">Por que escolher o Dojô Uemura?</h2>
+                <p class="lead text-muted">Nossa missão é formar não apenas atletas, mas cidadãos responsáveis e determinados.</p>
+            </div>
+        </div>
+        
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="feature-card text-center p-4">
+                    <div class="feature-icon mb-3">
+                        <i class="bi bi-shield-check display-4 text-primary"></i>
+                    </div>
+                    <h4 class="h5 fw-bold mb-3">Segurança e Qualidade</h4>
+                    <p class="text-muted">Professores qualificados e ambiente seguro para o desenvolvimento das habilidades.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="feature-card text-center p-4">
+                    <div class="feature-icon mb-3">
+                        <i class="bi bi-people display-4 text-primary"></i>
+                    </div>
+                    <h4 class="h5 fw-bold mb-3">Comunidade Unida</h4>
+                    <p class="text-muted">Família unida pelo respeito mútuo e valores compartilhados das artes marciais.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="feature-card text-center p-4">
+                    <div class="feature-icon mb-3">
+                        <i class="bi bi-trophy display-4 text-primary"></i>
+                    </div>
+                    <h4 class="h5 fw-bold mb-3">Resultados Comprovados</h4>
+                    <p class="text-muted">Histórico de sucesso na formação de campeões e cidadãos exemplares.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ===== MODALIDADES SECTION ===== -->
+<section class="py-5 modalidades-section bg-light">
+    <div class="container">
+        <div class="row text-center mb-5">
+            <div class="col-lg-8 mx-auto">
+                <h2 class="display-5 fw-bold text-primary mb-3">Nossas Modalidades</h2>
+                <p class="lead text-muted">Oferecemos uma variedade de artes marciais para todos os níveis e idades.</p>
+            </div>
+        </div>
+        
+        <div class="row g-4">
+            {% for modalidade in modalidades %}
+            <div class="col-md-6 col-lg-4">
+                <div class="modalidade-card text-center p-4 bg-white rounded-3 shadow-sm h-100">
+                    <div class="mb-3">
+                        {% if modalidade.imagem %}
+                            <img src="{{ modalidade.imagem.url }}" 
+                                 alt="{{ modalidade.nome }}" height="80" class="img-fluid rounded">
+                        {% else %}
+                            <div class="bg-light rounded d-flex align-items-center justify-content-center" 
+                                 style="width: 80px; height: 80px; margin: 0 auto;">
+                                <i class="bi bi-image text-muted" style="font-size: 2rem;"></i>
+                            </div>
+                        {% endif %}
+                    </div>
+                    <h4 class="h5 fw-bold mb-2">{{ modalidade.nome }}</h4>
+                    <p class="text-muted small mb-3">{{ modalidade.descricao|default:"Arte marcial tradicional" }}</p>
+                    <span class="badge bg-primary">{{ modalidade.nivel }}</span>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-12 text-center">
+                <p class="text-muted">Modalidades em breve...</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- ===== PROJETO SOCIAL SECTION ===== -->
+<section class="py-5 projeto-social-section">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6 mb-4 mb-lg-0">
+                <div class="projeto-social-icon text-center">
+                    <i class="bi bi-heart-pulse display-1 text-primary"></i>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="projeto-social-card">
+                    <h2 class="display-6 fw-bold text-primary mb-4">Projeto Social</h2>
+                    <p class="lead mb-4">Transformando vidas através das artes marciais, oferecendo oportunidades para crianças e jovens em situação de vulnerabilidade social.</p>
+                    <div class="row g-3 mb-4">
+                        <div class="col-6">
+                            <div class="text-center">
+                                <h3 class="h2 fw-bold text-primary">{{ total_atletas|default:"0" }}</h3>
+                                <p class="text-muted mb-0">Atletas Atendidos</p>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="text-center">
+                                <h3 class="h2 fw-bold text-primary">100%</h3>
+                                <p class="text-muted mb-0">Gratuito</p>
+                            </div>
+                        </div>
+                    </div>
+                    <a href="{% url 'publico:projeto_social' %}" class="btn btn-primary btn-lg">
+                        <i class="bi bi-arrow-right"></i> Saiba Mais
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ===== CONTATO SECTION ===== -->
+<section class="py-5 contato-section bg-light">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8 text-center">
+                <h2 class="display-5 fw-bold text-primary mb-4">Entre em Contato</h2>
+                <p class="lead text-muted mb-5">Tem dúvidas? Quer saber mais sobre nossas atividades? Entre em contato conosco!</p>
+                
+                <div class="row g-4 mb-5">
+                    <div class="col-md-4">
+                        <div class="contato-info-card text-center p-3">
+                            <i class="bi bi-geo-alt display-4 text-primary mb-3"></i>
+                            <h5>Endereço</h5>
+                            <p class="text-muted mb-0">Chapada dos Guimarães, MT</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="contato-info-card text-center p-3">
+                            <i class="bi bi-telephone display-4 text-primary mb-3"></i>
+                            <h5>Telefone</h5>
+                            <p class="text-muted mb-0">(65) 99999-9999</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="contato-info-card text-center p-3">
+                            <i class="bi bi-envelope display-4 text-primary mb-3"></i>
+                            <h5>Email</h5>
+                            <p class="text-muted mb-0">contato@dojouemura.com</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="contato-alert alert alert-info">
+                    <i class="bi bi-info-circle"></i>
+                    <strong>Horário de Funcionamento:</strong> Segunda a Sexta, das 8h às 20h
+                </div>
+                
+                <a href="{% url 'publico:contato' %}" class="btn btn-outline-primary btn-lg">
+                    <i class="bi bi-chat-dots"></i> Fale Conosco
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+    <script src="{% static 'assets/js/gallery.js' %}"></script>
+{% endblock %}
+

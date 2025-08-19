@@ -1,0 +1,134 @@
+{% extends 'publico/base.html' %}
+{% load static %}
+
+{% block title %}Galeria - Dojô Uemura{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'assets/css/forms.css' %}">
+{% endblock %}
+
+{% block content %}
+<!-- ===== HERO SECTION ===== -->
+<section class="py-5 bg-primary text-white">
+    <div class="container">
+        <div class="row justify-content-center text-center">
+            <div class="col-lg-8">
+                <h1 class="display-4 fw-bold mb-4">
+                    <i class="bi bi-images"></i> Galeria
+                </h1>
+                <p class="lead mb-0">Momentos especiais e conquistas dos nossos atletas</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ===== GALERIA GRID ===== -->
+<section class="py-5">
+    <div class="container">
+        <div class="row g-4" id="gallery-grid">
+            <!-- Imagens da galeria serão carregadas aqui -->
+            <div class="col-md-6 col-lg-4">
+                <div class="gallery-item" data-event="dojo">
+                    <img src="{% static 'assets/img/galeria/dojo_imagem_01.jpg' %}" 
+                         alt="Dojô Uemura" class="img-fluid rounded-3 shadow-sm w-100" 
+                         style="height: 250px; object-fit: cover;">
+                    <div class="gallery-overlay">
+                        <h5>Dojô Uemura</h5>
+                        <p>Nossa casa de treinos</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-4">
+                <div class="gallery-item" data-event="treino">
+                    <img src="{% static 'assets/img/galeria/dojo_imagem_02.jpg' %}" 
+                         alt="Treino" class="img-fluid rounded-3 shadow-sm w-100" 
+                         style="height: 250px; object-fit: cover;">
+                    <div class="gallery-overlay">
+                        <h5>Treinos</h5>
+                        <p>Disciplina e dedicação</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-4">
+                <div class="gallery-item" data-event="competicao">
+                    <img src="{% static 'assets/img/galeria/dojo_imagem_03.jpg' %}" 
+                         alt="Competição" class="img-fluid rounded-3 shadow-sm w-100" 
+                         style="height: 250px; object-fit: cover;">
+                    <div class="gallery-overlay">
+                        <h5>Competições</h5>
+                        <p>Momento de superação</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-4">
+                <div class="gallery-item" data-event="formatura">
+                    <img src="{% static 'assets/img/galeria/dojo_imagem_04.jpg' %}" 
+                         alt="Formatura" class="img-fluid rounded-3 shadow-sm w-100" 
+                         style="height: 250px; object-fit: cover;">
+                    <div class="gallery-overlay">
+                        <h5>Formaturas</h5>
+                        <p>Conquista de graduações</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-4">
+                <div class="gallery-item" data-event="eventos">
+                    <img src="{% static 'assets/img/galeria/dojo_imagem_05.jpg' %}" 
+                         alt="Eventos" class="img-fluid rounded-3 shadow-sm w-100" 
+                         style="height: 250px; object-fit: cover;">
+                    <div class="gallery-overlay">
+                        <h5>Eventos</h5>
+                        <p>Confraternização</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-4">
+                <div class="gallery-item" data-event="projeto-social">
+                    <img src="{% static 'assets/img/galeria/dojo_imagem_06.jpg' %}" 
+                         alt="Projeto Social" class="img-fluid rounded-3 shadow-sm w-100" 
+                         style="height: 250px; object-fit: cover;">
+                    <div class="gallery-overlay">
+                        <h5>Projeto Social</h5>
+                        <p>Transformando vidas</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ===== FILTROS ===== -->
+<section class="py-4 bg-light">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8 text-center">
+                <h5 class="mb-3">Filtrar por categoria:</h5>
+                <div class="btn-group" role="group">
+                    <button type="button" class="btn btn-outline-primary active" data-filter="all">Todas</button>
+                    <button type="button" class="btn btn-outline-primary" data-filter="dojo">Dojô</button>
+                    <button type="button" class="btn btn-outline-primary" data-filter="treino">Treinos</button>
+                    <button type="button" class="btn btn-outline-primary" data-filter="competicao">Competições</button>
+                    <button type="button" class="btn btn-outline-primary" data-filter="formatura">Formaturas</button>
+                    <button type="button" class="btn btn-outline-primary" data-filter="eventos">Eventos</button>
+                    <button type="button" class="btn btn-outline-primary" data-filter="projeto-social">Projeto Social</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ===== CTA ===== -->
+<section class="py-5">
+    <div class="container text-center">
+        <h3 class="fw-bold text-primary mb-3">Faça parte da nossa história!</h3>
+        <p class="lead text-muted mb-4">Inscreva-se no projeto social e apareça na nossa galeria de campeões.</p>
+        <a href="{% url 'publico:registro' %}" class="btn btn-primary btn-lg">
+            <i class="bi bi-person-plus"></i> Inscrever Agora
+        </a>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+    <script src="{% static 'assets/js/gallery.js' %}"></script>
+{% endblock %}

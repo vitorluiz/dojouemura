@@ -1,4 +1,4 @@
-{% extends 'usuarios/base.html' %}
+{% extends 'publico/base.html' %}
 
 {% block title %}Cadastro - Cadastro de Pessoas{% endblock %}
 
@@ -144,7 +144,7 @@
                     <div class="text-center">
                         <p class="text-muted mb-0">
                             Já tem uma conta? 
-                            <a href="{% url 'login' %}" class="text-decoration-none fw-bold">
+                            <a href="{% url 'usuarios:login' %}" class="text-decoration-none fw-bold">
                                 Faça login aqui
                             </a>
                         </p>

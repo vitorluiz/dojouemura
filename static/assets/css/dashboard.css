@@ -1,0 +1,209 @@
+/* ===== DOJÔ UEMURA - ESTILOS DO DASHBOARD ===== */
+
+/* ===== DASHBOARD STATS ===== */
+.dashboard-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.dashboard-card {
+    background: white;
+    padding: 2rem;
+    border-radius: 1rem;
+    box-shadow: var(--shadow-md);
+    border: 1px solid var(--gray-200);
+    transition: all 0.3s ease;
+    text-align: center;
+}
+
+.dashboard-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-lg);
+    border-color: var(--primary-red);
+}
+
+.dashboard-card .card-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+}
+
+.dashboard-card .card-number {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--primary-red);
+    margin-bottom: 0.5rem;
+}
+
+.dashboard-card .card-label {
+    color: var(--gray-600);
+    font-weight: 500;
+}
+
+/* ===== DASHBOARD TABLES ===== */
+.dashboard-table {
+    background: white;
+    border-radius: 1rem;
+    box-shadow: var(--shadow-md);
+    overflow: hidden;
+}
+
+.dashboard-table .table {
+    margin-bottom: 0;
+}
+
+.dashboard-table .table th {
+    background: var(--gray-50);
+    border-bottom: 2px solid var(--gray-200);
+    font-weight: 600;
+    color: var(--gray-700);
+    padding: 1rem;
+}
+
+.dashboard-table .table td {
+    padding: 1rem;
+    vertical-align: middle;
+    border-bottom: 1px solid var(--gray-100);
+}
+
+.dashboard-table .table tbody tr:hover {
+    background: var(--gray-50);
+}
+
+/* ===== STATUS BADGES ===== */
+.status-badge {
+    padding: 0.5rem 1rem;
+    border-radius: 2rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.status-badge.ativo {
+    background: rgba(25, 135, 84, 0.1);
+    color: #198754;
+    border: 1px solid rgba(25, 135, 84, 0.2);
+}
+
+.status-badge.inativo {
+    background: rgba(108, 117, 125, 0.1);
+    color: #6c757d;
+    border: 1px solid rgba(108, 117, 125, 0.2);
+}
+
+.status-badge.pendente {
+    background: rgba(255, 193, 7, 0.1);
+    color: #ffc107;
+    border: 1px solid rgba(255, 193, 7, 0.2);
+}
+
+/* ===== ACTION BUTTONS ===== */
+.action-buttons {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: center;
+}
+
+.action-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    transition: all 0.2s ease;
+    font-size: 1rem;
+}
+
+.action-btn:hover {
+    transform: scale(1.1);
+}
+
+.action-btn.edit {
+    background: var(--primary-red);
+    color: white;
+}
+
+.action-btn.edit:hover {
+    background: #e02400;
+}
+
+.action-btn.delete {
+    background: #dc3545;
+    color: white;
+}
+
+.action-btn.delete:hover {
+    background: #c82333;
+}
+
+.action-btn.view {
+    background: var(--japanese-navy);
+    color: white;
+}
+
+.action-btn.view:hover {
+    background: #1e3a8a;
+}
+
+/* ===== RESPONSIVIDADE ===== */
+@media (max-width: 768px) {
+    .dashboard-stats {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+    
+    .dashboard-card {
+        padding: 1.5rem;
+    }
+    
+    .dashboard-card .card-number {
+        font-size: 2rem;
+    }
+    
+    .dashboard-table {
+        font-size: 0.875rem;
+    }
+    
+    .dashboard-table .table th,
+    .dashboard-table .table td {
+        padding: 0.75rem 0.5rem;
+    }
+    
+    .action-buttons {
+        flex-direction: column;
+        gap: 0.25rem;
+    }
+    
+    .action-btn {
+        width: 35px;
+        height: 35px;
+        font-size: 0.875rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .dashboard-card {
+        padding: 1rem;
+    }
+    
+    .dashboard-card .card-icon {
+        font-size: 2.5rem;
+    }
+    
+    .dashboard-card .card-number {
+        font-size: 1.75rem;
+    }
+    
+    .dashboard-table {
+        font-size: 0.8rem;
+    }
+    
+    .status-badge {
+        padding: 0.375rem 0.75rem;
+        font-size: 0.75rem;
+    }
+}

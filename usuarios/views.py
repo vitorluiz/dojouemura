@@ -23,8 +23,8 @@ def home(request):
     """Página inicial"""
     if request.user.is_authenticated:
         dependentes = Dependente.objects.filter(usuario=request.user)
-        return render(request, 'usuarios/dashboard.html', {'dependentes': dependentes})
-    return render(request, 'usuarios/home.html')
+        return render(request, 'usuarios/usuario/painel.html', {'dependentes': dependentes})
+    return render(request, 'usuarios/usuario/home.html')
 
 
 def registro_usuario(request):
@@ -78,7 +78,7 @@ def login_usuario(request):
             if user is not None:
                 if user.email_verificado:
                     login(request, user)
-                    return redirect('home')
+                    return redirect('usuarios:home')
                 else:
                     messages.error(request, 'Por favor, verifique seu email antes de fazer login.')
             else:
@@ -93,7 +93,83 @@ def logout_usuario(request):
     """Logout do usuário"""
     logout(request)
     messages.success(request, 'Logout realizado com sucesso!')
-    return redirect('login')
+    return redirect('usuarios:login')
+
+
+def esqueceu_senha(request):
+    """Recuperação de senha"""
+    if request.method == 'POST':
+        email = request.POST.get('email')
+        try:
+            usuario = Usuario.objects.get(email=email)
+            if usuario.email_verificado:
+                # Gerar token para reset de senha
+                token = default_token_generator.make_token(usuario)
+                uid = urlsafe_base64_encode(force_bytes(usuario.pk))
+                
+                # Enviar email com link para reset
+                reset_url = request.build_absolute_uri(
+                    reverse('usuarios:reset_senha', kwargs={'uidb64': uid, 'token': token})
+                )
+                
+                assunto = "Recuperação de Senha - Dojô Uemura"
+                mensagem = f"""
+                Olá {usuario.first_name},
+                
+                Você solicitou a recuperação de senha para sua conta no Dojô Uemura.
+                
+                Para redefinir sua senha, clique no link abaixo:
+                {reset_url}
+                
+                Se você não solicitou esta recuperação, ignore este email.
+                
+                Atenciosamente,
+                Equipe Dojô Uemura
+                """
+                
+                send_mail(
+                    subject=assunto,
+                    message=mensagem,
+                    from_email=settings.DEFAULT_FROM_EMAIL,
+                    recipient_list=[email],
+                    fail_silently=False,
+                )
+                
+                messages.success(request, 'Email de recuperação enviado! Verifique sua caixa de entrada.')
+                return redirect('usuarios:login')
+            else:
+                messages.error(request, 'Este email ainda não foi verificado. Verifique sua caixa de entrada primeiro.')
+        except Usuario.DoesNotExist:
+            messages.error(request, 'Email não encontrado em nossa base de dados.')
+    
+    return render(request, 'usuarios/esqueceu_senha.html')
+
+
+def reset_senha(request, uidb64, token):
+    """Reset de senha com token"""
+    try:
+        uid = force_str(urlsafe_base64_decode(uidb64))
+        usuario = Usuario.objects.get(pk=uid)
+    except (TypeError, ValueError, OverflowError, Usuario.DoesNotExist):
+        usuario = None
+    
+    if usuario is not None and default_token_generator.check_token(usuario, token):
+        if request.method == 'POST':
+            senha1 = request.POST.get('senha1')
+            senha2 = request.POST.get('senha2')
+            
+            if senha1 == senha2 and len(senha1) >= 8:
+                usuario.set_password(senha1)
+                usuario.save()
+                messages.success(request, 'Senha alterada com sucesso! Faça login com sua nova senha.')
+                return redirect('usuarios:login')
+            else:
+                messages.error(request, 'As senhas não coincidem ou são muito curtas (mínimo 8 caracteres).')
+        
+        return render(request, 'usuarios/reset_senha.html')
+    else:
+        messages.error(request, 'Link de recuperação inválido ou expirado.')
+        return redirect('usuarios:login')
 
 
 def enviar_email_verificacao(request, usuario, senha_temporaria):
@@ -102,7 +178,7 @@ def enviar_email_verificacao(request, usuario, senha_temporaria):
     uid = urlsafe_base64_encode(force_bytes(usuario.pk))
     
     verification_url = request.build_absolute_uri(
-        reverse('verificar_email', kwargs={'uidb64': uid, 'token': token})
+        reverse('usuarios:verificar_email', kwargs={'uidb64': uid, 'token': token})
     )
     
     subject = 'Verificação de Email - Cadastro Dojô Uemura'
@@ -167,10 +243,10 @@ def verificar_email(request, uidb64, token):
         login(request, usuario)
         
         messages.success(request, 'Email verificado com sucesso! Bem-vindo ao seu portal.')
-        return redirect('dashboard')
+        return redirect('usuarios:dashboard')
     else:
         messages.error(request, 'Link de verificação inválido ou expirado.')
-        return redirect('login')
+        return redirect('usuarios:login')
 
 
 @login_required
@@ -365,7 +441,7 @@ def matricula_projeto_social(request):
             logger.info(f"Dependente criado com primeira matrícula: {dependente.id} - Matrícula: {primeira_matricula.id}")
             
             # Redirecionar para dashboard
-            return redirect('dashboard')
+            return redirect('usuarios:dashboard')
             
         except Exception as e:
             logger.error(f"Erro ao criar dependente: {str(e)}")
@@ -593,7 +669,7 @@ def matricula_modalidade_paga(request):
                 logger.info(f"Novo atleta criado com primeira matrícula: {dependente.id} - Matrícula: {primeira_matricula.id}")
             
             # Redirecionar para dashboard
-            return redirect('dashboard')
+            return redirect('usuarios:dashboard')
             
         except Exception as e:
             logger.error(f"Erro ao processar matrícula: {str(e)}")
@@ -619,5 +695,5 @@ def dashboard(request):
         'nome_completo': f"{usuario.first_name} {usuario.last_name}".strip() or usuario.email
     }
     
-    return render(request, 'usuarios/dashboard.html', context)
+    return render(request, 'usuarios/usuario/painel.html', context)
 

@@ -277,11 +277,27 @@ class DependenteAdmin(admin.ModelAdmin):
 class ModalidadeAdmin(admin.ModelAdmin):
     """Configuração do admin para o modelo Modalidade"""
     
-    list_display = ['nome', 'ativa', 'ordem', 'descricao_curta']
+    list_display = ['nome', 'imagem_preview', 'ativa', 'ordem', 'descricao_curta']
     list_editable = ['ativa', 'ordem']
     list_filter = ['ativa']
     search_fields = ['nome', 'descricao']
     ordering = ['ordem', 'nome']
+    
+    fieldsets = (
+        ('Informações Básicas', {
+            'fields': ('nome', 'descricao', 'imagem', 'ativa', 'ordem')
+        }),
+    )
+    
+    def imagem_preview(self, obj):
+        """Exibe preview da imagem da modalidade"""
+        if obj.imagem:
+            return format_html(
+                '<img src="{}" style="width: 50px; height: 50px; object-fit: cover; border-radius: 5px;" />',
+                obj.imagem.url
+            )
+        return '-'
+    imagem_preview.short_description = 'Imagem'
     
     def descricao_curta(self, obj):
         """Retorna descrição truncada para a listagem"""

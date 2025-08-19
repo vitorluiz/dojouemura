@@ -1,0 +1,393 @@
+/* ===== DOJÔ UEMURA - ESTILOS DA PÁGINA HOME ===== */
+
+/* ===== HERO SECTION ===== */
+.hero-section {
+    background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), 
+                url('../img/hero.jpg') center/cover no-repeat;
+    min-height: 80vh;
+    display: flex;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.hero-section .hero-logo {
+    height: 120px;
+    width: auto;
+    filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+}
+
+.hero-section .hero-title {
+    color: var(--japanese-gold);
+    font-weight: 600;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.hero-section .hero-buttons {
+    gap: 1rem;
+}
+
+/* ===== ELEMENTOS DECORATIVOS ===== */
+.hero-decoration {
+    position: absolute;
+    opacity: 0.1;
+    z-index: 1;
+}
+
+.hero-decoration.circle {
+    top: 20%;
+    left: 10%;
+}
+
+.hero-decoration.triangle {
+    top: 60%;
+    right: 15%;
+}
+
+.hero-decoration i {
+    font-size: 3rem;
+    color: var(--japanese-gold);
+}
+
+.hero-decoration.triangle i {
+    font-size: 2rem;
+    color: var(--japanese-silver);
+}
+
+/* ===== FEATURES SECTION ===== */
+.features-section {
+    background: var(--gray-50);
+}
+
+.feature-card {
+    background: white;
+    padding: 2rem;
+    border-radius: 1rem;
+    box-shadow: var(--shadow-md);
+    transition: all 0.3s ease;
+    height: 100%;
+    border: 1px solid var(--gray-200);
+}
+
+.feature-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-lg);
+    border-color: var(--primary-red);
+}
+
+.feature-icon {
+    width: 80px;
+    height: 80px;
+    background: linear-gradient(135deg, var(--primary-red), #e02400);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1.5rem;
+}
+
+.feature-icon i {
+    font-size: 2rem;
+    color: white;
+}
+
+/* ===== MODALIDADES SECTION ===== */
+.modalidades-section {
+    background: white;
+}
+
+.modalidade-card {
+    background: white;
+    padding: 2rem;
+    border-radius: 1rem;
+    box-shadow: var(--shadow-md);
+    transition: all 0.3s ease;
+    height: 100%;
+    border: 1px solid var(--gray-200);
+    text-align: center;
+}
+
+.modalidade-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-lg);
+}
+
+.modalidade-card img {
+    width: 120px;
+    height: 120px;
+    object-fit: cover;
+    border-radius: 50%;
+    margin-bottom: 1rem;
+    border: 3px solid var(--gray-200);
+    transition: all 0.3s ease;
+}
+
+.modalidade-card:hover img {
+    border-color: var(--primary-red);
+    transform: scale(1.05);
+}
+
+.modalidade-card.judo h4 {
+    color: var(--japanese-navy);
+}
+
+.modalidade-card.muay-thai h4 {
+    color: var(--japanese-forest);
+}
+
+.modalidade-card.boxe h4 {
+    color: var(--primary-red);
+}
+
+.modalidade-card.capoeira h4 {
+    color: var(--japanese-gold);
+}
+
+/* ===== PROFESSORES SECTION ===== */
+.professores-section {
+    background: var(--gray-50);
+}
+
+.professor-card {
+    background: white;
+    padding: 2rem;
+    border-radius: 1rem;
+    box-shadow: var(--shadow-md);
+    transition: all 0.3s ease;
+    height: 100%;
+    border: 1px solid var(--gray-200);
+    text-align: center;
+}
+
+.professor-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-lg);
+}
+
+.professor-card img {
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 50%;
+    margin-bottom: 1rem;
+    border: 3px solid var(--gray-200);
+    transition: all 0.3s ease;
+}
+
+.professor-card:hover img {
+    border-color: var(--primary-red);
+    transform: scale(1.05);
+}
+
+/* ===== GALERIA SECTION ===== */
+.galeria-section {
+    background: white;
+}
+
+.galeria-card {
+    background: white;
+    border-radius: 1rem;
+    overflow: hidden;
+    box-shadow: var(--shadow-md);
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.galeria-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-lg);
+}
+
+.galeria-card img {
+    width: 100%;
+    height: 250px;
+    object-fit: cover;
+    transition: all 0.3s ease;
+}
+
+.galeria-card:hover img {
+    transform: scale(1.05);
+}
+
+.galeria-card .card-body {
+    padding: 1.5rem;
+}
+
+/* ===== PROJETO SOCIAL SECTION ===== */
+.projeto-social-section {
+    background: var(--gray-50);
+}
+
+.projeto-social-icon {
+    font-size: 3rem;
+    color: var(--primary-red);
+    margin-bottom: 1rem;
+}
+
+.projeto-social-card {
+    background: white;
+    padding: 2rem;
+    border-radius: 1rem;
+    box-shadow: var(--shadow-md);
+    transition: all 0.3s ease;
+    height: 100%;
+    border: 1px solid var(--gray-200);
+    text-align: center;
+}
+
+.projeto-social-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-lg);
+}
+
+/* ===== CONTATO SECTION ===== */
+.contato-section {
+    background: white;
+}
+
+.contato-map {
+    border: 0;
+    border-radius: 8px;
+    width: 100%;
+    height: 400px;
+}
+
+.contato-info-card {
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    border: 1px solid rgba(255, 44, 0, 0.1);
+    background: rgba(255, 44, 0, 0.05);
+}
+
+.contato-info-card.gold {
+    background: rgba(212, 175, 55, 0.05);
+    border-color: rgba(212, 175, 55, 0.1);
+}
+
+.contato-info-card.gold h5 {
+    color: var(--japanese-gold);
+}
+
+.contato-alert {
+    background: rgba(255, 44, 0, 0.1);
+    border: 1px solid rgba(255, 44, 0, 0.2);
+    color: var(--gray-700);
+}
+
+/* ===== FOOTER SECTION ===== */
+.footer-section {
+    background: linear-gradient(135deg, var(--japanese-navy) 0%, var(--gray-800) 100%);
+    color: white;
+}
+
+/* ===== ANIMAÇÕES ===== */
+.animate-fade-in-up {
+    animation: fadeInUp 1s ease-out;
+}
+
+.animate-slide-in-left {
+    animation: slideInLeft 1s ease-out;
+}
+
+.animate-slide-in-right {
+    animation: slideInRight 1s ease-out;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideInLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes slideInRight {
+    from {
+        opacity: 0;
+        transform: translateX(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* ===== RESPONSIVIDADE ===== */
+@media (max-width: 768px) {
+    .hero-section {
+        min-height: 60vh;
+        padding: 2rem 1rem;
+    }
+    
+    .hero-section .hero-logo {
+        height: 80px;
+    }
+    
+    .hero-buttons {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .hero-buttons .btn {
+        width: 100%;
+        max-width: 300px;
+    }
+    
+    .feature-card,
+    .modalidade-card,
+    .professor-card,
+    .projeto-social-card {
+        margin-bottom: 1.5rem;
+    }
+    
+    .galeria-card img {
+        height: 200px;
+    }
+    
+    .contato-map {
+        height: 300px;
+        margin-bottom: 1.5rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .hero-section {
+        min-height: 50vh;
+        padding: 1.5rem 1rem;
+    }
+    
+    .hero-section .hero-logo {
+        height: 60px;
+    }
+    
+    .hero-decoration {
+        display: none;
+    }
+    
+    .feature-card,
+    .modalidade-card,
+    .professor-card,
+    .projeto-social-card {
+        padding: 1.5rem;
+    }
+    
+    .modalidade-card img,
+    .professor-card img {
+        width: 100px;
+        height: 100px;
+    }
+}

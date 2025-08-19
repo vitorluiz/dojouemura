@@ -1,0 +1,123 @@
+{% extends 'publico/base.html' %}
+{% load static %}
+
+{% block title %}Esqueceu a Senha - Dojô Uemura{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'assets/css/forms.css' %}">
+{% endblock %}
+
+{% block content %}
+<!-- ===== HERO SECTION ===== -->
+<section class="py-5 bg-warning text-dark">
+    <div class="container">
+        <div class="row justify-content-center text-center">
+            <div class="col-lg-8">
+                <h1 class="display-4 fw-bold mb-4">
+                    <i class="bi bi-key"></i> Esqueceu a Senha?
+                </h1>
+                <p class="lead mb-0">Não se preocupe! Vamos te ajudar a recuperar sua conta</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ===== FORMULÁRIO DE RECUPERAÇÃO ===== -->
+<section class="py-5">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-6">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-header bg-warning text-dark text-center py-4">
+                        <h3 class="mb-0">
+                            <i class="bi bi-envelope-open me-2"></i>
+                            Recuperar Senha
+                        </h3>
+                        <p class="mb-0 mt-2">Digite seu email para receber instruções</p>
+                    </div>
+                    <div class="card-body p-4">
+                        <div class="alert alert-info">
+                            <i class="bi bi-info-circle me-2"></i>
+                            <strong>Como funciona:</strong> Enviaremos um link para seu email para que você possa redefinir sua senha.
+                        </div>
+                        
+                        <form method="post">
+                            {% csrf_token %}
+                            
+                            <div class="mb-4">
+                                <label for="email" class="form-label fw-bold">
+                                    <i class="bi bi-envelope me-1"></i>
+                                    Email Cadastrado *
+                                </label>
+                                <input type="email" class="form-control form-control-lg" 
+                                       name="email" id="email" required 
+                                       placeholder="seu@email.com">
+                                <small class="text-muted">Digite o mesmo email usado no cadastro</small>
+                            </div>
+                            
+                            <div class="d-grid mb-4">
+                                <button type="submit" class="btn btn-warning btn-lg text-dark">
+                                    <i class="bi bi-send me-2"></i>
+                                    Enviar Email de Recuperação
+                                </button>
+                            </div>
+                        </form>
+                        
+                        <hr class="my-4">
+                        
+                        <div class="text-center">
+                            <p class="text-muted mb-3">Lembrou sua senha?</p>
+                            <a href="{% url 'usuarios:login' %}" class="btn btn-outline-primary">
+                                <i class="bi bi-box-arrow-in-right me-2"></i>
+                                Voltar ao Login
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ===== DICAS DE SEGURANÇA ===== -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="row text-center mb-5">
+            <div class="col-lg-8 mx-auto">
+                <h2 class="display-6 fw-bold text-primary mb-3">Dicas de Segurança</h2>
+                <p class="lead text-muted">Proteja sua conta com uma senha forte</p>
+            </div>
+        </div>
+        
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="text-center p-4">
+                    <div class="bg-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 80px; height: 80px;">
+                        <i class="bi bi-shield-lock display-5"></i>
+                    </div>
+                    <h5 class="fw-bold mb-3">Senha Forte</h5>
+                    <p class="text-muted">Use pelo menos 8 caracteres, incluindo letras, números e símbolos</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="text-center p-4">
+                    <div class="bg-success text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 80px; height: 80px;">
+                        <i class="bi bi-arrow-repeat display-5"></i>
+                    </div>
+                    <h5 class="fw-bold mb-3">Senha Única</h5>
+                    <p class="text-muted">Não use a mesma senha em outros sites ou aplicativos</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="text-center p-4">
+                    <div class="bg-warning text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 80px; height: 80px;">
+                        <i class="bi bi-calendar-check display-5"></i>
+                    </div>
+                    <h5 class="fw-bold mb-3">Atualização Regular</h5>
+                    <p class="text-muted">Troque sua senha periodicamente para maior segurança</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

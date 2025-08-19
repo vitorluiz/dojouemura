@@ -12,3 +12,23 @@ ATENÇÃO O PROJETO SOCIAL SÓ PODEM PARTICIPAR CRIANÇAS E ADOLECENTES DE 06 A 
 TEREMOS UMA CARTEIRA DO ATLETA QUE IDENTICARA O ALUNO COM UM CÓDIGO ALFANUMERICO DE 10 DIGITOS QUE SERÁ GERADO UM QRCODE PARA FACILITAR A SUA LEITURA, IREMOS DISPONIBILIZAR UMA LEITOR NA PORTARIA QUE FARA A SUA LEITURA E PERMISSÃO PARA REALIZAR AS AULAS, AO ALUNOS MENSALISTA SERÁ REALIZADO O CONTROLE DA FREQUENCIA E MENSALIDADES POR ESTE QR. TODOS OS ALUNOS DEVEM TER SUA FOTO NO CARTÃO DO ATLETA. DADOS MÉDICOS COMO TIPO SANGUINEO E ALERGIAS, CONDIÇÕES MÉDICAS, QUE OS PROFESSORES DEVEM SABER. SEU CONTATO DE EMERGENCIA.  SE É INICIANTE OU JÁ PRATICANTE DE ESPORTES. 
 NOSSOS PROFESSORES TERAM ACESSO AS AULAS PODENDO GERENCIA ALUNOS MATRICULADOS EM SUA AULA, MANDAR NOTIFICAÇÕES PARA OS RESPONSÁVEIS E ALUNOS MENSALISTA MATRICULADOS NA TURMA. 
 TEMOS UMA GALERIA DE FOTOS DOS EVENTOS E CAMPEONATOS DO DOJÔ. 
+
+
+# INSCRIÇÃO DO PROJETO SOCIAL
+
+- realizar sua inscrição no periodo de inscrição
+- ser menor de idade, (06 - 18 anos);
+- ter uma responsável legal;
+- estar matriculado e frequentando escola regular;
+- não ter restrições médicas que proibem a prática do esporte;
+- aceitar os termos de responsabilidade, uso de imagem, condições médicas.
+- pagar a taxa de inscrição R$ 50,00.
+
+# INSCRIÇÃO POR MODALIDADE
+
+- realizar sua inscrição no site;
+- apartir de 06 anos;
+- ser ou ter responsável financeiro;
+- não ter restrições médicas que proibem a prática do esporte;
+- aceitar os termos de responsabilidade, condições médicas, uso de imagem (opcional);
+- realizar o pagamento da mensalidade da modalidade que escolheu e confeção do cartão do atleta.

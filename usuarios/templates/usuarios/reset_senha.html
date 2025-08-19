@@ -1,0 +1,148 @@
+{% extends 'publico/base.html' %}
+{% load static %}
+
+{% block title %}Redefinir Senha - Dojô Uemura{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'assets/css/forms.css' %}">
+{% endblock %}
+
+{% block content %}
+<!-- ===== HERO SECTION ===== -->
+<section class="py-5 bg-success text-white">
+    <div class="container">
+        <div class="row justify-content-center text-center">
+            <div class="col-lg-8">
+                <h1 class="display-4 fw-bold mb-4">
+                    <i class="bi bi-lock"></i> Redefinir Senha
+                </h1>
+                <p class="lead mb-0">Crie uma nova senha para sua conta</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ===== FORMULÁRIO DE NOVA SENHA ===== -->
+<section class="py-5">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-6">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-header bg-success text-white text-center py-4">
+                        <h3 class="mb-0">
+                            <i class="bi bi-shield-lock me-2"></i>
+                            Nova Senha
+                        </h3>
+                        <p class="mb-0 mt-2">Digite sua nova senha</p>
+                    </div>
+                    <div class="card-body p-4">
+                        <div class="alert alert-info">
+                            <i class="bi bi-info-circle me-2"></i>
+                            <strong>Requisitos:</strong> Sua senha deve ter pelo menos 8 caracteres.
+                        </div>
+                        
+                        <form method="post">
+                            {% csrf_token %}
+                            
+                            <div class="mb-4">
+                                <label for="senha1" class="form-label fw-bold">
+                                    <i class="bi bi-lock me-1"></i>
+                                    Nova Senha *
+                                </label>
+                                <input type="password" class="form-control form-control-lg" 
+                                       name="senha1" id="senha1" required 
+                                       placeholder="Digite sua nova senha">
+                                <small class="text-muted">Mínimo 8 caracteres</small>
+                            </div>
+                            
+                            <div class="mb-4">
+                                <label for="senha2" class="form-label fw-bold">
+                                    <i class="bi bi-lock-fill me-1"></i>
+                                    Confirmar Nova Senha *
+                                </label>
+                                <input type="password" class="form-control form-control-lg" 
+                                       name="senha2" id="senha2" required 
+                                       placeholder="Digite novamente sua nova senha">
+                                <small class="text-muted">As senhas devem ser idênticas</small>
+                            </div>
+                            
+                            <div class="d-grid mb-4">
+                                <button type="submit" class="btn btn-success btn-lg">
+                                    <i class="bi bi-check-circle me-2"></i>
+                                    Alterar Senha
+                                </button>
+                            </div>
+                        </form>
+                        
+                        <hr class="my-4">
+                        
+                        <div class="text-center">
+                            <p class="text-muted mb-3">Lembrou sua senha antiga?</p>
+                            <a href="{% url 'usuarios:login' %}" class="btn btn-outline-primary">
+                                <i class="bi bi-box-arrow-in-right me-2"></i>
+                                Voltar ao Login
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ===== DICAS DE SENHA ===== -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="row text-center mb-5">
+            <div class="col-lg-8 mx-auto">
+                <h2 class="display-6 fw-bold text-primary mb-3">Como Criar uma Senha Forte</h2>
+                <p class="lead text-muted">Siga estas dicas para proteger sua conta</p>
+            </div>
+        </div>
+        
+        <div class="row g-4">
+            <div class="col-md-6">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body p-4">
+                        <h5 class="fw-bold text-success mb-3">
+                            <i class="bi bi-check-circle me-2"></i>
+                            O que INCLUIR
+                        </h5>
+                        <ul class="list-unstyled">
+                            <li class="mb-2"><i class="bi bi-arrow-right text-success me-2"></i>Pelo menos 8 caracteres</li>
+                            <li class="mb-2"><i class="bi bi-arrow-right text-success me-2"></i>Letras maiúsculas e minúsculas</li>
+                            <li class="mb-2"><i class="bi bi-arrow-right text-success me-2"></i>Números (0-9)</li>
+                            <li class="mb-2"><i class="bi bi-arrow-right text-success me-2"></i>Símbolos especiais (!@#$%^&*)</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body p-4">
+                        <h5 class="fw-bold text-danger mb-3">
+                            <i class="bi bi-x-circle me-2"></i>
+                            O que EVITAR
+                        </h5>
+                        <ul class="list-unstyled">
+                            <li class="mb-2"><i class="bi bi-arrow-right text-danger me-2"></i>Informações pessoais (nome, data nascimento)</li>
+                            <li class="mb-2"><i class="bi bi-arrow-right text-danger me-2"></i>Sequências simples (123456, abcdef)</li>
+                            <li class="mb-2"><i class="bi bi-arrow-right text-danger me-2"></i>Palavras do dicionário</li>
+                            <li class="mb-2"><i class="bi bi-arrow-right text-danger me-2"></i>Senhas usadas em outros sites</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="alert alert-warning text-center">
+                    <i class="bi bi-lightbulb me-2"></i>
+                    <strong>Dica:</strong> Use uma frase que você lembre facilmente, mas que seja difícil de adivinhar!
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

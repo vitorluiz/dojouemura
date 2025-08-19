@@ -318,6 +318,13 @@ class Modalidade(models.Model):
     )
     nome = models.CharField(max_length=50, unique=True, verbose_name='Nome da Modalidade')
     descricao = models.TextField(blank=True, verbose_name='Descrição')
+    imagem = models.ImageField(
+        upload_to='modalidades/',
+        blank=True,
+        null=True,
+        verbose_name='Imagem da Modalidade',
+        help_text='Imagem representativa da modalidade (recomendado: 300x300px)'
+    )
     ativa = models.BooleanField(default=True, verbose_name='Modalidade Ativa')
     ordem = models.PositiveIntegerField(default=0, verbose_name='Ordem de Exibição')
     

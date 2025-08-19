@@ -1,396 +1,226 @@
-{% extends 'usuarios/base.html' %} {% block title %}Editar Dependente - Cadastro
-de Pessoas{% endblock %} {% block content %}
-<div class="container py-5">
-  <div class="row justify-content-center">
-    <div class="col-md-10 col-lg-9">
-      <div class="card">
-        <div class="card-body p-5">
-          <div class="text-center mb-4">
-            <div class="display-4 text-warning mb-3">
-              <i class="bi bi-pencil-square"></i>
+{% extends 'publico/base.html' %}
+{% load static %}
+
+{% block title %}Editar Dependente - Dojô Uemura{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'assets/css/forms.css' %}">
+{% endblock %}
+
+{% block content %}
+<!-- ===== HERO SECTION ===== -->
+<section class="py-5 bg-warning text-dark">
+    <div class="container">
+        <div class="row justify-content-center text-center">
+            <div class="col-lg-8">
+                <h1 class="display-4 fw-bold mb-4">
+                    <i class="bi bi-pencil-square"></i> Editar Dependente
+                </h1>
+                <p class="lead mb-0">Atualize as informações do dependente</p>
             </div>
-            <h2 class="fw-bold">Editar Dependente</h2>
-            <p class="text-muted">
-              Atualize os dados de {{ dependente.nome_completo }}
-            </p>
-          </div>
-          <form method="post" enctype="multipart/form-data">
-            {% csrf_token %}
-            <!-- Dados Pessoais -->
-            <div class="row mb-4">
-              <div class="col-12">
-                <h5 class="fw-bold text-primary border-bottom pb-2 mb-3">
-                  <i class="bi bi-person me-2"></i>
-                  Dados Pessoais
-                </h5>
-              </div>
-              <div class="col-12 mb-3">
-                <div class="col-12 mb-3">
-                  <label
-                    for="{{ form.foto.id_for_label }}"
-                    class="form-label fw-bold"
-                  >
-                    <i class="bi bi-camera me-1"></i>
-                    Foto do Dependente
-                  </label>
-                  {% if dependente.foto %}
-                  <div class="mb-2">
-                    <img
-                      src="{{ dependente.foto.url }}"
-                      alt="Foto atual"
-                      class="img-thumbnail"
-                      style="max-width: 150px; max-height: 150px"
-                    />
-                    <small class="text-muted d-block">Foto atual</small>
-                  </div>
-                  {% endif %} {{ form.foto }} {% if form.foto.errors %}
-                  <div class="text-danger small mt-1">
-                    {% for error in form.foto.errors %}
-                    <div>{{ error }}</div>
-                    {% endfor %}
-                  </div>
-                  {% endif %}
-                  <small class="text-muted">{{ form.foto.help_text }}</small>
-                </div>
-                <label
-                  for="{{ form.nome_completo.id_for_label }}"
-                  class="form-label fw-bold"
-                >
-                  Nome Completo
-                </label>
-                {{ form.nome_completo }} {% if form.nome_completo.errors %}
-                <div class="text-danger small mt-1">
-                  {% for error in form.nome_completo.errors %}
-                  <div>{{ error }}</div>
-                  {% endfor %}
-                </div>
-                {% endif %}
-              </div>
-              <div class="col-md-3 mb-3">
-                <label
-                  for="{{ form.cpf.id_for_label }}"
-                  class="form-label fw-bold"
-                >
-                  CPF
-                </label>
-                {{ form.cpf }}
-              </div>
-              <div class="col-md-3 mb-3">
-                <label
-                  for="{{ form.data_nascimento.id_for_label }}"
-                  class="form-label fw-bold"
-                >
-                  Data de Nascimento
-                </label>
-                {{ form.data_nascimento }} {% if form.data_nascimento.errors %}
-                <div class="text-danger small mt-1">
-                  {% for error in form.data_nascimento.errors %}
-                  <div>{{ error }}</div>
-                  {% endfor %}
-                </div>
-                {% endif %}
-                <small class="text-muted"
-                  >Dependente deve ter entre 6 e 18 anos</small
-                >
-              </div>
-              <div class="col-md-6 mb-3">
-                <label
-                  for="{{ form.parentesco.id_for_label }}"
-                  class="form-label fw-bold"
-                >
-                  Parentesco
-                </label>
-                {{ form.parentesco }} {% if form.parentesco.errors %}
-                <div class="text-danger small mt-1">
-                  {% for error in form.parentesco.errors %}
-                  <div>{{ error }}</div>
-                  {% endfor %}
-                </div>
-                {% endif %}
-              </div>
-            </div>
-            <!-- Endereço -->
-            <div class="row mb-4">
-              <div class="col-12">
-                <h5 class="fw-bold text-primary border-bottom pb-2 mb-3">
-                  <i class="bi bi-geo-alt me-2"></i>
-                  Endereço
-                </h5>
-              </div>
-
-              <div class="col-md-4 mb-3">
-                <label
-                  for="{{ form.cep.id_for_label }}"
-                  class="form-label fw-bold"
-                >
-                  CEP
-                </label>
-                {{ form.cep }} {% if form.cep.errors %}
-                <div class="text-danger small mt-1">
-                  {% for error in form.cep.errors %}
-                  <div>{{ error }}</div>
-                  {% endfor %}
-                </div>
-                {% endif %}
-                <small class="text-muted">Preenchimento automático</small>
-              </div>
-              <div class="col-md-6 mb-3">
-                <label
-                  for="{{ form.logradouro.id_for_label }}"
-                  class="form-label fw-bold"
-                >
-                  Logradouro
-                </label>
-                {{ form.logradouro }} {% if form.logradouro.errors %}
-                <div class="text-danger small mt-1">
-                  {% for error in form.logradouro.errors %}
-                  <div>{{ error }}</div>
-                  {% endfor %}
-                </div>
-                {% endif %}
-              </div>
-
-              <div class="col-md-2 mb-3">
-                <label
-                  for="{{ form.numero.id_for_label }}"
-                  class="form-label fw-bold"
-                >
-                  Número
-                </label>
-                {{ form.numero }} {% if form.numero.errors %}
-                <div class="text-danger small mt-1">
-                  {% for error in form.numero.errors %}
-                  <div>{{ error }}</div>
-                  {% endfor %}
-                </div>
-                {% endif %}
-              </div>
-
-              <div class="col-md-6 mb-3">
-                <label
-                  for="{{ form.complemento.id_for_label }}"
-                  class="form-label fw-bold"
-                >
-                  Complemento
-                </label>
-                {{ form.complemento }} {% if form.complemento.errors %}
-                <div class="text-danger small mt-1">
-                  {% for error in form.complemento.errors %}
-                  <div>{{ error }}</div>
-                  {% endfor %}
-                </div>
-                {% endif %}
-              </div>
-
-              <div class="col-md-4 mb-3">
-                <label
-                  for="{{ form.bairro.id_for_label }}"
-                  class="form-label fw-bold"
-                >
-                  Bairro
-                </label>
-                {{ form.bairro }} {% if form.bairro.errors %}
-                <div class="text-danger small mt-1">
-                  {% for error in form.bairro.errors %}
-                  <div>{{ error }}</div>
-                  {% endfor %}
-                </div>
-                {% endif %}
-              </div>
-
-              <div class="col-md-2 mb-3">
-                <label
-                  for="{{ form.uf.id_for_label }}"
-                  class="form-label fw-bold"
-                >
-                  UF
-                </label>
-                {{ form.uf }} {% if form.uf.errors %}
-                <div class="text-danger small mt-1">
-                  {% for error in form.uf.errors %}
-                  <div>{{ error }}</div>
-                  {% endfor %}
-                </div>
-                {% endif %}
-              </div>
-
-              <div class="col-md-6 mb-3">
-                <label
-                  for="{{ form.cidade.id_for_label }}"
-                  class="form-label fw-bold"
-                >
-                  Cidade
-                </label>
-                {{ form.cidade }} {% if form.cidade.errors %}
-                <div class="text-danger small mt-1">
-                  {% for error in form.cidade.errors %}
-                  <div>{{ error }}</div>
-                  {% endfor %}
-                </div>
-                {% endif %}
-              </div>
-            </div>
-
-            <!-- Dados Escolares -->
-            <div class="row mb-4">
-              <div class="col-12">
-                <h5 class="fw-bold text-primary border-bottom pb-2 mb-3">
-                  <i class="bi bi-mortarboard me-2"></i>
-                  Dados Escolares
-                </h5>
-              </div>
-
-              <div class="col-md-4 mb-3">
-                <label
-                  for="{{ form.escolaridade.id_for_label }}"
-                  class="form-label fw-bold"
-                >
-                  Escolaridade
-                </label>
-                {{ form.escolaridade }} {% if form.escolaridade.errors %}
-                <div class="text-danger small mt-1">
-                  {% for error in form.escolaridade.errors %}
-                  <div>{{ error }}</div>
-                  {% endfor %}
-                </div>
-                {% endif %}
-              </div>
-
-              <div class="col-md-6 mb-3">
-                <label
-                  for="{{ form.escola.id_for_label }}"
-                  class="form-label fw-bold"
-                >
-                  Escola
-                </label>
-                {{ form.escola }} {% if form.escola.errors %}
-                <div class="text-danger small mt-1">
-                  {% for error in form.escola.errors %}
-                  <div>{{ error }}</div>
-                  {% endfor %}
-                </div>
-                {% endif %}
-              </div>
-
-              <div class="col-md-2 mb-3">
-                <label
-                  for="{{ form.turno.id_for_label }}"
-                  class="form-label fw-bold"
-                >
-                  Turno
-                </label>
-                {{ form.turno }} {% if form.turno.errors %}
-                <div class="text-danger small mt-1">
-                  {% for error in form.turno.errors %}
-                  <div>{{ error }}</div>
-                  {% endfor %}
-                </div>
-                {% endif %}
-              </div>
-            </div>
-
-            <!-- Condições Médicas -->
-            <div class="row mb-4">
-              <div class="col-12">
-                <h5 class="fw-bold text-primary border-bottom pb-2 mb-3">
-                  <i class="bi bi-heart-pulse me-2"></i>
-                  Condições Médicas
-                </h5>
-              </div>
-
-              <div class="col-12 mb-3">
-                <label
-                  for="{{ form.condicoes_medicas.id_for_label }}"
-                  class="form-label fw-bold"
-                >
-                  Condições Médicas para Prática de Esportes
-                </label>
-                {{ form.condicoes_medicas }} {% if form.condicoes_medicas.errors %}
-                <div class="text-danger small mt-1">
-                  {% for error in form.condicoes_medicas.errors %}
-                  <div>{{ error }}</div>
-                  {% endfor %}
-                </div>
-                {% endif %}
-              </div>
-            </div>
-
-            <!-- Termos -->
-            <div class="row mb-4">
-              <div class="col-12">
-                <h5 class="fw-bold text-primary border-bottom pb-2 mb-3">
-                  <i class="bi bi-file-text me-2"></i>
-                  Termos e Condições
-                </h5>
-              </div>
-
-              <div class="col-12 mb-3">
-                <div class="form-check">
-                  {{ form.termo_responsabilidade }}
-                  <label
-                    class="form-check-label fw-bold"
-                    for="{{ form.termo_responsabilidade.id_for_label }}"
-                  >
-                    Aceito os Termos de Responsabilidade
-                  </label>
-                  {% if form.termo_responsabilidade.errors %}
-                  <div class="text-danger small mt-1">
-                    {% for error in form.termo_responsabilidade.errors %}
-                    <div>{{ error }}</div>
-                    {% endfor %}
-                  </div>
-                  {% endif %}
-                </div>
-                <small class="text-muted">
-                  Declaro que sou responsável pelo dependente e autorizo sua
-                  participação nas atividades.
-                </small>
-              </div>
-
-              <div class="col-12 mb-3">
-                <div class="form-check">
-                  {{ form.termo_uso_imagem }}
-                  <label
-                    class="form-check-label fw-bold"
-                    for="{{ form.termo_uso_imagem.id_for_label }}"
-                  >
-                    Autorizo o Uso de Imagem
-                  </label>
-                  {% if form.termo_uso_imagem.errors %}
-                  <div class="text-danger small mt-1">
-                    {% for error in form.termo_uso_imagem.errors %}
-                    <div>{{ error }}</div>
-                    {% endfor %}
-                  </div>
-                  {% endif %}
-                </div>
-                <small class="text-muted">
-                  Autorizo o uso da imagem do dependente para fins
-                  institucionais e de divulgação.
-                </small>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-12">
-                <div class="d-flex gap-3">
-                  <button type="submit" class="btn btn-warning btn-lg">
-                    <i class="bi bi-pencil-square me-2"></i>
-                    Salvar Alterações
-                  </button>
-                  <a
-                    href="{% url 'home' %}"
-                    class="btn btn-outline-secondary btn-lg"
-                  >
-                    <i class="bi bi-arrow-left me-2"></i>
-                    Voltar
-                  </a>
-                </div>
-              </div>
-            </div>
-          </form>
         </div>
-      </div>
     </div>
-  </div>
-</div>
+</section>
+
+<!-- ===== FORMULÁRIO DE EDIÇÃO ===== -->
+<section class="py-5">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-header bg-warning text-dark text-center py-4">
+                        <h3 class="mb-0">
+                            <i class="bi bi-person-badge me-2"></i>
+                            Editar: {{ dependente.nome }}
+                        </h3>
+                        <p class="mb-0 mt-2">Modifique as informações necessárias</p>
+                    </div>
+                    <div class="card-body p-4">
+                        <div class="alert alert-info">
+                            <i class="bi bi-info-circle me-2"></i>
+                            <strong>Dica:</strong> Preencha apenas os campos que deseja alterar.
+                        </div>
+                        
+                        <form method="post" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            
+                            <h5 class="text-primary mb-3">Informações Pessoais</h5>
+                            <div class="row g-3 mb-4">
+                                <div class="col-md-6">
+                                    <label class="form-label">Nome Completo *</label>
+                                    <input type="text" class="form-control" name="nome" value="{{ dependente.nome }}" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Data de Nascimento *</label>
+                                    <input type="date" class="form-control" name="data_nascimento" value="{{ dependente.data_nascimento|date:'Y-m-d' }}" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">CPF *</label>
+                                    <input type="text" class="form-control" name="cpf" value="{{ dependente.cpf }}" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">RG</label>
+                                    <input type="text" class="form-control" name="rg" value="{{ dependente.rg|default:'' }}">
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Sexo *</label>
+                                    <select class="form-select" name="sexo" required>
+                                        <option value="">Selecione...</option>
+                                        <option value="M" {% if dependente.sexo == 'M' %}selected{% endif %}>Masculino</option>
+                                        <option value="F" {% if dependente.sexo == 'F' %}selected{% endif %}>Feminino</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Estado Civil</label>
+                                    <select class="form-select" name="estado_civil">
+                                        <option value="">Selecione...</option>
+                                        <option value="solteiro" {% if dependente.estado_civil == 'solteiro' %}selected{% endif %}>Solteiro(a)</option>
+                                        <option value="casado" {% if dependente.estado_civil == 'casado' %}selected{% endif %}>Casado(a)</option>
+                                        <option value="divorciado" {% if dependente.estado_civil == 'divorciado' %}selected{% endif %}>Divorciado(a)</option>
+                                        <option value="viuvo" {% if dependente.estado_civil == 'viuvo' %}selected{% endif %}>Viúvo(a)</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                                                         <h5 class="text-primary mb-3">Informações de Contato</h5>
+                             <div class="row g-3 mb-4">
+                                 <div class="col-12">
+                                     <div class="alert alert-info">
+                                         <i class="bi bi-info-circle me-2"></i>
+                                         <strong>Nota:</strong> As informações de contato (telefone e email) são gerenciadas através da conta do usuário responsável.
+                                     </div>
+                                 </div>
+                             </div>
+                            
+                            <h5 class="text-primary mb-3">Endereço</h5>
+                            <div class="row g-3 mb-4">
+                                <div class="col-md-3">
+                                    <label class="form-label">CEP *</label>
+                                    <input type="text" class="form-control" name="cep" value="{{ dependente.cep }}" required>
+                                </div>
+                                <div class="col-md-7">
+                                    <label class="form-label">Endereço *</label>
+                                    <input type="text" class="form-control" name="endereco" value="{{ dependente.endereco }}" required>
+                                </div>
+                                <div class="col-md-2">
+                                    <label class="form-label">Número *</label>
+                                    <input type="text" class="form-control" name="numero" value="{{ dependente.numero }}" required>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label">Complemento</label>
+                                    <input type="text" class="form-control" name="complemento" value="{{ dependente.complemento|default:'' }}" placeholder="Apto, Casa, etc.">
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label">Bairro *</label>
+                                    <input type="text" class="form-control" name="bairro" value="{{ dependente.bairro }}" required>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label">Cidade *</label>
+                                    <input type="text" class="form-control" name="cidade" value="{{ dependente.cidade }}" required>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label">Estado *</label>
+                                    <select class="form-select" name="estado" required>
+                                        <option value="">Selecione...</option>
+                                        <option value="AC" {% if dependente.estado == 'AC' %}selected{% endif %}>Acre</option>
+                                        <option value="AL" {% if dependente.estado == 'AL' %}selected{% endif %}>Alagoas</option>
+                                        <option value="AP" {% if dependente.estado == 'AP' %}selected{% endif %}>Amapá</option>
+                                        <option value="AM" {% if dependente.estado == 'AM' %}selected{% endif %}>Amazonas</option>
+                                        <option value="BA" {% if dependente.estado == 'BA' %}selected{% endif %}>Bahia</option>
+                                        <option value="CE" {% if dependente.estado == 'CE' %}selected{% endif %}>Ceará</option>
+                                        <option value="DF" {% if dependente.estado == 'DF' %}selected{% endif %}>Distrito Federal</option>
+                                        <option value="ES" {% if dependente.estado == 'ES' %}selected{% endif %}>Espírito Santo</option>
+                                        <option value="GO" {% if dependente.estado == 'GO' %}selected{% endif %}>Goiás</option>
+                                        <option value="MA" {% if dependente.estado == 'MA' %}selected{% endif %}>Maranhão</option>
+                                        <option value="MT" {% if dependente.estado == 'MT' %}selected{% endif %}>Mato Grosso</option>
+                                        <option value="MS" {% if dependente.estado == 'MS' %}selected{% endif %}>Mato Grosso do Sul</option>
+                                        <option value="MG" {% if dependente.estado == 'MG' %}selected{% endif %}>Minas Gerais</option>
+                                        <option value="PA" {% if dependente.estado == 'PA' %}selected{% endif %}>Pará</option>
+                                        <option value="PB" {% if dependente.estado == 'PB' %}selected{% endif %}>Paraíba</option>
+                                        <option value="PR" {% if dependente.estado == 'PR' %}selected{% endif %}>Paraná</option>
+                                        <option value="PE" {% if dependente.estado == 'PE' %}selected{% endif %}>Pernambuco</option>
+                                        <option value="PI" {% if dependente.estado == 'PI' %}selected{% endif %}>Piauí</option>
+                                        <option value="RJ" {% if dependente.estado == 'RJ' %}selected{% endif %}>Rio de Janeiro</option>
+                                        <option value="RN" {% if dependente.estado == 'RN' %}selected{% endif %}>Rio Grande do Norte</option>
+                                        <option value="RS" {% if dependente.estado == 'RS' %}selected{% endif %}>Rio Grande do Sul</option>
+                                        <option value="RO" {% if dependente.estado == 'RO' %}selected{% endif %}>Rondônia</option>
+                                        <option value="RR" {% if dependente.estado == 'RR' %}selected{% endif %}>Roraima</option>
+                                        <option value="SC" {% if dependente.estado == 'SC' %}selected{% endif %}>Santa Catarina</option>
+                                        <option value="SP" {% if dependente.estado == 'SP' %}selected{% endif %}>São Paulo</option>
+                                        <option value="SE" {% if dependente.estado == 'SE' %}selected{% endif %}>Sergipe</option>
+                                        <option value="TO" {% if dependente.estado == 'TO' %}selected{% endif %}>Tocantins</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <h5 class="text-primary mb-3">Informações Escolares</h5>
+                            <div class="row g-3 mb-4">
+                                <div class="col-md-6">
+                                    <label class="form-label">Escola onde estuda</label>
+                                    <input type="text" class="form-control" name="escola" value="{{ dependente.escola|default:'' }}" placeholder="Nome da escola">
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Série/Ano</label>
+                                    <input type="text" class="form-control" name="serie" value="{{ dependente.serie|default:'' }}" placeholder="Ex: 5º ano, 1º ano EM">
+                                </div>
+                            </div>
+                            
+                            <h5 class="text-primary mb-3">Informações Médicas</h5>
+                            <div class="row g-3 mb-4">
+                                <div class="col-md-6">
+                                    <label class="form-label">Tipo Sanguíneo</label>
+                                    <select class="form-select" name="tipo_sanguineo">
+                                        <option value="">Selecione...</option>
+                                        <option value="A+" {% if dependente.tipo_sanguineo == 'A+' %}selected{% endif %}>A+</option>
+                                        <option value="A-" {% if dependente.tipo_sanguineo == 'A-' %}selected{% endif %}>A-</option>
+                                        <option value="B+" {% if dependente.tipo_sanguineo == 'B+' %}selected{% endif %}>B+</option>
+                                        <option value="B-" {% if dependente.tipo_sanguineo == 'B-' %}selected{% endif %}>B-</option>
+                                        <option value="AB+" {% if dependente.tipo_sanguineo == 'AB+' %}selected{% endif %}>AB+</option>
+                                        <option value="AB-" {% if dependente.tipo_sanguineo == 'AB-' %}selected{% endif %}>AB-</option>
+                                        <option value="O+" {% if dependente.tipo_sanguineo == 'O+' %}selected{% endif %}>O+</option>
+                                        <option value="O-" {% if dependente.tipo_sanguineo == 'O-' %}selected{% endif %}>O-</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Alergias</label>
+                                    <input type="text" class="form-control" name="alergias" value="{{ dependente.alergias|default:'' }}" placeholder="Ex: Pólen, alimentos...">
+                                </div>
+                                <div class="col-12">
+                                    <label class="form-label">Condições Médicas</label>
+                                    <textarea class="form-control" name="condicoes_medicas" rows="3" placeholder="Descreva condições médicas importantes...">{{ dependente.condicoes_medicas|default:'' }}</textarea>
+                                </div>
+                            </div>
+                            
+                            <h5 class="text-primary mb-3">Foto</h5>
+                            <div class="row g-3 mb-4">
+                                <div class="col-12">
+                                    <label class="form-label">Foto do Dependente</label>
+                                    {% if dependente.foto %}
+                                        <div class="mb-3">
+                                            <img src="{{ dependente.foto.url }}" alt="Foto atual" class="img-thumbnail" style="max-width: 200px;">
+                                            <p class="text-muted small">Foto atual</p>
+                                        </div>
+                                    {% endif %}
+                                    <input type="file" class="form-control" name="foto" accept="image/*">
+                                    <small class="text-muted">Formatos aceitos: JPG, PNG. Tamanho máximo: 5MB. Deixe em branco para manter a foto atual.</small>
+                                </div>
+                            </div>
+                            
+                            <div class="d-flex gap-3">
+                                <button type="submit" class="btn btn-warning btn-lg flex-fill">
+                                    <i class="bi bi-check-circle me-2"></i>
+                                    Salvar Alterações
+                                </button>
+                                <a href="{% url 'usuarios:painel' %}" class="btn btn-outline-secondary btn-lg">
+                                    <i class="bi bi-arrow-left me-2"></i>
+                                    Cancelar
+                                </a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
 {% endblock %}

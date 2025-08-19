@@ -1,0 +1,161 @@
+{% extends 'publico/base.html' %}
+{% load static %}
+
+{% block title %}Painel do Atleta - Dojô Uemura{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'assets/css/dashboard.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    <div class="row">
+        <!-- Sidebar -->
+        <div class="col-md-3 col-lg-2">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body text-center">
+                    <div class="mb-3">
+                        <i class="bi bi-person-circle" style="font-size: 4rem; color: var(--bs-primary);"></i>
+                    </div>
+                    <h5 class="fw-bold">{{ nome_completo }}</h5>
+                    <p class="text-muted small">{{ usuario.email }}</p>
+                    <hr>
+                    <div class="d-grid gap-2">
+                        <a href="{% url 'usuarios:cadastrar_dependente' %}" class="btn btn-primary btn-sm">
+                            <i class="bi bi-person-plus"></i> Novo Atleta
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="col-md-9 col-lg-10">
+            <!-- Header -->
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2 class="h3 mb-0">
+                    <i class="bi bi-speedometer2 text-primary"></i> Painel do Atleta
+                </h2>
+                <div class="btn-group" role="group">
+                    <a href="{% url 'usuarios:galeria_completa' %}" class="btn btn-outline-primary">
+                        <i class="bi bi-images"></i> Galeria
+                    </a>
+                </div>
+            </div>
+
+            <!-- Atletas/Dependentes -->
+            <div class="row">
+                {% if dependentes %}
+                    {% for dependente in dependentes %}
+                    <div class="col-md-6 col-lg-4 mb-4">
+                        <div class="card border-0 shadow-sm h-100">
+                            <div class="card-body">
+                                <div class="d-flex align-items-center mb-3">
+                                    {% if dependente.foto %}
+                                        <img src="{{ dependente.foto.url }}" alt="{{ dependente.nome }}" 
+                                             class="rounded-circle me-3" style="width: 50px; height: 50px; object-fit: cover;">
+                                    {% else %}
+                                        <div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center me-3" 
+                                             style="width: 50px; height: 50px;">
+                                            <i class="bi bi-person text-white"></i>
+                                        </div>
+                                    {% endif %}
+                                    <div>
+                                        <h6 class="mb-0 fw-bold">{{ dependente.nome }}</h6>
+                                        <small class="text-muted">{{ dependente.parentesco }}</small>
+                                    </div>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <small class="text-muted">
+                                        <i class="bi bi-calendar"></i> {{ dependente.data_nascimento|date:"d/m/Y" }}<br>
+                                        <i class="bi bi-mortarboard"></i> {{ dependente.get_escolaridade_display }}<br>
+                                        <i class="bi bi-building"></i> {{ dependente.escola }}
+                                    </small>
+                                </div>
+
+                                <!-- Matrículas -->
+                                {% if dependente.matriculas.all %}
+                                <div class="mb-3">
+                                    <h6 class="fw-bold text-primary mb-2">Modalidades Ativas:</h6>
+                                    {% for matricula in dependente.matriculas.all %}
+                                        {% if matricula.ativa %}
+                                        <span class="badge bg-success me-1 mb-1">
+                                            {{ matricula.modalidade.nome }}
+                                        </span>
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+                                {% endif %}
+
+                                <div class="d-flex gap-2">
+                                    <a href="{% url 'usuarios:editar_dependente' dependente.id %}" 
+                                       class="btn btn-outline-primary btn-sm flex-fill">
+                                        <i class="bi bi-pencil"></i> Editar
+                                    </a>
+                                    <a href="{% url 'usuarios:excluir_dependente' dependente.id %}" 
+                                       class="btn btn-outline-danger btn-sm flex-fill"
+                                       onclick="return confirm('Tem certeza que deseja excluir este atleta?')">
+                                        <i class="bi bi-trash"></i> Excluir
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="col-12">
+                        <div class="card border-0 shadow-sm">
+                            <div class="card-body text-center py-5">
+                                <i class="bi bi-person-plus text-muted" style="font-size: 3rem;"></i>
+                                <h5 class="mt-3 text-muted">Nenhum atleta cadastrado</h5>
+                                <p class="text-muted">Comece cadastrando seu primeiro atleta para acompanhar seu progresso.</p>
+                                <a href="{% url 'usuarios:cadastrar_dependente' %}" class="btn btn-primary">
+                                    <i class="bi bi-person-plus"></i> Cadastrar Primeiro Atleta
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+
+            <!-- Ações Rápidas -->
+            {% if dependentes %}
+            <div class="row mt-4">
+                <div class="col-12">
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-header bg-white border-0">
+                            <h5 class="fw-bold text-primary mb-0">Ações Rápidas</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row g-3">
+                                <div class="col-md-4">
+                                    <a href="{% url 'usuarios:matricula_projeto_social' %}" class="btn btn-outline-success w-100">
+                                        <i class="bi bi-heart"></i> Matrícula Projeto Social
+                                    </a>
+                                </div>
+                                <div class="col-md-4">
+                                    <a href="{% url 'usuarios:matricula_modalidade_paga' %}" class="btn btn-outline-primary w-100">
+                                        <i class="bi bi-star"></i> Matrícula Modalidade Paga
+                                    </a>
+                                </div>
+                                <div class="col-md-4">
+                                    <a href="{% url 'usuarios:galeria_completa' %}" class="btn btn-outline-info w-100">
+                                        <i class="bi bi-images"></i> Ver Galeria
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'assets/js/dashboard.js' %}"></script>
+{% endblock %}
+

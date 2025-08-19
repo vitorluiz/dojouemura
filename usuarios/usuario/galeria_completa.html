@@ -1,0 +1,342 @@
+{% extends 'publico/base.html' %}
+{% load static %}
+
+{% block title %}Galeria Completa - Dojô Uemura{% endblock %}
+
+{% block content %}
+<!-- Hero Section da Galeria -->
+<section class="hero-section" style="
+background: linear-gradient(rgba(0, 0, 0, 0.6), 
+rgba(0, 0, 0, 0.6)), 
+url('{% static 'assets/img/galeria/dojo_imagem_01.jpg' %}')
+center/cover no-repeat;">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-10 text-center">
+                <div class="animate-fade-in-up">
+                    <h1 class="display-3 fw-bold mb-4 text-white">
+                        Galeria Completa
+                    </h1>
+                    <h2 class="h3 mb-4 text-white-50">
+                        Momentos especiais e conquistas dos nossos alunos
+                    </h2>
+                    <p class="lead mb-5 text-white-75">
+                        Reviva os momentos mais marcantes do Dojô Uemura através de nossa galeria completa
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Filtros da Galeria -->
+<section class="py-5" style="background: var(--gray-50);">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8 text-center">
+                <h3 class="mb-4">Filtrar por Evento</h3>
+                <div class="d-flex gap-2 justify-content-center flex-wrap">
+                    <button class="btn btn-outline-primary filter-btn active" data-filter="todos">
+                        Todos os Eventos
+                    </button>
+                    <button class="btn btn-outline-primary filter-btn" data-filter="graduacao">
+                        Graduações
+                    </button>
+                    <button class="btn btn-outline-primary filter-btn" data-filter="competicao">
+                        Competições
+                    </button>
+                    <button class="btn btn-outline-primary filter-btn" data-filter="treino">
+                        Treinos Especiais
+                    </button>
+                    <button class="btn btn-outline-primary filter-btn" data-filter="campeonato">
+                        Campeonatos
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Galeria Completa -->
+<section class="py-5">
+    <div class="container">
+        <div class="row g-4" id="galeriaCompleta">
+            <!-- Graduação Julho 2025 -->
+            <div class="col-lg-4 col-md-6 gallery-item" data-category="graduacao">
+                <div class="card gallery-card h-100" data-bs-toggle="modal" data-bs-target="#galleryModal" data-event="graduacao-julho">
+                    <div class="card-body p-0">
+                        <img src="{% static 'assets/img/galeria/dojo_imagem_01.jpg' %}" 
+                             alt="Graduação Julho 2025" 
+                             class="img-fluid rounded-top" 
+                             style="width: 100%; height: 250px; object-fit: cover;">
+                        <div class="card-body">
+                            <h5 class="card-title text-primary">Graduação Julho 2025</h5>
+                            <p class="card-text text-muted">
+                                <i class="bi bi-geo-alt-fill me-2"></i>
+                                Dojô Uemura
+                            </p>
+                            <p class="card-text small">Celebração das conquistas e progresso dos nossos alunos</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4 col-md-6 gallery-item" data-category="graduacao">
+                <div class="card gallery-card h-100" data-bs-toggle="modal" data-bs-target="#galleryModal" data-event="graduacao-julho">
+                    <div class="card-body p-0">
+                        <img src="{% static 'assets/img/galeria/dojo_imagem_02.jpg' %}" 
+                             alt="Graduação Julho 2025" 
+                             class="img-fluid rounded-top" 
+                             style="width: 100%; height: 250px; object-fit: cover;">
+                        <div class="card-body">
+                            <h5 class="card-title text-primary">Graduação Julho 2025</h5>
+                            <p class="card-text text-muted">
+                                <i class="bi bi-geo-alt-fill me-2"></i>
+                                Dojô Uemura
+                            </p>
+                            <p class="card-text small">Entrega de faixas e certificados</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4 col-md-6 gallery-item" data-category="graduacao">
+                <div class="card gallery-card h-100" data-bs-toggle="modal" data-bs-target="#galleryModal" data-event="graduacao-julho">
+                    <div class="card-body p-0">
+                        <img src="{% static 'assets/img/galeria/dojo_imagem_03.jpg' %}" 
+                             alt="Graduação Julho 2025" 
+                             class="img-fluid rounded-top" 
+                             style="width: 100%; height: 250px; object-fit: cover;">
+                        <div class="card-body">
+                            <h5 class="card-title text-primary">Graduação Julho 2025</h5>
+                            <p class="card-text text-muted">
+                                <i class="bi bi-geo-alt-fill me-2"></i>
+                                Dojô Uemura
+                            </p>
+                            <p class="card-text small">Festa de comemoração</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Competição Março 2025 -->
+            <div class="col-lg-4 col-md-6 gallery-item" data-category="competicao">
+                <div class="card gallery-card h-100" data-bs-toggle="modal" data-bs-target="#galleryModal" data-event="competicao-marco">
+                    <div class="card-body p-0">
+                        <img src="{% static 'assets/img/galeria/dojo_imagem_04.jpg' %}" 
+                             alt="Competição Março 2025" 
+                             class="img-fluid rounded-top" 
+                             style="width: 100%; height: 250px; object-fit: cover;">
+                        <div class="card-body">
+                            <h5 class="card-title text-primary">Competição Março 2025</h5>
+                            <p class="card-text text-muted">
+                                <i class="bi bi-geo-alt-fill me-2"></i>
+                                Ginásio Municipal
+                            </p>
+                            <p class="card-text small">Desafios e superação em competições regionais</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4 col-md-6 gallery-item" data-category="competicao">
+                <div class="card gallery-card h-100" data-bs-toggle="modal" data-bs-target="#galleryModal" data-event="competicao-marco">
+                    <div class="card-body p-0">
+                        <img src="{% static 'assets/img/galeria/dojo_imagem_05.jpg' %}" 
+                             alt="Competição Março 2025" 
+                             class="img-fluid rounded-top" 
+                             style="width: 100%; height: 250px; object-fit: cover;">
+                        <div class="card-body">
+                            <h5 class="card-title text-primary">Competição Março 2025</h5>
+                            <p class="card-text text-muted">
+                                <i class="bi bi-geo-alt-fill me-2"></i>
+                                Ginásio Municipal
+                            </p>
+                            <p class="card-text small">Lutas emocionantes</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4 col-md-6 gallery-item" data-category="competicao">
+                <div class="card gallery-card h-100" data-bs-toggle="modal" data-bs-target="#galleryModal" data-event="competicao-marco">
+                    <div class="card-body p-0">
+                        <img src="{% static 'assets/img/galeria/dojo_imagem_06.jpg' %}" 
+                             alt="Competição Março 2025" 
+                             class="img-fluid rounded-top" 
+                             style="width: 100%; height: 250px; object-fit: cover;">
+                        <div class="card-body">
+                            <h5 class="card-title text-primary">Competição Março 2025</h5>
+                            <p class="card-text text-muted">
+                                <i class="bi bi-geo-alt-fill me-2"></i>
+                                Ginásio Municipal
+                            </p>
+                            <p class="card-text small">Pódio e premiações</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Treino Especial Maio 2025 -->
+            <div class="col-lg-4 col-md-6 gallery-item" data-category="treino">
+                <div class="card gallery-card h-100" data-bs-toggle="modal" data-bs-target="#galleryModal" data-event="treino-especial">
+                    <div class="card-body p-0">
+                        <img src="{% static 'assets/img/galeria/dojo_imagem_07.jpg' %}" 
+                             alt="Treino Especial Maio 2025" 
+                             class="img-fluid rounded-top" 
+                             style="width: 100%; height: 250px; object-fit: cover;">
+                        <div class="card-body">
+                            <h5 class="card-title text-primary">Treino Especial Maio 2025</h5>
+                            <p class="card-text text-muted">
+                                <i class="bi bi-geo-alt-fill me-2"></i>
+                                Dojô Uemura
+                            </p>
+                            <p class="card-text small">Aulas especiais com mestres convidados</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4 col-md-6 gallery-item" data-category="treino">
+                <div class="card gallery-card h-100" data-bs-toggle="modal" data-bs-target="#galleryModal" data-event="treino-especial">
+                    <div class="card-body p-0">
+                        <img src="{% static 'assets/img/galeria/dojo_imagem_08.jpg' %}" 
+                             alt="Treino Especial Maio 2025" 
+                             class="img-fluid rounded-top" 
+                             style="width: 100%; height: 250px; object-fit: cover;">
+                        <div class="card-body">
+                            <h5 class="card-title text-primary">Treino Especial Maio 2025</h5>
+                            <p class="card-text text-muted">
+                                <i class="bi bi-geo-alt-fill me-2"></i>
+                                Dojô Uemura
+                            </p>
+                            <p class="card-text small">Técnicas avançadas</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4 col-md-6 gallery-item" data-category="treino">
+                <div class="card gallery-card h-100" data-bs-toggle="modal" data-bs-target="#galleryModal" data-event="treino-especial">
+                    <div class="card-body p-0">
+                        <img src="{% static 'assets/img/galeria/dojo_imagem_09.jpg' %}" 
+                             alt="Treino Especial Maio 2025" 
+                             class="img-fluid rounded-top" 
+                             style="width: 100%; height: 250px; object-fit: cover;">
+                        <div class="card-body">
+                            <h5 class="card-title text-primary">Treino Especial Maio 2025</h5>
+                            <p class="card-text text-muted">
+                                <i class="bi bi-geo-alt-fill me-2"></i>
+                                Dojô Uemura
+                            </p>
+                            <p class="card-text small">Mestre convidado</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Campeonato Junho 2025 -->
+            <div class="col-lg-4 col-md-6 gallery-item" data-category="campeonato">
+                <div class="card gallery-card h-100" data-bs-toggle="modal" data-bs-target="#galleryModal" data-event="campeonato-junho">
+                    <div class="card-body p-0">
+                        <img src="{% static 'assets/img/galeria/dojo_imagem_10.jpg' %}" 
+                             alt="Campeonato Junho 2025" 
+                             class="img-fluid rounded-top" 
+                             style="width: 100%; height: 250px; object-fit: cover;">
+                        <div class="card-body">
+                            <h5 class="card-title text-primary">Campeonato Junho 2025</h5>
+                            <p class="card-text text-muted">
+                                <i class="bi bi-geo-alt-fill me-2"></i>
+                                Arena Esportiva
+                            </p>
+                            <p class="card-text small">Grande evento de artes marciais da região</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4 col-md-6 gallery-item" data-category="campeonato">
+                <div class="card gallery-card h-100" data-bs-toggle="modal" data-bs-target="#galleryModal" data-event="campeonato-junho">
+                    <div class="card-body p-0">
+                        <img src="{% static 'assets/img/galeria/dojo_imagem_11.jpg' %}" 
+                             alt="Campeonato Junho 2025" 
+                             class="img-fluid rounded-top" 
+                             style="width: 100%; height: 250px; object-fit: cover;">
+                        <div class="card-body">
+                            <h5 class="card-title text-primary">Campeonato Junho 2025</h5>
+                            <p class="card-text text-muted">
+                                <i class="bi bi-geo-alt-fill me-2"></i>
+                                Arena Esportiva
+                            </p>
+                            <p class="card-text small">Equipe vencedora</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4 col-md-6 gallery-item" data-category="campeonato">
+                <div class="card gallery-card h-100" data-bs-toggle="modal" data-bs-target="#galleryModal" data-event="campeonato-junho">
+                    <div class="card-body p-0">
+                        <img src="{% static 'assets/img/galeria/dojo_imagem_12.jpg' %}" 
+                             alt="Campeonato Junho 2025" 
+                             class="img-fluid rounded-top" 
+                             style="width: 100%; height: 250px; object-fit: cover;">
+                        <div class="card-body">
+                            <h5 class="card-title text-primary">Campeonato Junho 2025</h5>
+                            <p class="card-text text-muted">
+                                <i class="bi bi-geo-alt-fill me-2"></i>
+                                Arena Esportiva
+                            </p>
+                            <p class="card-text small">Celebração e troféus</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Modal da Galeria -->
+<div class="modal fade" id="galleryModal" tabindex="-1" aria-labelledby="galleryModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="galleryModalLabel">Galeria de Fotos</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row g-3" id="modalGalleryContent">
+                    <!-- Conteúdo dinâmico será carregado aqui -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- CTA Section -->
+<section class="py-5" style="background: linear-gradient(135deg, var(--japanese-navy) 0%, var(--gray-800) 100%);">
+    <div class="container text-center">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <h2 class="text-white mb-4">Quer fazer parte da nossa história?</h2>
+                <p class="lead text-white-50 mb-5">
+                    Junte-se ao Dojô Uemura e crie seus próprios momentos especiais
+                </p>
+                <div class="d-flex gap-3 justify-content-center flex-wrap">
+                    <a href="{% url 'usuarios:login' %}" class="btn btn-primary btn-lg">
+                        <i class="bi bi-heart-fill me-2"></i>
+                        Inscrever Agora
+                    </a>
+                    <a href="{% url 'home' %}" class="btn btn-outline-light btn-lg">
+                        <i class="bi bi-arrow-left me-2"></i>
+                        Voltar ao Início
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

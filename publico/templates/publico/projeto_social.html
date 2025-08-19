@@ -1,0 +1,227 @@
+{% extends 'publico/base.html' %}
+{% load static %}
+
+{% block title %}Projeto Social - Dojô Uemura{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'assets/css/forms.css' %}">
+{% endblock %}
+
+{% block content %}
+<!-- ===== HERO SECTION ===== -->
+<section class="py-5 bg-primary text-white">
+    <div class="container">
+        <div class="row justify-content-center text-center">
+            <div class="col-lg-8">
+                <h1 class="display-4 fw-bold mb-4">
+                    <i class="bi bi-heart-pulse"></i> Projeto Social
+                </h1>
+                <p class="lead mb-0">Transformando vidas através das artes marciais</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ===== SOBRE O PROJETO ===== -->
+<section class="py-5">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6 mb-4 mb-lg-0">
+                <h2 class="display-6 fw-bold text-primary mb-4">Nossa Missão Social</h2>
+                <p class="lead mb-4">O Projeto Social do Dojô Uemura nasceu da crença de que as artes marciais podem transformar vidas e criar oportunidades para crianças e jovens em situação de vulnerabilidade social.</p>
+                
+                <div class="row g-3 mb-4">
+                    <div class="col-6">
+                        <div class="text-center p-3 bg-light rounded">
+                            <i class="bi bi-people display-4 text-primary"></i>
+                            <h5 class="mt-2">Inclusão Social</h5>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="text-center p-3 bg-light rounded">
+                            <i class="bi bi-shield-check display-4 text-primary"></i>
+                            <h5 class="mt-2">Segurança</h5>
+                        </div>
+                    </div>
+                </div>
+                
+                <p class="text-muted">Através da disciplina, respeito e superação, nossos atletas desenvolvem não apenas habilidades físicas, mas também valores essenciais para a vida.</p>
+            </div>
+            <div class="col-lg-6">
+                <div class="text-center">
+                    <img src="{% static 'assets/img/hero.jpg' %}" alt="Projeto Social" class="img-fluid rounded-3 shadow">
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ===== BENEFÍCIOS ===== -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="row text-center mb-5">
+            <div class="col-lg-8 mx-auto">
+                <h2 class="display-5 fw-bold text-primary mb-3">Benefícios do Projeto</h2>
+                <p class="lead text-muted">Descubra como as artes marciais podem transformar a vida dos participantes.</p>
+            </div>
+        </div>
+        
+        <div class="row g-4">
+            <div class="col-md-6 col-lg-3">
+                <div class="text-center p-4">
+                    <div class="bg-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 80px; height: 80px;">
+                        <i class="bi bi-lightning display-5"></i>
+                    </div>
+                    <h5 class="fw-bold mb-3">Disciplina</h5>
+                    <p class="text-muted">Desenvolvimento de rotinas e hábitos saudáveis que se estendem para outras áreas da vida.</p>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-3">
+                <div class="text-center p-4">
+                    <div class="bg-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 80px; height: 80px;">
+                        <i class="bi bi-heart display-5"></i>
+                    </div>
+                    <h5 class="fw-bold mb-3">Respeito</h5>
+                    <p class="text-muted">Aprender a respeitar a si mesmo, aos outros e às diferenças individuais.</p>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-3">
+                <div class="text-center p-4">
+                    <div class="bg-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 80px; height: 80px;">
+                        <i class="bi bi-trophy display-5"></i>
+                    </div>
+                    <h5 class="fw-bold mb-3">Superação</h5>
+                    <p class="text-muted">Desenvolvimento da resiliência e capacidade de enfrentar desafios.</p>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-3">
+                <div class="text-center p-4">
+                    <div class="bg-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 80px; height: 80px;">
+                        <i class="bi bi-people display-5"></i>
+                    </div>
+                    <h5 class="fw-bold mb-3">Socialização</h5>
+                    <p class="text-muted">Construção de amizades e senso de comunidade entre os participantes.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ===== COMO PARTICIPAR ===== -->
+<section class="py-5">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8 text-center">
+                <h2 class="display-5 fw-bold text-primary mb-4">Como Participar</h2>
+                <p class="lead text-muted mb-5">O processo é simples e totalmente gratuito. Veja os passos:</p>
+                
+                <div class="row g-4 mb-5">
+                    <div class="col-md-4">
+                        <div class="text-center p-3">
+                            <div class="bg-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px;">
+                                <span class="h4 fw-bold">1</span>
+                            </div>
+                            <h5>Cadastro</h5>
+                            <p class="text-muted small">Preencha o formulário de inscrição com os dados do atleta.</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="text-center p-3">
+                            <div class="bg-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px;">
+                                <span class="h4 fw-bold">2</span>
+                            </div>
+                            <h5>Avaliação</h5>
+                            <p class="text-muted small">Nossa equipe avalia a elegibilidade e necessidades específicas.</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="text-center p-3">
+                            <div class="bg-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px;">
+                                <span class="h4 fw-bold">3</span>
+                            </div>
+                            <h5>Início</h5>
+                            <p class="text-muted small">Comece a treinar e fazer parte da nossa família!</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="alert alert-info">
+                    <i class="bi bi-info-circle"></i>
+                    <strong>Importante:</strong> O projeto é 100% gratuito e inclui uniforme, equipamentos e todas as atividades.
+                </div>
+                
+                <a href="{% url 'publico:registro' %}" class="btn btn-primary btn-lg">
+                    <i class="bi bi-person-plus"></i> Inscrever no Projeto Social
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ===== DEPOIMENTOS ===== -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="row text-center mb-5">
+            <div class="col-lg-8 mx-auto">
+                <h2 class="display-5 fw-bold text-primary mb-3">Depoimentos</h2>
+                <p class="lead text-muted">Veja o que nossos atletas e famílias têm a dizer sobre o projeto.</p>
+            </div>
+        </div>
+        
+        <div class="row g-4">
+            <div class="col-md-6 col-lg-4">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body text-center p-4">
+                        <div class="bg-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px;">
+                            <i class="bi bi-quote display-6"></i>
+                        </div>
+                        <p class="card-text">"Meu filho mudou completamente desde que começou no projeto. Mais disciplinado e responsável."</p>
+                        <h6 class="fw-bold text-primary">Maria Silva</h6>
+                        <small class="text-muted">Mãe do João, 12 anos</small>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-4">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body text-center p-4">
+                        <div class="bg-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px;">
+                            <i class="bi bi-quote display-6"></i>
+                        </div>
+                        <p class="card-text">"O projeto me deu uma nova perspectiva de vida. Aprendi que posso ser um campeão dentro e fora do tatame."</p>
+                        <h6 class="fw-bold text-primary">Pedro Santos</h6>
+                        <small class="text-muted">Atleta, 15 anos</small>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-4">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body text-center p-4">
+                        <div class="bg-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px;">
+                            <i class="bi bi-quote display-6"></i>
+                        </div>
+                        <p class="card-text">"Graças ao projeto, minha filha desenvolveu autoconfiança e agora sonha em ser professora de artes marciais."</p>
+                        <h6 class="fw-bold text-primary">Ana Costa</h6>
+                        <small class="text-muted">Mãe da Sofia, 14 anos</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ===== CTA FINAL ===== -->
+<section class="py-5 bg-primary text-white">
+    <div class="container text-center">
+        <h2 class="display-6 fw-bold mb-4">Transforme uma vida hoje!</h2>
+        <p class="lead mb-4">Junte-se ao nosso projeto social e ajude a formar campeões da vida.</p>
+        <div class="d-flex justify-content-center gap-3 flex-wrap">
+            <a href="{% url 'publico:registro' %}" class="btn btn-light btn-lg">
+                <i class="bi bi-person-plus"></i> Inscrever Atleta
+            </a>
+            <a href="{% url 'publico:contato' %}" class="btn btn-outline-light btn-lg">
+                <i class="bi bi-chat-dots"></i> Fazer Doação
+            </a>
+        </div>
+    </div>
+</section>
+{% endblock %}
