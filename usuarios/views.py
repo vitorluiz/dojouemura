@@ -32,16 +32,19 @@ def home(request):
 
 def registro_usuario(request):
     """Registro de novo usuário"""
+    import logging
+    logger = logging.getLogger('usuarios.views')
+    
     if request.method == 'POST':
-        print(f"DEBUG: POST recebido - {request.POST}")
+        logger.debug(f"POST recebido - {request.POST}")
         form = UsuarioRegistroForm(request.POST)
-        print(f"DEBUG: Formulário criado - {form}")
-        print(f"DEBUG: Formulário válido? {form.is_valid()}")
+        logger.debug(f"Formulário criado - {form}")
+        logger.debug(f"Formulário válido? {form.is_valid()}")
         if not form.is_valid():
-            print(f"DEBUG: Erros do formulário: {form.errors}")
+            logger.debug(f"Erros do formulário: {form.errors}")
         
         if form.is_valid():
-            print("DEBUG: Formulário válido, criando usuário...")
+            logger.info("Formulário válido, criando usuário...")
             usuario = form.save(commit=False)
             # Usar email como username temporariamente
             usuario.username = usuario.email
@@ -52,15 +55,23 @@ def registro_usuario(request):
             
             usuario.is_active = False  # Usuário inativo até verificar email
             usuario.save()
-            print(f"DEBUG: Usuário criado com ID: {usuario.id}")
+            logger.info(f"Usuário criado com ID: {usuario.id}")
             
             # Enviar email de verificação com senha temporária
-            enviar_email_verificacao(request, usuario, senha_temp)
+            logger.info("Tentando enviar email de verificação...")
+            email_enviado = enviar_email_verificacao(request, usuario, senha_temp)
             
-            messages.success(request, 'Cadastro realizado com sucesso! Verifique seu email para ativar sua conta.')
-            return redirect('login')
+            if email_enviado:
+                logger.info(f"Email de verificação agendado com sucesso para {usuario.email}")
+                messages.success(request, 'Cadastro realizado com sucesso! Verifique seu email para ativar sua conta.')
+                return redirect('usuarios:login')
+            else:
+                # Se o email falhou, ainda criar o usuário mas informar sobre o problema
+                logger.warning(f"Falha ao agendar email de verificação para {usuario.email}")
+                messages.warning(request, 'Cadastro realizado, mas houve um problema ao enviar o email de verificação. Entre em contato com o suporte.')
+                return redirect('usuarios:login')
         else:
-            print("DEBUG: Formulário inválido, renderizando com erros...")
+            logger.debug("Formulário inválido, renderizando com erros...")
     else:
         form = UsuarioRegistroForm()
     
@@ -99,6 +110,9 @@ def logout_usuario(request):
 
 def esqueceu_senha(request):
     """Recuperação de senha"""
+    import logging
+    logger = logging.getLogger('usuarios.views')
+    
     if request.method == 'POST':
         email = request.POST.get('email')
         acao = request.POST.get('acao', 'recuperar')  # 'recuperar' ou 'reenviar_verificacao'
@@ -112,7 +126,13 @@ def esqueceu_senha(request):
                 usuario.set_password(senha_temp)
                 usuario.save()
                 
-                enviar_email_verificacao(request, usuario, senha_temp)
+                # Usar Celery para reenviar email de verificação
+                from .tasks import enviar_email_verificacao_task
+                
+                # Criar tarefa para reenviar email
+                task = enviar_email_verificacao_task.delay(usuario.id, senha_temp)
+                
+                logger.info(f"Tarefa de reenvio de verificação criada: {task.id} para {usuario.email}")
                 messages.success(request, 'Email de verificação reenviado! Verifique sua caixa de entrada.')
                 return redirect('usuarios:login')
                 
@@ -141,13 +161,13 @@ def esqueceu_senha(request):
                     Equipe Dojô Uemura
                     """
                     
-                    send_mail(
-                        subject=assunto,
-                        message=mensagem,
-                        from_email=settings.DEFAULT_FROM_EMAIL,
-                        recipient_list=[email],
-                        fail_silently=False,
-                    )
+                    # Usar Celery para enviar email em background
+                    from .tasks import enviar_email_recuperacao_senha_task
+                    
+                    # Criar tarefa para enviar email de recuperação
+                    task = enviar_email_recuperacao_senha_task.delay(usuario.id, reset_url)
+                    
+                    logger.info(f"Tarefa de recuperação de senha criada: {task.id} para {usuario.email}")
                     
                     messages.success(request, 'Email de recuperação enviado! Verifique sua caixa de entrada.')
                     return redirect('usuarios:login')
@@ -168,6 +188,9 @@ def esqueceu_senha(request):
 
 def reenviar_verificacao(request):
     """Reenvia email de verificação para usuário não verificado"""
+    import logging
+    logger = logging.getLogger('usuarios.views')
+    
     if request.method == 'POST':
         email = request.POST.get('email')
         try:
@@ -180,7 +203,13 @@ def reenviar_verificacao(request):
                 usuario.set_password(senha_temp)
                 usuario.save()
                 
-                enviar_email_verificacao(request, usuario, senha_temp)
+                # Usar Celery para reenviar email de verificação
+                from .tasks import enviar_email_verificacao_task
+                
+                # Criar tarefa para reenviar email
+                task = enviar_email_verificacao_task.delay(usuario.id, senha_temp)
+                
+                logger.info(f"Tarefa de reenvio de verificação criada: {task.id} para {usuario.email}")
                 messages.success(request, 'Email de verificação reenviado! Verifique sua caixa de entrada.')
                 return redirect('usuarios:login')
             else:
@@ -220,57 +249,27 @@ def reset_senha(request, uidb64, token):
 
 
 def enviar_email_verificacao(request, usuario, senha_temporaria):
-    """Envia email de verificação para o usuário"""
-    token = default_token_generator.make_token(usuario)
-    uid = urlsafe_base64_encode(force_bytes(usuario.pk))
-    
-    verification_url = request.build_absolute_uri(
-        reverse('usuarios:verificar_email', kwargs={'uidb64': uid, 'token': token})
-    )
-    
-    subject = 'Verificação de Email - Cadastro Dojô Uemura'
-    nome_completo = f"{usuario.first_name} {usuario.last_name}".strip() or usuario.email
-    message = f'''
-    Olá {nome_completo},
-    
-    Para ativar sua conta, clique no link abaixo:
-    {verification_url}
-    
-    Sua senha temporária para login é: {senha_temporaria}
-    
-    Se você não se cadastrou em nosso site, ignore este email.
-    
-    Atenciosamente,
-    Equipe Dojô Uemura
-    '''
-    
-    #send_mail(
-    #    subject,
-    #    message,
-    #    settings.DEFAULT_FROM_EMAIL,
-    #    [usuario.email],
-    #    fail_silently=False,
-    #)
-     # --- INÍCIO DO CÓDIGO DE DIAGNÓSTICO ---
-    print("\n" + "="*60)
-    print("DIAGNÓSTICO DE E-MAIL DENTRO DA VIEW DO DJANGO")
-    print(f"  Remetente (From) que será usado: {settings.DEFAULT_FROM_EMAIL}")
-    print(f"  Usuário de Autenticação (Host User): {settings.EMAIL_HOST_USER}")
-    print(f"  Senha de Autenticação (Host Password): {'*' * len(settings.EMAIL_HOST_PASSWORD) if hasattr(settings, 'EMAIL_HOST_PASSWORD') else 'NAO DEFINIDA'}")
-    print("="*60 + "\n")
-    # --- FIM DO CÓDIGO DE DIAGNÓSTICO ---
+    """Envia email de verificação para o usuário usando Celery"""
+    import logging
+    logger = logging.getLogger('usuarios.views')
     
     try:
-        send_mail(
-            subject,
-            message,
-            settings.DEFAULT_FROM_EMAIL, # Usando a configuração do settings
-            [usuario.email],
-            fail_silently=False,
-        )
-        print(">>> SUCESSO: O comando send_mail do Django foi executado.")
+        logger.info(f"Iniciando envio de email de verificação via Celery para {usuario.email}")
+        
+        # Importar a tarefa do Celery
+        from .tasks import enviar_email_verificacao_task
+        
+        # Executar a tarefa em background
+        task = enviar_email_verificacao_task.delay(usuario.id, senha_temporaria)
+        
+        logger.info(f"Tarefa Celery criada com ID: {task.id} para usuário {usuario.email}")
+        logger.debug(f"Email será enviado em background para: {usuario.email}")
+        
+        return True
+        
     except Exception as e:
-        print(f">>> ERRO: O comando send_mail do Django falhou. Erro: {e}")
+        logger.error(f"Falha ao criar tarefa Celery para usuário {usuario.email}: {e}", exc_info=True)
+        return False
 
 
 def verificar_email(request, uidb64, token):

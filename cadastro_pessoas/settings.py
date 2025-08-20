@@ -101,11 +101,8 @@ AUTH_PASSWORD_VALIDATORS = [
 # https://docs.djangoproject.com/en/5.2/topics/i18n/
 
 LANGUAGE_CODE = 'pt-br'
-
 TIME_ZONE = 'America/Cuiaba'
-
 USE_I18N = True
-
 USE_TZ = True
 
 
@@ -134,7 +131,100 @@ EMAIL_PORT = config('EMAIL_PORT', cast=int)
 EMAIL_USE_TLS = config('EMAIL_USE_TLS')
 EMAIL_HOST_USER = config('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
-DEFAULT_FROM_EMAIL = config('DEFAULT_FROM_EMAIL') 
+DEFAULT_FROM_EMAIL = config('DEFAULT_FROM_EMAIL')
+
+# Configurações de timeout para evitar travamento
+EMAIL_TIMEOUT = 10  # Timeout de 10 segundos
+EMAIL_USE_SSL = False  # Usar TLS em vez de SSL
+
+# Configurações do Celery
+CELERY_BROKER_URL = 'memory://'  # Broker em memória para desenvolvimento
+CELERY_RESULT_BACKEND = 'rpc://'  # Backend RPC para desenvolvimento
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TIMEZONE = 'America/Sao_Paulo'
+
+# Configurações específicas para tarefas de email
+CELERY_TASK_ROUTES = {
+    'usuarios.tasks.enviar_email_verificacao_task': {'queue': 'emails'},
+}
+
+# Configurações de filas
+CELERY_TASK_DEFAULT_QUEUE = 'default'
+CELERY_TASK_DEFAULT_EXCHANGE = 'default'
+CELERY_TASK_DEFAULT_ROUTING_KEY = 'default'
+
+# Configurações de Logging
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '{levelname} {asctime} {module} {process:d} {thread:d} {message}',
+            'style': '{',
+        },
+        'simple': {
+            'format': '{levelname} {message}',
+            'style': '{',
+        },
+        'celery': {
+            'format': '[CELERY] {levelname} {asctime} {module} {message}',
+            'style': '{',
+        },
+        'email': {
+            'format': '[EMAIL] {levelname} {asctime} {module} {message}',
+            'style': '{',
+        },
+    },
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+            'formatter': 'verbose',
+        },
+        'file': {
+            'class': 'logging.FileHandler',
+            'filename': 'logs/django.log',
+            'formatter': 'verbose',
+        },
+        'celery_file': {
+            'class': 'logging.FileHandler',
+            'filename': 'logs/celery.log',
+            'formatter': 'celery',
+        },
+        'email_file': {
+            'class': 'logging.FileHandler',
+            'filename': 'logs/email.log',
+            'formatter': 'email',
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console', 'file'],
+            'level': 'INFO',
+            'propagate': True,
+        },
+        'celery': {
+            'handlers': ['console', 'celery_file'],
+            'level': 'INFO',
+            'propagate': True,
+        },
+        'usuarios.tasks': {
+            'handlers': ['console', 'email_file'],
+            'level': 'DEBUG',
+            'propagate': False,
+        },
+        'usuarios.views': {
+            'handlers': ['console', 'file'],
+            'level': 'INFO',
+            'propagate': False,
+        },
+    },
+    'root': {
+        'handlers': ['console', 'file'],
+        'level': 'WARNING',
+    },
+} 
 
 # Configurações de autenticação
 LOGIN_URL = '/login/'

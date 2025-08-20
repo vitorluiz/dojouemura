@@ -5,8 +5,8 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('publico.urls')),  # Site público como página principal
-    path('usuarios/', include('usuarios.urls', namespace='usuarios')),  # Sistema de usuários
+    path('', include('publico.urls', namespace='publico')),  # Site público como página principal
+    path('', include('usuarios.urls', namespace='usuarios')),  # Sistema de usuários
 ]
 # Servir arquivos de mídia durante o desenvolvimento
 if settings.DEBUG:
