@@ -1,0 +1,59 @@
+{% extends 'publico/base.html' %}
+{% block title %}Cartão do Atleta{% endblock %}
+
+{% block content %}
+<div class="container my-4">
+	<div class="d-flex justify-content-between align-items-center mb-3">
+		<h2 class="mb-0">Cartão do Atleta</h2>
+		<a href="{{ request.META.HTTP_REFERER|default:'/' }}" class="btn btn-secondary">Voltar</a>
+	</div>
+
+	<div class="card" style="width: 100%; max-width: 900px; margin: 0 auto;">
+		<div class="card-body">
+			<div class="row" style="aspect-ratio: 16 / 9;">
+				<!-- Lado esquerdo: Foto e QR -->
+				<div class="col-md-4 d-flex flex-column align-items-center justify-content-center">
+					<div class="mb-3">
+						{% if atleta.foto %}
+							<img src="{{ atleta.foto.url }}" alt="Foto do atleta" style="width: 160px; height: 160px; object-fit: cover; border-radius: 8px; border: 1px solid #ddd;" />
+						{% else %}
+							<div style="width: 160px; height: 160px; display:flex; align-items:center; justify-content:center; background:#f5f5f5; border: 1px dashed #ccc; border-radius: 8px;">Sem foto</div>
+						{% endif %}
+					</div>
+					<div>
+						{% if atleta.qr_code_imagem %}
+							<img src="{{ atleta.qr_code_imagem.url }}" alt="QR Code" style="width: 160px; height: 160px; background: #fff; padding: 8px; border: 1px solid #eee; border-radius: 8px;" />
+						{% else %}
+							<div style="width: 160px; height: 160px; display:flex; align-items:center; justify-content:center; background:#fff; border: 1px dashed #ccc; border-radius: 8px;">QR não gerado</div>
+						{% endif %}
+					</div>
+				</div>
+
+				<!-- Lado direito: Dados -->
+				<div class="col-md-8 d-flex flex-column justify-content-center">
+					<h3 class="mb-2">{{ atleta.nome }}</h3>
+					<p class="mb-1"><strong>Responsável:</strong> {{ atleta.usuario.first_name }} {{ atleta.usuario.last_name }}</p>
+					<p class="mb-1"><strong>CPF:</strong> {{ atleta.cpf }}</p>
+					<p class="mb-1"><strong>Código:</strong> {{ atleta.codigo_alfanumerico }}</p>
+					<p class="mb-1"><strong>Idade:</strong> {{ atleta.idade }} anos</p>
+					<p class="mb-1"><strong>Endereço:</strong> {{ atleta.endereco_completo }}</p>
+					<hr />
+					<div class="d-flex gap-2">
+						<a href="{{ atleta.qr_code_imagem.url }}" class="btn btn-outline-primary" download>Baixar QR</a>
+						<a href="#" class="btn btn-primary" onclick="window.print(); return false;">Imprimir</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<style>
+@media print {
+	body * { visibility: hidden; }
+	.card, .card * { visibility: visible; }
+	.card { position: absolute; left: 0; top: 0; width: 100%; }
+	@page { size: landscape; margin: 10mm; }
+}
+</style>
+{% endblock %}

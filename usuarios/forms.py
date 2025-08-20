@@ -5,6 +5,52 @@ from .models import Usuario, Atleta
 from utils.validacoes import validar_cpf
 import re
 
+# Constantes de choices para o formulário
+SEXO_CHOICES = [
+    ('M', 'Masculino'),
+    ('F', 'Feminino'),
+]
+
+ESTADO_CIVIL_CHOICES = [
+    ('solteiro', 'Solteiro(a)'),
+    ('casado', 'Casado(a)'),
+    ('divorciado', 'Divorciado(a)'),
+    ('viuvo', 'Viúvo(a)'),
+]
+
+TIPO_SANGUINEO_CHOICES = [
+    ('A+', 'A+'),
+    ('A-', 'A-'),
+    ('B+', 'B+'),
+    ('B-', 'B-'),
+    ('AB+', 'AB+'),
+    ('AB-', 'AB-'),
+    ('O+', 'O+'),
+    ('O-', 'O-'),
+]
+
+PARENTESCO_CHOICES = [
+    ('filho', 'Filho(a)'),
+    ('enteado', 'Enteado(a)'),
+    ('neto', 'Neto(a)'),
+    ('sobrinho', 'Sobrinho(a)'),
+    ('outro', 'Outro'),
+]
+
+ESCOLARIDADE_CHOICES = [
+    ('fundamental_1', 'Ensino Fundamental I (1º ao 5º ano)'),
+    ('fundamental_2', 'Ensino Fundamental II (6º ao 9º ano)'),
+    ('medio', 'Ensino Médio'),
+    ('tecnico', 'Ensino Técnico'),
+]
+
+TURNO_CHOICES = [
+    ('matutino', 'Matutino'),
+    ('vespertino', 'Vespertino'),
+    ('noturno', 'Noturno'),
+    ('integral', 'Integral'),
+]
+
 
 class UsuarioRegistroForm(forms.ModelForm):
     """Formulário de registro de usuário"""
@@ -134,6 +180,7 @@ class AtletaForm(forms.ModelForm):
             'type': 'date'
         })
     )
+    
     cpf = forms.CharField(
         max_length=14,
         widget=forms.TextInput(attrs={
@@ -143,8 +190,32 @@ class AtletaForm(forms.ModelForm):
         })
     )
     
+    rg = forms.CharField(
+        max_length=20,
+        required=False,
+        widget=forms.TextInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'RG (opcional)'
+        })
+    )
+    
+    sexo = forms.ChoiceField(
+        choices=SEXO_CHOICES,
+        widget=forms.Select(attrs={
+            'class': 'form-control'
+        })
+    )
+    
+    estado_civil = forms.ChoiceField(
+        choices=ESTADO_CIVIL_CHOICES,
+        required=False,
+        widget=forms.Select(attrs={
+            'class': 'form-control'
+        })
+    )
+    
     parentesco = forms.ChoiceField(
-        choices=Atleta.PARENTESCO_CHOICES,
+        choices=PARENTESCO_CHOICES,
         widget=forms.Select(attrs={
             'class': 'form-control'
         })
@@ -156,7 +227,7 @@ class AtletaForm(forms.ModelForm):
             'class': 'form-control',
             'accept': 'image/*'
         }),
-        help_text='Foto do atleta (obrigatório)'
+        help_text='Foto do atleta (opcional)'
     )
     
     cep = forms.CharField(
@@ -169,12 +240,12 @@ class AtletaForm(forms.ModelForm):
         })
     )
     
-    logradouro = forms.CharField(
+    endereco = forms.CharField(
         max_length=200,
         widget=forms.TextInput(attrs={
             'class': 'form-control',
             'placeholder': 'Rua, Avenida, etc.',
-            'id': 'id_logradouro'
+            'id': 'id_endereco'
         })
     )
     
@@ -213,18 +284,18 @@ class AtletaForm(forms.ModelForm):
         })
     )
     
-    uf = forms.CharField(
+    estado = forms.CharField(
         max_length=2,
         widget=forms.TextInput(attrs={
             'class': 'form-control',
-            'placeholder': 'UF',
-            'id': 'id_uf',
+            'placeholder': 'Estado',
+            'id': 'id_estado',
             'style': 'text-transform: uppercase;'
         })
     )
     
     escolaridade = forms.ChoiceField(
-        choices=Atleta.ESCOLARIDADE_CHOICES,
+        choices=ESCOLARIDADE_CHOICES,
         widget=forms.Select(attrs={
             'class': 'form-control'
         })
@@ -259,10 +330,36 @@ class AtletaForm(forms.ModelForm):
         })
     )
     
+    serie = forms.CharField(
+        max_length=20,
+        required=False,
+        widget=forms.TextInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Série/Ano (opcional)'
+        })
+    )
+    
     turno = forms.ChoiceField(
-        choices=Atleta.TURNO_CHOICES,
+        choices=TURNO_CHOICES,
         widget=forms.Select(attrs={
             'class': 'form-control'
+        })
+    )
+    
+    tipo_sanguineo = forms.ChoiceField(
+        choices=TIPO_SANGUINEO_CHOICES,
+        required=False,
+        widget=forms.Select(attrs={
+            'class': 'form-control'
+        })
+    )
+    
+    alergias = forms.CharField(
+        required=False,
+        widget=forms.Textarea(attrs={
+            'class': 'form-control',
+            'rows': 3,
+            'placeholder': 'Ex: Pólen, alimentos, medicamentos... (opcional)'
         })
     )
     
@@ -302,10 +399,11 @@ class AtletaForm(forms.ModelForm):
     class Meta:
         model = Atleta
         fields = [
-            'nome', 'data_nascimento', 'cpf', 'parentesco', 'foto',
-            'cep', 'logradouro', 'numero', 'complemento', 'bairro', 'cidade', 'uf',
-            'escolaridade', 'escola', 'turno',
-            'condicoes_medicas', 'termo_responsabilidade', 'termo_uso_imagem'
+            'nome', 'data_nascimento', 'cpf', 'rg', 'sexo', 'estado_civil', 'parentesco', 'foto',
+            'cep', 'endereco', 'numero', 'complemento', 'bairro', 'cidade', 'estado',
+            'escolaridade', 'escola', 'serie', 'turno',
+            'tipo_sanguineo', 'alergias', 'condicoes_medicas', 
+            'termo_responsabilidade', 'termo_uso_imagem'
         ]
     
     def clean_cpf(self):
@@ -341,9 +439,9 @@ class AtletaForm(forms.ModelForm):
         
         return cep
     
-    def clean_uf(self):
-        uf = self.cleaned_data.get('uf')
-        if uf:
-            return uf.upper()
-        return uf
+    def clean_estado(self):
+        estado = self.cleaned_data.get('estado')
+        if estado:
+            return estado.upper()
+        return estado
 

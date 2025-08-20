@@ -13,10 +13,10 @@
     <div class="container">
         <div class="row justify-content-center text-center">
             <div class="col-lg-8">
-                                 <h1 class="display-4 fw-bold mb-4">
-                     <i class="bi bi-pencil-square"></i> Editar Atleta
-                 </h1>
-                 <p class="lead mb-0">Atualize as informações do atleta</p>
+                <h1 class="display-4 fw-bold mb-4">
+                    <i class="bi bi-pencil-square"></i> Editar Atleta
+                </h1>
+                <p class="lead mb-0">Atualize as informações do atleta</p>
             </div>
         </div>
     </div>
@@ -31,7 +31,7 @@
                     <div class="card-header bg-warning text-dark text-center py-4">
                         <h3 class="mb-0">
                             <i class="bi bi-person-badge me-2"></i>
-                            Editar: {{ dependente.nome }}
+                            Editar: {{ atleta.nome }}
                         </h3>
                         <p class="mb-0 mt-2">Modifique as informações necessárias</p>
                     </div>
@@ -48,185 +48,185 @@
                             <div class="row g-3 mb-4">
                                 <div class="col-md-6">
                                     <label class="form-label">Nome Completo *</label>
-                                    <input type="text" class="form-control" name="nome" value="{{ dependente.nome }}" required>
+                                    <input type="text" class="form-control" name="nome" value="{{ atleta.nome }}" required>
                                 </div>
                                 <div class="col-md-6">
                                     <label class="form-label">Data de Nascimento *</label>
-                                    <input type="date" class="form-control" name="data_nascimento" value="{{ dependente.data_nascimento|date:'Y-m-d' }}" required>
+                                    <input type="date" class="form-control" name="data_nascimento" value="{{ atleta.data_nascimento|date:'Y-m-d' }}" required>
                                 </div>
                                 <div class="col-md-6">
                                     <label class="form-label">CPF *</label>
-                                    <input type="text" class="form-control" name="cpf" value="{{ dependente.cpf }}" required>
+                                    <input type="text" class="form-control" name="cpf" value="{{ atleta.cpf }}" required>
                                 </div>
                                 <div class="col-md-6">
                                     <label class="form-label">RG</label>
-                                    <input type="text" class="form-control" name="rg" value="{{ dependente.rg|default:'' }}">
+                                    <input type="text" class="form-control" name="rg" value="{{ atleta.rg|default:'' }}">
                                 </div>
                                 <div class="col-md-6">
                                     <label class="form-label">Sexo *</label>
                                     <select class="form-select" name="sexo" required>
                                         <option value="">Selecione...</option>
-                                        <option value="M" {% if dependente.sexo == 'M' %}selected{% endif %}>Masculino</option>
-                                        <option value="F" {% if dependente.sexo == 'F' %}selected{% endif %}>Feminino</option>
+                                        <option value="M" {% if atleta.sexo == 'M' %}selected{% endif %}>Masculino</option>
+                                        <option value="F" {% if atleta.sexo == 'F' %}selected{% endif %}>Feminino</option>
                                     </select>
                                 </div>
                                 <div class="col-md-6">
                                     <label class="form-label">Estado Civil</label>
                                     <select class="form-select" name="estado_civil">
                                         <option value="">Selecione...</option>
-                                        <option value="solteiro" {% if dependente.estado_civil == 'solteiro' %}selected{% endif %}>Solteiro(a)</option>
-                                        <option value="casado" {% if dependente.estado_civil == 'casado' %}selected{% endif %}>Casado(a)</option>
-                                        <option value="divorciado" {% if dependente.estado_civil == 'divorciado' %}selected{% endif %}>Divorciado(a)</option>
-                                        <option value="viuvo" {% if dependente.estado_civil == 'viuvo' %}selected{% endif %}>Viúvo(a)</option>
+                                        <option value="solteiro" {% if atleta.estado_civil == 'solteiro' %}selected{% endif %}>Solteiro(a)</option>
+                                        <option value="casado" {% if atleta.estado_civil == 'casado' %}selected{% endif %}>Casado(a)</option>
+                                        <option value="divorciado" {% if atleta.estado_civil == 'divorciado' %}selected{% endif %}>Divorciado(a)</option>
+                                        <option value="viuvo" {% if atleta.estado_civil == 'viuvo' %}selected{% endif %}>Viúvo(a)</option>
                                     </select>
                                 </div>
                             </div>
                             
-                                                         <h5 class="text-primary mb-3">Informações de Contato</h5>
-                             <div class="row g-3 mb-4">
-                                 <div class="col-12">
-                                     <div class="alert alert-info">
-                                         <i class="bi bi-info-circle me-2"></i>
-                                         <strong>Nota:</strong> As informações de contato (telefone e email) são gerenciadas através da conta do usuário responsável.
-                                     </div>
-                                 </div>
-                             </div>
+                            <h5 class="text-primary mb-3">Informações de Contato</h5>
+                            <div class="row g-3 mb-4">
+                                <div class="col-12">
+                                    <div class="alert alert-info">
+                                        <i class="bi bi-info-circle me-2"></i>
+                                        <strong>Nota:</strong> As informações de contato (telefone e email) são gerenciadas através da conta do usuário responsável.
+                                    </div>
+                                </div>
+                            </div>
                             
                             <h5 class="text-primary mb-3">Endereço</h5>
                             <div class="row g-3 mb-4">
                                 <div class="col-md-3">
                                     <label class="form-label">CEP *</label>
-                                    <input type="text" class="form-control" name="cep" value="{{ dependente.cep }}" required>
+                                    <input type="text" class="form-control" name="cep" value="{{ atleta.cep }}" required>
                                 </div>
                                 <div class="col-md-7">
                                     <label class="form-label">Endereço *</label>
-                                    <input type="text" class="form-control" name="endereco" value="{{ dependente.endereco }}" required>
+                                    <input type="text" class="form-control" name="endereco" value="{{ atleta.endereco }}" required>
                                 </div>
                                 <div class="col-md-2">
                                     <label class="form-label">Número *</label>
-                                    <input type="text" class="form-control" name="numero" value="{{ dependente.numero }}" required>
+                                    <input type="text" class="form-control" name="numero" value="{{ atleta.numero }}" required>
                                 </div>
                                 <div class="col-md-4">
                                     <label class="form-label">Complemento</label>
-                                    <input type="text" class="form-control" name="complemento" value="{{ dependente.complemento|default:'' }}" placeholder="Apto, Casa, etc.">
+                                    <input type="text" class="form-control" name="complemento" value="{{ atleta.complemento|default:'' }}" placeholder="Apto, Casa, etc.">
                                 </div>
                                 <div class="col-md-4">
                                     <label class="form-label">Bairro *</label>
-                                    <input type="text" class="form-control" name="bairro" value="{{ dependente.bairro }}" required>
+                                    <input type="text" class="form-control" name="bairro" value="{{ atleta.bairro }}" required>
                                 </div>
                                 <div class="col-md-4">
                                     <label class="form-label">Cidade *</label>
-                                    <input type="text" class="form-control" name="cidade" value="{{ dependente.cidade }}" required>
+                                    <input type="text" class="form-control" name="cidade" value="{{ atleta.cidade }}" required>
                                 </div>
                                 <div class="col-md-4">
                                     <label class="form-label">Estado *</label>
                                     <select class="form-select" name="estado" required>
                                         <option value="">Selecione...</option>
-                                        <option value="AC" {% if dependente.estado == 'AC' %}selected{% endif %}>Acre</option>
-                                        <option value="AL" {% if dependente.estado == 'AL' %}selected{% endif %}>Alagoas</option>
-                                        <option value="AP" {% if dependente.estado == 'AP' %}selected{% endif %}>Amapá</option>
-                                        <option value="AM" {% if dependente.estado == 'AM' %}selected{% endif %}>Amazonas</option>
-                                        <option value="BA" {% if dependente.estado == 'BA' %}selected{% endif %}>Bahia</option>
-                                        <option value="CE" {% if dependente.estado == 'CE' %}selected{% endif %}>Ceará</option>
-                                        <option value="DF" {% if dependente.estado == 'DF' %}selected{% endif %}>Distrito Federal</option>
-                                        <option value="ES" {% if dependente.estado == 'ES' %}selected{% endif %}>Espírito Santo</option>
-                                        <option value="GO" {% if dependente.estado == 'GO' %}selected{% endif %}>Goiás</option>
-                                        <option value="MA" {% if dependente.estado == 'MA' %}selected{% endif %}>Maranhão</option>
-                                        <option value="MT" {% if dependente.estado == 'MT' %}selected{% endif %}>Mato Grosso</option>
-                                        <option value="MS" {% if dependente.estado == 'MS' %}selected{% endif %}>Mato Grosso do Sul</option>
-                                        <option value="MG" {% if dependente.estado == 'MG' %}selected{% endif %}>Minas Gerais</option>
-                                        <option value="PA" {% if dependente.estado == 'PA' %}selected{% endif %}>Pará</option>
-                                        <option value="PB" {% if dependente.estado == 'PB' %}selected{% endif %}>Paraíba</option>
-                                        <option value="PR" {% if dependente.estado == 'PR' %}selected{% endif %}>Paraná</option>
-                                        <option value="PE" {% if dependente.estado == 'PE' %}selected{% endif %}>Pernambuco</option>
-                                        <option value="PI" {% if dependente.estado == 'PI' %}selected{% endif %}>Piauí</option>
-                                        <option value="RJ" {% if dependente.estado == 'RJ' %}selected{% endif %}>Rio de Janeiro</option>
-                                        <option value="RN" {% if dependente.estado == 'RN' %}selected{% endif %}>Rio Grande do Norte</option>
-                                        <option value="RS" {% if dependente.estado == 'RS' %}selected{% endif %}>Rio Grande do Sul</option>
-                                        <option value="RO" {% if dependente.estado == 'RO' %}selected{% endif %}>Rondônia</option>
-                                        <option value="RR" {% if dependente.estado == 'RR' %}selected{% endif %}>Roraima</option>
-                                        <option value="SC" {% if dependente.estado == 'SC' %}selected{% endif %}>Santa Catarina</option>
-                                        <option value="SP" {% if dependente.estado == 'SP' %}selected{% endif %}>São Paulo</option>
-                                        <option value="SE" {% if dependente.estado == 'SE' %}selected{% endif %}>Sergipe</option>
-                                        <option value="TO" {% if dependente.estado == 'TO' %}selected{% endif %}>Tocantins</option>
+                                        <option value="AC" {% if atleta.estado == 'AC' %}selected{% endif %}>Acre</option>
+                                        <option value="AL" {% if atleta.estado == 'AL' %}selected{% endif %}>Alagoas</option>
+                                        <option value="AP" {% if atleta.estado == 'AP' %}selected{% endif %}>Amapá</option>
+                                        <option value="AM" {% if atleta.estado == 'AM' %}selected{% endif %}>Amazonas</option>
+                                        <option value="BA" {% if atleta.estado == 'BA' %}selected{% endif %}>Bahia</option>
+                                        <option value="CE" {% if atleta.estado == 'CE' %}selected{% endif %}>Ceará</option>
+                                        <option value="DF" {% if atleta.estado == 'DF' %}selected{% endif %}>Distrito Federal</option>
+                                        <option value="ES" {% if atleta.estado == 'ES' %}selected{% endif %}>Espírito Santo</option>
+                                        <option value="GO" {% if atleta.estado == 'GO' %}selected{% endif %}>Goiás</option>
+                                        <option value="MA" {% if atleta.estado == 'MA' %}selected{% endif %}>Maranhão</option>
+                                        <option value="MT" {% if atleta.estado == 'MT' %}selected{% endif %}>Mato Grosso</option>
+                                        <option value="MS" {% if atleta.estado == 'MS' %}selected{% endif %}>Mato Grosso do Sul</option>
+                                        <option value="MG" {% if atleta.estado == 'MG' %}selected{% endif %}>Minas Gerais</option>
+                                        <option value="PA" {% if atleta.estado == 'PA' %}selected{% endif %}>Pará</option>
+                                        <option value="PB" {% if atleta.estado == 'PB' %}selected{% endif %}>Paraíba</option>
+                                        <option value="PR" {% if atleta.estado == 'PR' %}selected{% endif %}>Paraná</option>
+                                        <option value="PE" {% if atleta.estado == 'PE' %}selected{% endif %}>Pernambuco</option>
+                                        <option value="PI" {% if atleta.estado == 'PI' %}selected{% endif %}>Piauí</option>
+                                        <option value="RJ" {% if atleta.estado == 'RJ' %}selected{% endif %}>Rio de Janeiro</option>
+                                        <option value="RN" {% if atleta.estado == 'RN' %}selected{% endif %}>Rio Grande do Norte</option>
+                                        <option value="RS" {% if atleta.estado == 'RS' %}selected{% endif %}>Rio Grande do Sul</option>
+                                        <option value="RO" {% if atleta.estado == 'RO' %}selected{% endif %}>Rondônia</option>
+                                        <option value="RR" {% if atleta.estado == 'RR' %}selected{% endif %}>Roraima</option>
+                                        <option value="SC" {% if atleta.estado == 'SC' %}selected{% endif %}>Santa Catarina</option>
+                                        <option value="SP" {% if atleta.estado == 'SP' %}selected{% endif %}>São Paulo</option>
+                                        <option value="SE" {% if atleta.estado == 'SE' %}selected{% endif %}>Sergipe</option>
+                                        <option value="TO" {% if atleta.estado == 'TO' %}selected{% endif %}>Tocantins</option>
                                     </select>
                                 </div>
                             </div>
                             
-                                                         <h5 class="text-primary mb-3">Informações Escolares</h5>
-                             <div class="row g-3 mb-4">
-                                 <div class="col-md-6">
-                                     <label class="form-label">Escola onde estuda</label>
-                                     <select class="form-select" name="escola" required>
-                                         <option value="">Selecione a escola...</option>
-                                         
-                                         <optgroup label="🏫 Escolas Municipais">
-                                             <option value="Escola Municipal Água Branca" {% if dependente.escola == 'Escola Municipal Água Branca' %}selected{% endif %}>Escola Municipal Água Branca</option>
-                                             <option value="Escola Municipal Casca III" {% if dependente.escola == 'Escola Municipal Casca III' %}selected{% endif %}>Escola Municipal Casca III</option>
-                                             <option value="Escola Municipal Córrego do Campo" {% if dependente.escola == 'Escola Municipal Córrego do Campo' %}selected{% endif %}>Escola Municipal Córrego do Campo</option>
-                                             <option value="Escola Municipal Cristo Rei" {% if dependente.escola == 'Escola Municipal Cristo Rei' %}selected{% endif %}>Escola Municipal Cristo Rei</option>
-                                             <option value="Escola Municipal JJ" {% if dependente.escola == 'Escola Municipal JJ' %}selected{% endif %}>Escola Municipal JJ</option>
-                                             <option value="Escola Municipal Monteiro Lobato" {% if dependente.escola == 'Escola Municipal Monteiro Lobato' %}selected{% endif %}>Escola Municipal Monteiro Lobato</option>
-                                             <option value="Escola Municipal Professor Jacondino Bezerra" {% if dependente.escola == 'Escola Municipal Professor Jacondino Bezerra' %}selected{% endif %}>Escola Municipal Professor Jacondino Bezerra</option>
-                                             <option value="Escola Municipal Professora Abinel Freitas Pereira" {% if dependente.escola == 'Escola Municipal Professora Abinel Freitas Pereira' %}selected{% endif %}>Escola Municipal Professora Abinel Freitas Pereira</option>
-                                             <option value="Escola Municipal Professora Elba Xavier Ferreira" {% if dependente.escola == 'Escola Municipal Professora Elba Xavier Ferreira' %}selected{% endif %}>Escola Municipal Professora Elba Xavier Ferreira</option>
-                                             <option value="Escola Municipal Professora Irene Ferreira da Silva" {% if dependente.escola == 'Escola Municipal Professora Irene Ferreira da Silva' %}selected{% endif %}>Escola Municipal Professora Irene Ferreira da Silva</option>
-                                             <option value="Escola Municipal Professora Maria Luiza de Araújo Gomes" {% if dependente.escola == 'Escola Municipal Professora Maria Luiza de Araújo Gomes' %}selected{% endif %}>Escola Municipal Professora Maria Luiza de Araújo Gomes</option>
-                                             <option value="Escola Municipal Santa Helena" {% if dependente.escola == 'Escola Municipal Santa Helena' %}selected{% endif %}>Escola Municipal Santa Helena</option>
-                                             <option value="Escola Municipal Thermozina de Siqueira" {% if dependente.escola == 'Escola Municipal Thermozina de Siqueira' %}selected{% endif %}>Escola Municipal Thermozina de Siqueira</option>
-                                         </optgroup>
-                                         
-                                         <optgroup label="🏛️ Escolas Estaduais">
-                                             <option value="Escola Estadual Cel Rafael de Siqueira" {% if dependente.escola == 'Escola Estadual Cel Rafael de Siqueira' %}selected{% endif %}>Escola Estadual Cel Rafael de Siqueira</option>
-                                             <option value="Escola Estadual Professor Ana Tereza Albernaz" {% if dependente.escola == 'Escola Estadual Professor Ana Tereza Albernaz' %}selected{% endif %}>Escola Estadual Professor Ana Tereza Albernaz</option>
-                                             <option value="Escola Estadual Reunidas de Cachoeira Rica" {% if dependente.escola == 'Escola Estadual Reunidas de Cachoeira Rica' %}selected{% endif %}>Escola Estadual Reunidas de Cachoeira Rica</option>
-                                             <option value="Escola Estadual São José" {% if dependente.escola == 'Escola Estadual São José' %}selected{% endif %}>Escola Estadual São José</option>
-                                         </optgroup>
-                                         
-                                         <optgroup label="🎓 Escolas Privadas">
-                                             <option value="Colégio Tales de Mileto" {% if dependente.escola == 'Colégio Tales de Mileto' %}selected{% endif %}>Colégio Tales de Mileto</option>
-                                             <option value="Centro Educacional Sebastião Albernaz" {% if dependente.escola == 'Centro Educacional Sebastião Albernaz' %}selected{% endif %}>Centro Educacional Sebastião Albernaz</option>
-                                         </optgroup>
-                                         
-                                         <option value="outra" {% if dependente.escola and dependente.escola not in 'Escola Municipal Água Branca,Escola Municipal Casca III,Escola Municipal Córrego do Campo,Escola Municipal Cristo Rei,Escola Municipal JJ,Escola Municipal Monteiro Lobato,Escola Municipal Professor Jacondino Bezerra,Escola Municipal Professora Abinel Freitas Pereira,Escola Municipal Professora Elba Xavier Ferreira,Escola Municipal Professora Irene Ferreira da Silva,Escola Municipal Professora Maria Luiza de Araújo Gomes,Escola Municipal Santa Helena,Escola Municipal Thermozina de Siqueira,Escola Estadual Cel Rafael de Siqueira,Escola Estadual Professor Ana Tereza Albernaz,Escola Estadual Reunidas de Cachoeira Rica,Escola Estadual São José,Colégio Tales de Mileto,Centro Educacional Sebastião Albernaz' %}selected{% endif %}>Outra escola (especificar)</option>
-                                     </select>
-                                 </div>
-                                 <div class="col-md-6">
-                                     <label class="form-label">Série/Ano</label>
-                                     <select class="form-select" name="serie" required>
-                                         <option value="">Selecione a série...</option>
-                                         
-                                         <optgroup label="📚 Ensino Fundamental I">
-                                             <option value="1º ano" {% if dependente.serie == '1º ano' %}selected{% endif %}>1º ano</option>
-                                             <option value="2º ano" {% if dependente.serie == '2º ano' %}selected{% endif %}>2º ano</option>
-                                             <option value="3º ano" {% if dependente.serie == '2º ano' %}selected{% endif %}>3º ano</option>
-                                             <option value="4º ano" {% if dependente.serie == '4º ano' %}selected{% endif %}>4º ano</option>
-                                             <option value="5º ano" {% if dependente.serie == '5º ano' %}selected{% endif %}>5º ano</option>
-                                         </optgroup>
-                                         
-                                         <optgroup label="📖 Ensino Fundamental II">
-                                             <option value="6º ano" {% if dependente.serie == '6º ano' %}selected{% endif %}>6º ano</option>
-                                             <option value="7º ano" {% if dependente.serie == '7º ano' %}selected{% endif %}>7º ano</option>
-                                             <option value="8º ano" {% if dependente.serie == '8º ano' %}selected{% endif %}>8º ano</option>
-                                             <option value="9º ano" {% if dependente.serie == '9º ano' %}selected{% endif %}>9º ano</option>
-                                         </optgroup>
-                                         
-                                         <optgroup label="🎓 Ensino Médio">
-                                             <option value="1º ano EM" {% if dependente.serie == '1º ano EM' %}selected{% endif %}>1º ano EM</option>
-                                             <option value="2º ano EM" {% if dependente.serie == '2º ano EM' %}selected{% endif %}>2º ano EM</option>
-                                             <option value="3º ano EM" {% if dependente.serie == '3º ano EM' %}selected{% endif %}>3º ano EM</option>
-                                         </optgroup>
-                                     </select>
-                                 </div>
-                             </div>
-                             
-                             <!-- Campo para escola personalizada (aparece quando "outra" é selecionado) -->
-                             <div class="row g-3 mb-4" id="outraEscola" style="display: {% if dependente.escola and dependente.escola not in 'Escola Municipal Água Branca,Escola Municipal Casca III,Escola Municipal Córrego do Campo,Escola Municipal Cristo Rei,Escola Municipal JJ,Escola Municipal Monteiro Lobato,Escola Municipal Professor Jacondino Bezerra,Escola Municipal Professora Abinel Freitas Pereira,Escola Municipal Professora Elba Xavier Ferreira,Escola Municipal Professora Irene Ferreira da Silva,Escola Municipal Professora Maria Luiza de Araújo Gomes,Escola Municipal Santa Helena,Escola Municipal Thermozina de Siqueira,Escola Estadual Cel Rafael de Siqueira,Escola Estadual Professor Ana Tereza Albernaz,Escola Estadual Reunidas de Cachoeira Rica,Escola Estadual São José,Colégio Tales de Mileto,Centro Educacional Sebastião Albernaz' %}block{% else %}none{% endif %};">
-                                 <div class="col-12">
-                                     <label class="form-label">Nome da escola</label>
-                                     <input type="text" class="form-control" name="escola_outra" value="{% if dependente.escola and dependente.escola not in 'Escola Municipal Água Branca,Escola Municipal Casca III,Escola Municipal Córrego do Campo,Escola Municipal Cristo Rei,Escola Municipal JJ,Escola Municipal Monteiro Lobato,Escola Municipal Professor Jacondino Bezerra,Escola Municipal Professora Abinel Freitas Pereira,Escola Municipal Professora Elba Xavier Ferreira,Escola Municipal Professora Irene Ferreira da Silva,Escola Municipal Professora Maria Luiza de Araújo Gomes,Escola Municipal Santa Helena,Escola Municipal Thermozina de Siqueira,Escola Estadual Cel Rafael de Siqueira,Escola Estadual Professor Ana Tereza Albernaz,Escola Estadual Reunidas de Cachoeira Rica,Escola Estadual São José,Colégio Tales de Mileto,Centro Educacional Sebastião Albernaz' %}{{ dependente.escola }}{% endif %}" placeholder="Digite o nome da escola">
-                                 </div>
-                             </div>
+                            <h5 class="text-primary mb-3">Informações Escolares</h5>
+                            <div class="row g-3 mb-4">
+                                <div class="col-md-6">
+                                    <label class="form-label">Escola onde estuda</label>
+                                    <select class="form-select" name="escola" required>
+                                        <option value="">Selecione a escola...</option>
+                                        
+                                        <optgroup label="🏫 Escolas Municipais">
+                                            <option value="Escola Municipal Água Branca" {% if atleta.escola == 'Escola Municipal Água Branca' %}selected{% endif %}>Escola Municipal Água Branca</option>
+                                            <option value="Escola Municipal Casca III" {% if atleta.escola == 'Escola Municipal Casca III' %}selected{% endif %}>Escola Municipal Casca III</option>
+                                            <option value="Escola Municipal Córrego do Campo" {% if atleta.escola == 'Escola Municipal Córrego do Campo' %}selected{% endif %}>Escola Municipal Córrego do Campo</option>
+                                            <option value="Escola Municipal Cristo Rei" {% if atleta.escola == 'Escola Municipal Cristo Rei' %}selected{% endif %}>Escola Municipal Cristo Rei</option>
+                                            <option value="Escola Municipal JJ" {% if atleta.escola == 'Escola Municipal JJ' %}selected{% endif %}>Escola Municipal JJ</option>
+                                            <option value="Escola Municipal Monteiro Lobato" {% if atleta.escola == 'Escola Municipal Monteiro Lobato' %}selected{% endif %}>Escola Municipal Monteiro Lobato</option>
+                                            <option value="Escola Municipal Professor Jacondino Bezerra" {% if atleta.escola == 'Escola Municipal Professor Jacondino Bezerra' %}selected{% endif %}>Escola Municipal Professor Jacondino Bezerra</option>
+                                            <option value="Escola Municipal Professora Abinel Freitas Pereira" {% if atleta.escola == 'Escola Municipal Professora Abinel Freitas Pereira' %}selected{% endif %}>Escola Municipal Professora Abinel Freitas Pereira</option>
+                                            <option value="Escola Municipal Professora Elba Xavier Ferreira" {% if atleta.escola == 'Escola Municipal Professora Elba Xavier Ferreira' %}selected{% endif %}>Escola Municipal Professora Elba Xavier Ferreira</option>
+                                            <option value="Escola Municipal Professora Irene Ferreira da Silva" {% if atleta.escola == 'Escola Municipal Professora Irene Ferreira da Silva' %}selected{% endif %}>Escola Municipal Professora Irene Ferreira da Silva</option>
+                                            <option value="Escola Municipal Professora Maria Luiza de Araújo Gomes" {% if atleta.escola == 'Escola Municipal Professora Maria Luiza de Araújo Gomes' %}selected{% endif %}>Escola Municipal Professora Maria Luiza de Araújo Gomes</option>
+                                            <option value="Escola Municipal Santa Helena" {% if atleta.escola == 'Escola Municipal Santa Helena' %}selected{% endif %}>Escola Municipal Santa Helena</option>
+                                            <option value="Escola Municipal Thermozina de Siqueira" {% if atleta.escola == 'Escola Municipal Thermozina de Siqueira' %}selected{% endif %}>Escola Municipal Thermozina de Siqueira</option>
+                                        </optgroup>
+                                        
+                                        <optgroup label="🏛️ Escolas Estaduais">
+                                            <option value="Escola Estadual Cel Rafael de Siqueira" {% if atleta.escola == 'Escola Estadual Cel Rafael de Siqueira' %}selected{% endif %}>Escola Estadual Cel Rafael de Siqueira</option>
+                                            <option value="Escola Estadual Professor Ana Tereza Albernaz" {% if atleta.escola == 'Escola Estadual Professor Ana Tereza Albernaz' %}selected{% endif %}>Escola Estadual Professor Ana Tereza Albernaz</option>
+                                            <option value="Escola Estadual Reunidas de Cachoeira Rica" {% if atleta.escola == 'Escola Estadual Reunidas de Cachoeira Rica' %}selected{% endif %}>Escola Estadual Reunidas de Cachoeira Rica</option>
+                                            <option value="Escola Estadual São José" {% if atleta.escola == 'Escola Estadual São José' %}selected{% endif %}>Escola Estadual São José</option>
+                                        </optgroup>
+                                        
+                                        <optgroup label="🎓 Escolas Privadas">
+                                            <option value="Colégio Tales de Mileto" {% if atleta.escola == 'Colégio Tales de Mileto' %}selected{% endif %}>Colégio Tales de Mileto</option>
+                                            <option value="Centro Educacional Sebastião Albernaz" {% if atleta.escola == 'Centro Educacional Sebastião Albernaz' %}selected{% endif %}>Centro Educacional Sebastião Albernaz</option>
+                                        </optgroup>
+                                        
+                                        <option value="outra" {% if atleta.escola and atleta.escola not in 'Escola Municipal Água Branca,Escola Municipal Casca III,Escola Municipal Córrego do Campo,Escola Municipal Cristo Rei,Escola Municipal JJ,Escola Municipal Monteiro Lobato,Escola Municipal Professor Jacondino Bezerra,Escola Municipal Professora Abinel Freitas Pereira,Escola Municipal Professora Elba Xavier Ferreira,Escola Municipal Professora Irene Ferreira da Silva,Escola Municipal Professora Maria Luiza de Araújo Gomes,Escola Municipal Santa Helena,Escola Municipal Thermozina de Siqueira,Escola Estadual Cel Rafael de Siqueira,Escola Estadual Professor Ana Tereza Albernaz,Escola Estadual Reunidas de Cachoeira Rica,Escola Estadual São José,Colégio Tales de Mileto,Centro Educacional Sebastião Albernaz' %}selected{% endif %}>Outra escola (especificar)</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Série/Ano</label>
+                                    <select class="form-select" name="serie" required>
+                                        <option value="">Selecione a série...</option>
+                                        
+                                        <optgroup label="📚 Ensino Fundamental I">
+                                            <option value="1º ano" {% if atleta.serie == '1º ano' %}selected{% endif %}>1º ano</option>
+                                            <option value="2º ano" {% if atleta.serie == '2º ano' %}selected{% endif %}>2º ano</option>
+                                            <option value="3º ano" {% if atleta.serie == '3º ano' %}selected{% endif %}>3º ano</option>
+                                            <option value="4º ano" {% if atleta.serie == '4º ano' %}selected{% endif %}>4º ano</option>
+                                            <option value="5º ano" {% if atleta.serie == '5º ano' %}selected{% endif %}>5º ano</option>
+                                        </optgroup>
+                                        
+                                        <optgroup label="📖 Ensino Fundamental II">
+                                            <option value="6º ano" {% if atleta.serie == '6º ano' %}selected{% endif %}>6º ano</option>
+                                            <option value="7º ano" {% if atleta.serie == '7º ano' %}selected{% endif %}>7º ano</option>
+                                            <option value="8º ano" {% if atleta.serie == '8º ano' %}selected{% endif %}>8º ano</option>
+                                            <option value="9º ano" {% if atleta.serie == '9º ano' %}selected{% endif %}>9º ano</option>
+                                        </optgroup>
+                                        
+                                        <optgroup label="🎓 Ensino Médio">
+                                            <option value="1º ano EM" {% if atleta.serie == '1º ano EM' %}selected{% endif %}>1º ano EM</option>
+                                            <option value="2º ano EM" {% if atleta.serie == '2º ano EM' %}selected{% endif %}>2º ano EM</option>
+                                            <option value="3º ano EM" {% if atleta.serie == '3º ano EM' %}selected{% endif %}>3º ano EM</option>
+                                        </optgroup>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <!-- Campo para escola personalizada (aparece quando "outra" é selecionado) -->
+                            <div class="row g-3 mb-4" id="outraEscola" style="display: {% if atleta.escola and atleta.escola not in 'Escola Municipal Água Branca,Escola Municipal Casca III,Escola Municipal Córrego do Campo,Escola Municipal Cristo Rei,Escola Municipal JJ,Escola Municipal Monteiro Lobato,Escola Municipal Professor Jacondino Bezerra,Escola Municipal Professora Abinel Freitas Pereira,Escola Municipal Professora Elba Xavier Ferreira,Escola Municipal Professora Irene Ferreira da Silva,Escola Municipal Professora Maria Luiza de Araújo Gomes,Escola Municipal Santa Helena,Escola Municipal Thermozina de Siqueira,Escola Estadual Cel Rafael de Siqueira,Escola Estadual Professor Ana Tereza Albernaz,Escola Estadual Reunidas de Cachoeira Rica,Escola Estadual São José,Colégio Tales de Mileto,Centro Educacional Sebastião Albernaz' %}block{% else %}none{% endif %};">
+                                <div class="col-12">
+                                    <label class="form-label">Nome da escola</label>
+                                    <input type="text" class="form-control" name="escola_outra" value="{% if atleta.escola and atleta.escola not in 'Escola Municipal Água Branca,Escola Municipal Casca III,Escola Municipal Córrego do Campo,Escola Municipal Cristo Rei,Escola Municipal JJ,Escola Municipal Monteiro Lobato,Escola Municipal Professor Jacondino Bezerra,Escola Municipal Professora Abinel Freitas Pereira,Escola Municipal Professora Elba Xavier Ferreira,Escola Municipal Professora Irene Ferreira da Silva,Escola Municipal Professora Maria Luiza de Araújo Gomes,Escola Municipal Santa Helena,Escola Municipal Thermozina de Siqueira,Escola Estadual Cel Rafael de Siqueira,Escola Estadual Professor Ana Tereza Albernaz,Escola Estadual Reunidas de Cachoeira Rica,Escola Estadual São José,Colégio Tales de Mileto,Centro Educacional Sebastião Albernaz' %}{{ atleta.escola }}{% endif %}" placeholder="Digite o nome da escola">
+                                </div>
+                            </div>
                             
                             <h5 class="text-primary mb-3">Informações Médicas</h5>
                             <div class="row g-3 mb-4">
@@ -234,33 +234,33 @@
                                     <label class="form-label">Tipo Sanguíneo</label>
                                     <select class="form-select" name="tipo_sanguineo">
                                         <option value="">Selecione...</option>
-                                        <option value="A+" {% if dependente.tipo_sanguineo == 'A+' %}selected{% endif %}>A+</option>
-                                        <option value="A-" {% if dependente.tipo_sanguineo == 'A-' %}selected{% endif %}>A-</option>
-                                        <option value="B+" {% if dependente.tipo_sanguineo == 'B+' %}selected{% endif %}>B+</option>
-                                        <option value="B-" {% if dependente.tipo_sanguineo == 'B-' %}selected{% endif %}>B-</option>
-                                        <option value="AB+" {% if dependente.tipo_sanguineo == 'AB+' %}selected{% endif %}>AB+</option>
-                                        <option value="AB-" {% if dependente.tipo_sanguineo == 'AB-' %}selected{% endif %}>AB-</option>
-                                        <option value="O+" {% if dependente.tipo_sanguineo == 'O+' %}selected{% endif %}>O+</option>
-                                        <option value="O-" {% if dependente.tipo_sanguineo == 'O-' %}selected{% endif %}>O-</option>
+                                        <option value="A+" {% if atleta.tipo_sanguineo == 'A+' %}selected{% endif %}>A+</option>
+                                        <option value="A-" {% if atleta.tipo_sanguineo == 'A-' %}selected{% endif %}>A-</option>
+                                        <option value="B+" {% if atleta.tipo_sanguineo == 'B+' %}selected{% endif %}>B+</option>
+                                        <option value="B-" {% if atleta.tipo_sanguineo == 'B-' %}selected{% endif %}>B-</option>
+                                        <option value="AB+" {% if atleta.tipo_sanguineo == 'AB+' %}selected{% endif %}>AB+</option>
+                                        <option value="AB-" {% if atleta.tipo_sanguineo == 'AB-' %}selected{% endif %}>AB-</option>
+                                        <option value="O+" {% if atleta.tipo_sanguineo == 'O+' %}selected{% endif %}>O+</option>
+                                        <option value="O-" {% if atleta.tipo_sanguineo == 'O-' %}selected{% endif %}>O-</option>
                                     </select>
                                 </div>
                                 <div class="col-md-6">
                                     <label class="form-label">Alergias</label>
-                                    <input type="text" class="form-control" name="alergias" value="{{ dependente.alergias|default:'' }}" placeholder="Ex: Pólen, alimentos...">
+                                    <input type="text" class="form-control" name="alergias" value="{{ atleta.alergias|default:'' }}" placeholder="Ex: Pólen, alimentos...">
                                 </div>
                                 <div class="col-12">
                                     <label class="form-label">Condições Médicas</label>
-                                    <textarea class="form-control" name="condicoes_medicas" rows="3" placeholder="Descreva condições médicas importantes...">{{ dependente.condicoes_medicas|default:'' }}</textarea>
+                                    <textarea class="form-control" name="condicoes_medicas" rows="3" placeholder="Descreva condições médicas importantes...">{{ atleta.condicoes_medicas|default:'' }}</textarea>
                                 </div>
                             </div>
                             
                             <h5 class="text-primary mb-3">Foto</h5>
                             <div class="row g-3 mb-4">
                                 <div class="col-12">
-                                                                         <label class="form-label">Foto do Atleta</label>
-                                    {% if dependente.foto %}
+                                    <label class="form-label">Foto do Atleta</label>
+                                    {% if atleta.foto %}
                                         <div class="mb-3">
-                                            <img src="{{ dependente.foto.url }}" alt="Foto atual" class="img-thumbnail" style="max-width: 200px;">
+                                            <img src="{{ atleta.foto.url }}" alt="Foto atual" class="img-thumbnail" style="max-width: 200px;">
                                             <p class="text-muted small">Foto atual</p>
                                         </div>
                                     {% endif %}

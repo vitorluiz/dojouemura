@@ -133,13 +133,16 @@ EMAIL_HOST_USER = config('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
 DEFAULT_FROM_EMAIL = config('DEFAULT_FROM_EMAIL')
 
+# URL do site para links de ativação
+SITE_URL = config('SITE_URL', default='http://127.0.0.1:8000')
+
 # Configurações de timeout para evitar travamento
 EMAIL_TIMEOUT = 10  # Timeout de 10 segundos
 EMAIL_USE_SSL = False  # Usar TLS em vez de SSL
 
 # Configurações do Celery
 CELERY_BROKER_URL = 'memory://'  # Broker em memória para desenvolvimento
-CELERY_RESULT_BACKEND = 'rpc://'  # Backend RPC para desenvolvimento
+CELERY_RESULT_BACKEND = None  # Sem backend para desenvolvimento simples
 CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
@@ -147,13 +150,25 @@ CELERY_TIMEZONE = 'America/Sao_Paulo'
 
 # Configurações específicas para tarefas de email
 CELERY_TASK_ROUTES = {
-    'usuarios.tasks.enviar_email_verificacao_task': {'queue': 'emails'},
+    'usuarios.tasks.enviar_email_verificacao_task': {'queue': 'default'},
 }
 
 # Configurações de filas
 CELERY_TASK_DEFAULT_QUEUE = 'default'
 CELERY_TASK_DEFAULT_EXCHANGE = 'default'
 CELERY_TASK_DEFAULT_ROUTING_KEY = 'default'
+
+# Configurações para evitar timeouts
+CELERY_TASK_ALWAYS_EAGER = True  # Executar tarefas sincronamente para desenvolvimento
+CELERY_TASK_EAGER_PROPAGATES = True
+CELERY_WORKER_PREFETCH_MULTIPLIER = 1
+CELERY_TASK_ACKS_LATE = True
+
+# Configurações de timeout mais agressivas
+CELERY_TASK_SOFT_TIME_LIMIT = 30  # Timeout suave de 30 segundos
+CELERY_TASK_TIME_LIMIT = 60  # Timeout hard de 1 minuto
+CELERY_WORKER_DISABLE_RATE_LIMITS = True
+CELERY_WORKER_MAX_TASKS_PER_CHILD = 1000
 
 # Configurações de Logging
 LOGGING = {
@@ -236,43 +251,7 @@ LOGOUT_REDIRECT_URL = '/login/'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
-# Configuração de Logging
-LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': False,
-    'formatters': {
-        'verbose': {
-            'format': '{levelname} {asctime} {module} {process:d} {thread:d} {message}',
-            'style': '{',
-        },
-        'simple': {
-            'format': '{levelname} {message}',
-            'style': '{',
-        },
-    },
-    'handlers': {
-        'console': {
-            'class': 'logging.StreamHandler',
-            'formatter': 'verbose',
-        },
-        'file': {
-            'class': 'logging.FileHandler',
-            'filename': BASE_DIR / 'debug.log',
-            'formatter': 'verbose',
-        },
-    },
-    'root': {
-        'handlers': ['console', 'file'],
-        'level': 'INFO',
-    },
-    'loggers': {
-        'usuarios': {
-            'handlers': ['console', 'file'],
-            'level': 'DEBUG',
-            'propagate': False,
-        },
-    },
-}
+
 
 # ===== CONFIGURAÇÕES DO JAZZMIN =====
 JAZZMIN_SETTINGS = {
@@ -298,7 +277,7 @@ JAZZMIN_SETTINGS = {
         "auth.Group": "fas fa-users",
         "empresa.Empresa": "fas fa-building",
         "usuarios.Usuario": "fas fa-user-tie",
-        "usuarios.Dependente": "fas fa-child",
+        "usuarios.Atleta": "fas fa-child",
         "usuarios.Modalidade": "fas fa-fist-raised",
         "usuarios.Matricula": "fas fa-graduation-cap",
         "usuarios.TipoMatricula": "fas fa-tags",

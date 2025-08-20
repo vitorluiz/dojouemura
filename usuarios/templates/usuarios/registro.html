@@ -16,8 +16,9 @@
                         <p class="text-muted">Primeiro passo: Cadastre-se como responsável para depois inscrever seus atletas</p>
                     </div>
                     
-                    <form method="post">
+                    <form method="post" id="form-registro">
                         {% csrf_token %}
+                        <input type="hidden" name="debug" value="1">
                         
                         <div class="row">
                             <div class="col-md-6 mb-3">
@@ -118,11 +119,7 @@
                         <div class="d-grid mb-3">
                             <button type="submit" class="btn btn-primary btn-lg" id="btn-criar-conta">
                                 <i class="bi bi-check-circle me-2"></i>
-                                <span id="btn-text">Criar Conta</span>
-                                <span id="btn-loading" class="d-none">
-                                    <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
-                                    Criando conta...
-                                </span>
+                                Criar Conta
                             </button>
                         </div>
                     </form>
@@ -137,7 +134,7 @@
                             <li><strong>1º Passo:</strong> Crie sua conta de responsável (este formulário)</li>
                             <li><strong>2º Passo:</strong> Verifique seu email para receber a senha temporária</li>
                             <li><strong>3º Passo:</strong> Faça login com a senha temporária</li>
-                            <li><strong>4º Passo:</strong> Cadastre seus dependentes e escolha o tipo de matrícula</li>
+                            <li><strong>4º Passo:</strong> Cadastre seus atletas e escolha o tipo de matrícula</li>
                         </ol>
                     </div>
                     
@@ -195,22 +192,24 @@
 {% block extra_js %}
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    const form = document.querySelector('form');
+    const form = document.querySelector('#form-registro');
     const btnCriarConta = document.getElementById('btn-criar-conta');
-    const btnText = document.getElementById('btn-text');
-    const btnLoading = document.getElementById('btn-loading');
     
+    console.log('=== FORMULÁRIO DE REGISTRO CARREGADO ===');
+    console.log('Formulário:', form);
+    console.log('Botão:', btnCriarConta);
+    
+    // Capturar envio do formulário
     form.addEventListener('submit', function(e) {
-        // Mostrar estado de carregamento
+        console.log('=== FORMULÁRIO SENDO ENVIADO ===');
+        console.log('Dados:', new FormData(form));
+        
+        // Mostrar loading no botão
         btnCriarConta.disabled = true;
-        btnText.classList.add('d-none');
-        btnLoading.classList.remove('d-none');
+        btnCriarConta.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Enviando...';
         
-        // Adicionar classe de carregamento ao botão
-        btnCriarConta.classList.add('btn-loading');
-        
-        // O formulário será enviado normalmente
-        // O Django processará e redirecionará
+        // IMPORTANTE: Não prevenir o envio padrão
+        console.log('Enviando para Django...');
     });
 });
 </script>

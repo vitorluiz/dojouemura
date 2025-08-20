@@ -4,7 +4,7 @@ O DOJÔ UEMURA CONTA COM OFERTAS DE AULAS GRATUIRAS DE JIU-JITSU PARA CRIANÇAS 
 TEMOS AGENDAS NOS 3 PERIODOS PARA ATENDER A TODOS A TODA SOCIEDADE CHAPADENSE.
 O CADASTRO PARA TURMAS DE JIU-JITSU SÃO REALIZADAS VIA WEB, PELO SITE DO DOJÔ EM PERIODOS DE INSCRIÇÃO ABERTOS. NOSSAS TURMAS TEM X ALUNOS, NOSSOS PROFESSORES SÃO GRADUADOS.
 PARA OS PAIS E RESPONSÁVEL TEMOS O CONTROLE DE FREQUENCIA DO SEU FILHO, QUE ENVIA A NOTIFICAÇÃO QUANDO SEU FILHO ENTRA E SAI DO DOJO. 
-O RESPONSÁVEL PODERÁ ACOMPANHAR O SEU DEPENDENTE AO VIVO, NA HORA SUA AULA. ATRAVES DO NOSSO PORTAL DO ALUNO. 
+O RESPONSÁVEL PODERÁ ACOMPANHAR O SEU atleta AO VIVO, NA HORA SUA AULA. ATRAVES DO NOSSO PORTAL DO ALUNO. 
 PARA ALUNOS QUE DESEJAM SER ALUNOS MENSALISTA PODEM SOLICITAR SUA AULA NO SITE, ASSIM PODERÁ MARCAR SUA AULA.
 O PROCESSO É SIMPLES NO NOSSO SITE EM AGENDAMENTO INFORME SEU EMAIL VOCE RECEBERÁ UMA SENHA QUE EXPIRA EM 24 HORAS, FAÇA O SEU AGENDAMENTO E RECEBER O CÓDIGO PARA SUA AULA EXPERIMENTAL.
 QUER SER ALUNO FALE COM NOSSOS COLABORADORES QUE TEREMOS O MAIRO PRAZER EM TER VOCE COMO NOSSO ALUNO.
@@ -70,7 +70,7 @@ Implementar um sistema completo de controle de frequência que permita aos respo
 #### **Modelo: Frequencia**
 ```python
 class Frequencia(models.Model):
-    atleta = models.ForeignKey(Dependente, on_delete=models.CASCADE)
+    atleta = models.ForeignKey(atleta, on_delete=models.CASCADE)
     data_entrada = models.DateTimeField()
     data_saida = models.DateTimeField(null=True, blank=True)
     turma = models.ForeignKey('Turma', on_delete=models.CASCADE)
@@ -88,7 +88,7 @@ class Turma(models.Model):
     horario_inicio = models.TimeField()
     horario_fim = models.TimeField()
     professor = models.ForeignKey('Professor', on_delete=models.CASCADE)
-    alunos = models.ManyToManyField(Dependente, through='Matricula')
+    alunos = models.ManyToManyField(atleta, through='Matricula')
     capacidade_maxima = models.IntegerField()
     ativa = models.BooleanField(default=True)
 ```
@@ -105,7 +105,7 @@ class Professor(models.Model):
 #### **Modelo: Matricula**
 ```python
 class Matricula(models.Model):
-    atleta = models.ForeignKey(Dependente, on_delete=models.CASCADE)
+    atleta = models.ForeignKey(atleta, on_delete=models.CASCADE)
     turma = models.ForeignKey(Turma, on_delete=models.CASCADE)
     data_matricula = models.DateField(auto_now_add=True)
     ativa = models.BooleanField(default=True)

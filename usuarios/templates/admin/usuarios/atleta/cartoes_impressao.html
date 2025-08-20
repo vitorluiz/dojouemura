@@ -1,0 +1,59 @@
+{% extends 'admin/base_site.html' %}
+{% load static %}
+
+{% block title %}Impressão de Cartões{% endblock %}
+
+{% block content %}
+<h1>Impressão de Cartões de Atleta</h1>
+<p>Use Ctrl+P para imprimir. Os cartões serão impressos em orientação paisagem.</p>
+
+<div class="container-fluid">
+	<div class="row g-3">
+		{% for atleta in atletas %}
+		<div class="col-12">
+			<div class="card" style="width: 100%; max-width: 900px; margin: 0 auto;">
+				<div class="card-body">
+					<div class="row" style="aspect-ratio: 16 / 9;">
+						<div class="col-4 d-flex flex-column align-items-center justify-content-center">
+							<div class="mb-3">
+								{% if atleta.foto %}
+								<img src="{{ atleta.foto.url }}" style="width: 140px; height: 140px; object-fit: cover; border-radius: 8px; border: 1px solid #ddd;" />
+								{% else %}
+								<div style="width: 140px; height: 140px; display:flex; align-items:center; justify-content:center; background:#f5f5f5; border: 1px dashed #ccc; border-radius: 8px;">Sem foto</div>
+								{% endif %}
+							</div>
+							<div>
+								{% if atleta.qr_code_imagem %}
+								<img src="{{ atleta.qr_code_imagem.url }}" style="width: 140px; height: 140px; background: #fff; padding: 8px; border: 1px solid #eee; border-radius: 8px;" />
+								{% else %}
+								<div style="width: 140px; height: 140px; display:flex; align-items:center; justify-content:center; background:#fff; border: 1px dashed #ccc; border-radius: 8px;">QR não gerado</div>
+								{% endif %}
+							</div>
+						</div>
+						<div class="col-8 d-flex flex-column justify-content-center">
+							<h3 class="mb-2">{{ atleta.nome }}</h3>
+							<p class="mb-1"><strong>Responsável:</strong> {{ atleta.usuario.first_name }} {{ atleta.usuario.last_name }}</p>
+							<p class="mb-1"><strong>Código:</strong> {{ atleta.codigo_alfanumerico }}</p>
+							<p class="mb-1"><strong>Idade:</strong> {{ atleta.idade }} anos</p>
+							<p class="mb-1"><strong>Endereço:</strong> {{ atleta.endereco_completo }}</p>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		{% empty %}
+		<p>Nenhum atleta selecionado.</p>
+		{% endfor %}
+	</div>
+</div>
+
+<style>
+@media print {
+	body * { visibility: hidden; }
+	.card, .card * { visibility: visible; }
+	.card { position: relative; left: 0; top: 0; width: 100%; margin-bottom: 16px; }
+	@page { size: landscape; margin: 10mm; }
+}
+</style>
+{% endblock %}
+

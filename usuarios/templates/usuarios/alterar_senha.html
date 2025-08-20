@@ -1,0 +1,125 @@
+{% extends 'publico/base.html' %}
+{% load static %}
+
+{% block title %}Alterar Senha - Dojô Uemura{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'assets/css/forms.css' %}">
+{% endblock %}
+
+{% block content %}
+<!-- ===== HERO SECTION ===== -->
+<section class="py-5 bg-primary text-white">
+    <div class="container">
+        <div class="row justify-content-center text-center">
+            <div class="col-lg-8">
+                <h1 class="display-4 fw-bold mb-4">
+                    <i class="bi bi-shield-lock"></i> Alterar Senha
+                </h1>
+                <p class="lead mb-0">Defina uma nova senha para sua conta</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ===== FORMULÁRIO DE ALTERAÇÃO DE SENHA ===== -->
+<section class="py-5">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-6">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-header bg-primary text-white text-center py-4">
+                        <h3 class="mb-0">
+                            <i class="bi bi-key me-2"></i>
+                            Nova Senha
+                        </h3>
+                        <p class="mb-0 mt-2">Sua conta será verificada após a alteração</p>
+                    </div>
+                    <div class="card-body p-4">
+                        <div class="alert alert-info">
+                            <i class="bi bi-info-circle me-2"></i>
+                            <strong>Importante:</strong> Após alterar sua senha, sua conta será automaticamente verificada e você poderá acessar todos os recursos do sistema.
+                        </div>
+                        
+                        {% if messages %}
+                            {% for message in messages %}
+                                <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                                    <i class="bi bi-{% if message.tags == 'success' %}check-circle{% elif message.tags == 'error' %}exclamation-triangle{% else %}info-circle{% endif %} me-2"></i>
+                                    {{ message }}
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+                        
+                        <form method="post">
+                            {% csrf_token %}
+                            
+                            <div class="mb-4">
+                                <label for="nova_senha" class="form-label fw-bold">
+                                    <i class="bi bi-lock me-1"></i>
+                                    Nova Senha *
+                                </label>
+                                <input type="password" class="form-control form-control-lg" 
+                                       name="nova_senha" id="nova_senha" required 
+                                       placeholder="Digite sua nova senha"
+                                       minlength="8">
+                                <small class="text-muted">Mínimo de 8 caracteres</small>
+                            </div>
+                            
+                            <div class="mb-4">
+                                <label for="confirmar_senha" class="form-label fw-bold">
+                                    <i class="bi bi-lock-fill me-1"></i>
+                                    Confirmar Nova Senha *
+                                </label>
+                                <input type="password" class="form-control form-control-lg" 
+                                       name="confirmar_senha" id="confirmar_senha" required 
+                                       placeholder="Confirme sua nova senha"
+                                       minlength="8">
+                                <small class="text-muted">Digite a mesma senha novamente</small>
+                            </div>
+                            
+                            <div class="d-grid mb-4">
+                                <button type="submit" class="btn btn-primary btn-lg">
+                                    <i class="bi bi-check-circle me-2"></i>
+                                    Alterar Senha e Verificar Conta
+                                </button>
+                            </div>
+                        </form>
+                        
+                        <div class="text-center">
+                            <a href="{% url 'usuarios:login' %}" class="text-decoration-none">
+                                <i class="bi bi-arrow-left me-1"></i>
+                                Voltar para o Login
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.querySelector('form');
+    const novaSenha = document.getElementById('nova_senha');
+    const confirmarSenha = document.getElementById('confirmar_senha');
+    
+    form.addEventListener('submit', function(e) {
+        if (novaSenha.value !== confirmarSenha.value) {
+            e.preventDefault();
+            alert('As senhas não coincidem!');
+            return false;
+        }
+        
+        if (novaSenha.value.length < 8) {
+            e.preventDefault();
+            alert('A senha deve ter pelo menos 8 caracteres!');
+            return false;
+        }
+    });
+});
+</script>
+{% endblock %}

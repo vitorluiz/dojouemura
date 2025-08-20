@@ -18,6 +18,7 @@ urlpatterns = [
     path('cadastrar-atleta/', views.cadastrar_atleta, name='cadastrar_atleta'),
     path('editar-atleta/<uuid:atleta_id>/', views.editar_atleta, name='editar_atleta'),
     path('excluir-atleta/<uuid:atleta_id>/', views.excluir_atleta, name='excluir_atleta'),
+    path('atleta/<uuid:atleta_id>/cartao/', views.cartao_atleta, name='cartao_atleta'),
     
     # Matrículas
     path('matricula/projeto-social/', views.matricula_projeto_social, name='matricula_projeto_social'),
@@ -27,6 +28,8 @@ urlpatterns = [
     path('esqueceu-senha/', views.esqueceu_senha, name='esqueceu_senha'),
     path('reenviar-verificacao/', views.reenviar_verificacao, name='reenviar_verificacao'),
     path('reset-senha/<uidb64>/<token>/', views.reset_senha, name='reset_senha'),
+    path('ativar-conta/<uidb64>/<token>/', views.ativar_conta, name='ativar_conta'),
+    path('alterar-senha/', views.alterar_senha, name='alterar_senha'),
     
     # Utilitários
     path('buscar-cep/', views.buscar_cep_ajax, name='buscar_cep'),

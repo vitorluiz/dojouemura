@@ -22,6 +22,7 @@ class Usuario(AbstractUser):
         PROFESSOR = 'PROFESSOR', 'Professor'
         GESTOR = 'GESTOR', 'Gestor'
         FUNCIONARIO = 'FUNCIONARIO', 'Funcionário'
+        ADMIN = 'ADMIN', 'Administrador'
 
     
     email = models.EmailField(
@@ -84,6 +85,14 @@ class Usuario(AbstractUser):
     def nome_completo(self):
         """Retorna o nome completo do usuário"""
         return f"{self.first_name} {self.last_name}".strip() or self.email
+    
+    def save(self, *args, **kwargs):
+        """Salva o usuário e ajusta o tipo de conta para superusuários"""
+        # Se for superusuário, definir tipo como ADMIN
+        if self.is_superuser:
+            self.tipo_conta = self.TipoConta.ADMIN
+        
+        super().save(*args, **kwargs)
 
 
 class Atleta(models.Model):
@@ -142,6 +151,27 @@ class Atleta(models.Model):
         verbose_name='CPF',
         validators=[validar_cpf]
     )
+    rg = models.CharField(
+        max_length=20,
+        blank=True,
+        verbose_name='RG'
+    )
+    sexo = models.CharField(
+        max_length=1,
+        choices=[('M', 'Masculino'), ('F', 'Feminino')],
+        verbose_name='Sexo'
+    )
+    estado_civil = models.CharField(
+        max_length=20,
+        choices=[
+            ('solteiro', 'Solteiro(a)'),
+            ('casado', 'Casado(a)'),
+            ('divorciado', 'Divorciado(a)'),
+            ('viuvo', 'Viúvo(a)')
+        ],
+        blank=True,
+        verbose_name='Estado Civil'
+    )
     parentesco = models.CharField(
         max_length=20,
         choices=PARENTESCO_CHOICES,
@@ -156,6 +186,14 @@ class Atleta(models.Model):
         null=True,
         blank=True
     )
+    # QR Code
+    qr_code_imagem = models.ImageField(
+        upload_to='atletas/qrcodes/',
+        verbose_name='QR Code',
+        null=True,
+        blank=True,
+        help_text='QR Code gerado automaticamente a partir do código do atleta'
+    )
     
     # Endereço
     cep = models.CharField(
@@ -164,9 +202,10 @@ class Atleta(models.Model):
         validators=[validar_cep]
     )
     
-    logradouro = models.CharField(
+    endereco = models.CharField(
         max_length=200,
-        verbose_name='Logradouro'
+        verbose_name='Endereço',
+        help_text='Será preenchido automaticamente pelo CEP'
         )
 
     numero = models.CharField(
@@ -182,20 +221,23 @@ class Atleta(models.Model):
 
     bairro = models.CharField(
         max_length=100,
-        verbose_name='Bairro'
+        verbose_name='Bairro',
+        help_text='Será preenchido automaticamente pelo CEP'
         )
 
     cidade = models.CharField(
         max_length=100,
-        verbose_name='Cidade'
+        verbose_name='Cidade',
+        help_text='Será preenchido automaticamente pelo CEP'
         )
 
-    uf = models.CharField(
+    estado = models.CharField(
         max_length=2,
-        verbose_name='UF',
+        verbose_name='Estado',
+        help_text='Será preenchido automaticamente pelo CEP',
         validators=[RegexValidator(
             regex=r'^[A-Z]{2}$',
-            message='UF deve ter 2 letras maiúsculas'
+            message='Estado deve ter 2 letras maiúsculas'
         )]
         )
     
@@ -211,6 +253,12 @@ class Atleta(models.Model):
         verbose_name='Escola'
         )
     
+    serie = models.CharField(
+        max_length=20,
+        blank=True,
+        verbose_name='Série/Ano'
+    )
+    
     turno = models.CharField(
         max_length=15,
         choices=TURNO_CHOICES,
@@ -218,6 +266,21 @@ class Atleta(models.Model):
         )
     
     # Dados médicos e termos
+    tipo_sanguineo = models.CharField(
+        max_length=3,
+        choices=[
+            ('A+', 'A+'), ('A-', 'A-'),
+            ('B+', 'B+'), ('B-', 'B-'),
+            ('AB+', 'AB+'), ('AB-', 'AB-'),
+            ('O+', 'O+'), ('O-', 'O-')
+        ],
+        blank=True,
+        verbose_name='Tipo Sanguíneo'
+    )
+    alergias = models.TextField(
+        blank=True,
+        verbose_name='Alergias'
+    )
     condicoes_medicas = models.TextField(
         blank=True,
         verbose_name='Condições Médicas para Prática de Esportes',
@@ -281,14 +344,17 @@ class Atleta(models.Model):
     @property
     def endereco_completo(self):
         """Retorna o endereço completo formatado"""
-        endereco = f"{self.logradouro}, {self.numero}"
+        endereco = f"{self.endereco}, {self.numero}"
         if self.complemento:
             endereco += f", {self.complemento}"
-        endereco += f" - {self.bairro}, {self.cidade}/{self.uf} - CEP: {self.cep}"
+        endereco += f" - {self.bairro}, {self.cidade}/{self.estado} - CEP: {self.cep}"
         return endereco
     
     def save(self, *args, **kwargs):
-        """Gera um código alfanumérico único antes de salvar o atleta se ele não existir."""
+        """Gera um código alfanumérico único e busca dados do CEP antes de salvar.
+        Após salvar, garante que a imagem do QR Code exista.
+        """
+        # Gerar código alfanumérico se não existir
         if not self.codigo_alfanumerico:
             # Loop para garantir que o código gerado seja único
             while True:
@@ -297,7 +363,91 @@ class Atleta(models.Model):
                 if not Atleta.objects.filter(codigo_alfanumerico=codigo).exists():
                     self.codigo_alfanumerico = codigo
                     break
+        
+        # Buscar dados do CEP se foi fornecido e os campos de endereço estão vazios
+        if self.cep and (not self.endereco or not self.bairro or not self.cidade or not self.estado):
+            try:
+                from utils.validacoes import buscar_cep
+                cep_data = buscar_cep(self.cep.replace('-', ''))
+                if cep_data:
+                    self.endereco = cep_data.get('logradouro', self.endereco)
+                    self.bairro = cep_data.get('bairro', self.bairro)
+                    self.cidade = cep_data.get('localidade', self.cidade)
+                    self.estado = cep_data.get('uf', self.estado)
+            except Exception as e:
+                # Se houver erro na busca do CEP, continuar sem preencher automaticamente
+                pass
+        # Verificar se precisamos gerar o QR Code após salvar (requer ID para path estável)
+        precisa_qr = not self.qr_code_imagem
+
         super().save(*args, **kwargs)
+
+        if precisa_qr:
+            try:
+                self.gerar_qr_code()
+                # Salvar somente o campo do QR para evitar loop
+                super().save(update_fields=['qr_code_imagem'])
+            except Exception:
+                # Em caso de erro ao gerar o QR, não impedir o save do restante
+                pass
+    
+    def buscar_cep_automatico(self):
+        """Busca dados do CEP e preenche os campos de endereço automaticamente"""
+        if self.cep:
+            try:
+                from utils.validacoes import buscar_cep
+                cep_data = buscar_cep(self.cep.replace('-', ''))
+                if cep_data:
+                    self.endereco = cep_data.get('logradouro', '')
+                    self.bairro = cep_data.get('bairro', '')
+                    self.cidade = cep_data.get('localidade', '')
+                    self.estado = cep_data.get('uf', '')
+                    return True
+            except Exception as e:
+                return False
+        return False
+
+    def gerar_qr_code(self, force: bool = False) -> bool:
+        """Gera a imagem do QR Code a partir do codigo_alfanumerico.
+
+        Parameters
+        ----------
+        force: bool
+            Se True, força a geração mesmo que já exista a imagem.
+
+        Returns
+        -------
+        bool
+            True se gerou/salvou, False caso contrário.
+        """
+        from io import BytesIO
+        from django.core.files.base import ContentFile
+        try:
+            if self.qr_code_imagem and not force:
+                return False
+            # Import local para evitar dependência em import global
+            import qrcode
+            from qrcode.constants import ERROR_CORRECT_M
+
+            qr = qrcode.QRCode(
+                version=1,
+                error_correction=ERROR_CORRECT_M,
+                box_size=10,
+                border=2,
+            )
+            qr.add_data(self.codigo_alfanumerico)
+            qr.make(fit=True)
+            img = qr.make_image(fill_color="black", back_color="white")
+
+            buffer = BytesIO()
+            img.save(buffer, format='PNG')
+            buffer.seek(0)
+
+            filename = f"{self.codigo_alfanumerico}.png"
+            self.qr_code_imagem.save(filename, ContentFile(buffer.getvalue()), save=False)
+            return True
+        except Exception:
+            return False
 
     def __str__(self):
         nome_atleta = self.nome_completo if hasattr(self, 'nome_completo') else "atleta"

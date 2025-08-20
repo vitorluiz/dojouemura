@@ -35,13 +35,19 @@ def registro_usuario(request):
     import logging
     logger = logging.getLogger('usuarios.views')
     
+    logger.info(f"=== INICIANDO REGISTRO_USUARIO - METHOD: {request.method} ===")
+    
     if request.method == 'POST':
-        logger.debug(f"POST recebido - {request.POST}")
+        logger.info("POST recebido - processando formulário...")
+        logger.debug(f"POST data: {request.POST}")
+        
         form = UsuarioRegistroForm(request.POST)
-        logger.debug(f"Formulário criado - {form}")
-        logger.debug(f"Formulário válido? {form.is_valid()}")
+        logger.info(f"Formulário criado - válido? {form.is_valid()}")
+        
         if not form.is_valid():
-            logger.debug(f"Erros do formulário: {form.errors}")
+            logger.error(f"Erros do formulário: {form.errors}")
+            logger.info("Retornando formulário com erros...")
+            return render(request, 'usuarios/registro.html', {'form': form})
         
         if form.is_valid():
             logger.info("Formulário válido, criando usuário...")
@@ -53,7 +59,9 @@ def registro_usuario(request):
             senha_temp = ''.join(secrets.choice(string.ascii_letters + string.digits) for _ in range(12))
             usuario.set_password(senha_temp)
             
-            usuario.is_active = False  # Usuário inativo até verificar email
+            # IMPORTANTE: Usuário ATIVO desde o início, mas email não verificado
+            usuario.is_active = True  # Usuário ativo para poder fazer login
+            usuario.email_verificado = False  # Email não verificado ainda
             usuario.save()
             logger.info(f"Usuário criado com ID: {usuario.id}")
             
@@ -63,7 +71,7 @@ def registro_usuario(request):
             
             if email_enviado:
                 logger.info(f"Email de verificação agendado com sucesso para {usuario.email}")
-                messages.success(request, 'Cadastro realizado com sucesso! Verifique seu email para ativar sua conta.')
+                messages.success(request, 'Cadastro realizado com sucesso! Sua conta está ativa. Verifique seu email para completar a verificação.')
                 return redirect('usuarios:login')
             else:
                 # Se o email falhou, ainda criar o usuário mas informar sobre o problema
@@ -89,10 +97,14 @@ def login_usuario(request):
             user = authenticate(request, username=email, password=password)
             if user is not None:
                 if user.email_verificado:
+                    # Usuário já verificado - login normal
                     login(request, user)
                     return redirect('usuarios:home')
                 else:
-                    messages.error(request, 'Por favor, verifique seu email antes de fazer login.')
+                    # Usuário não verificado - permitir login para ativação
+                    login(request, user)
+                    messages.info(request, 'Conta não verificada. Após alterar sua senha, sua conta será automaticamente verificada.')
+                    return redirect('usuarios:alterar_senha')
             else:
                 messages.error(request, 'Email ou senha incorretos.')
     else:
@@ -100,6 +112,71 @@ def login_usuario(request):
     
     return render(request, 'usuarios/login.html', {'form': form})
 
+
+def ativar_conta(request, uidb64, token):
+    """Ativa a conta do usuário via link de email"""
+    try:
+        from django.utils.http import urlsafe_base64_decode
+        from django.utils.encoding import force_str
+        
+        # Decodificar o UID
+        uid = urlsafe_base64_decode(uidb64).decode()
+        usuario = Usuario.objects.get(pk=uid)
+        
+        # Verificar o token
+        if default_token_generator.check_token(usuario, token):
+            if not usuario.email_verificado:
+                # ATIVAR A CONTA COMPLETAMENTE
+                usuario.email_verificado = True
+                usuario.is_active = True  # IMPORTANTE: Ativar a conta
+                usuario.save()
+                
+                messages.success(request, 'Conta ativada com sucesso! Agora você pode fazer login.')
+                logger.info(f"Conta ativada com sucesso para {usuario.email} - is_active=True, email_verificado=True")
+            else:
+                messages.info(request, 'Sua conta já está ativada!')
+            
+            return redirect('usuarios:login')
+        else:
+            messages.error(request, 'Link de ativação inválido ou expirado.')
+            return redirect('usuarios:login')
+            
+    except (TypeError, ValueError, OverflowError, Usuario.DoesNotExist):
+        messages.error(request, 'Link de ativação inválido.')
+        return redirect('usuarios:login')
+
+def alterar_senha(request):
+    """Alterar senha para usuários não verificados"""
+    if not request.user.is_authenticated:
+        return redirect('usuarios:login')
+    
+    if request.method == 'POST':
+        nova_senha = request.POST.get('nova_senha')
+        confirmar_senha = request.POST.get('confirmar_senha')
+        
+        if nova_senha and confirmar_senha:
+            if nova_senha == confirmar_senha:
+                if len(nova_senha) >= 8:
+                    # Alterar senha e verificar conta COMPLETAMENTE
+                    request.user.set_password(nova_senha)
+                    request.user.email_verificado = True
+                    request.user.is_active = True  # IMPORTANTE: Ativar a conta
+                    request.user.save()
+                    
+                    # IMPORTANTE: Atualizar a sessão com o novo usuário
+                    from django.contrib.auth import update_session_auth_hash
+                    update_session_auth_hash(request, request.user)
+                    
+                    messages.success(request, 'Senha alterada com sucesso! Sua conta foi verificada e ativada. Agora você pode acessar todos os recursos.')
+                    return redirect('usuarios:home')
+                else:
+                    messages.error(request, 'A senha deve ter pelo menos 8 caracteres.')
+            else:
+                messages.error(request, 'As senhas não coincidem.')
+        else:
+            messages.error(request, 'Preencha todos os campos.')
+    
+    return render(request, 'usuarios/alterar_senha.html')
 
 def logout_usuario(request):
     """Logout do usuário"""
@@ -121,19 +198,17 @@ def esqueceu_senha(request):
             usuario = Usuario.objects.get(email=email)
             
             if acao == 'reenviar_verificacao' and not usuario.email_verificado:
-                # Reenviar email de verificação
-                senha_temp = ''.join(secrets.choice(string.ascii_letters + string.digits) for _ in range(12))
-                usuario.set_password(senha_temp)
-                usuario.save()
+                # Reenviar email de verificação COM nova senha temporária
+                logger.info(f"Reenviando email de verificação para {usuario.email} (ID: {usuario.id})")
                 
                 # Usar Celery para reenviar email de verificação
-                from .tasks import enviar_email_verificacao_task
+                from .tasks import reenviar_email_verificacao_task
                 
-                # Criar tarefa para reenviar email
-                task = enviar_email_verificacao_task.delay(usuario.id, senha_temp)
+                # Criar tarefa para reenviar email (com nova senha temporária)
+                task = reenviar_email_verificacao_task.delay(usuario.id)
                 
                 logger.info(f"Tarefa de reenvio de verificação criada: {task.id} para {usuario.email}")
-                messages.success(request, 'Email de verificação reenviado! Verifique sua caixa de entrada.')
+                messages.success(request, 'Email de verificação reenviado com nova senha temporária! Verifique sua caixa de entrada.')
                 return redirect('usuarios:login')
                 
             elif acao == 'recuperar':
@@ -196,21 +271,17 @@ def reenviar_verificacao(request):
         try:
             usuario = Usuario.objects.get(email=email)
             if not usuario.email_verificado:
-                # Gerar nova senha temporária
-                import secrets
-                import string
-                senha_temp = ''.join(secrets.choice(string.ascii_letters + string.digits) for _ in range(12))
-                usuario.set_password(senha_temp)
-                usuario.save()
+                # Reenviar email de verificação COM nova senha temporária
+                logger.info(f"Reenviando email de verificação para {usuario.email} (ID: {usuario.id})")
                 
                 # Usar Celery para reenviar email de verificação
-                from .tasks import enviar_email_verificacao_task
+                from .tasks import reenviar_email_verificacao_task
                 
-                # Criar tarefa para reenviar email
-                task = enviar_email_verificacao_task.delay(usuario.id, senha_temp)
+                # Criar tarefa para reenviar email (com nova senha temporária)
+                task = reenviar_email_verificacao_task.delay(usuario.id)
                 
                 logger.info(f"Tarefa de reenvio de verificação criada: {task.id} para {usuario.email}")
-                messages.success(request, 'Email de verificação reenviado! Verifique sua caixa de entrada.')
+                messages.success(request, 'Email de verificação reenviado com nova senha temporária! Verifique sua caixa de entrada.')
                 return redirect('usuarios:login')
             else:
                 messages.info(request, 'Este email já foi verificado.')
@@ -249,26 +320,59 @@ def reset_senha(request, uidb64, token):
 
 
 def enviar_email_verificacao(request, usuario, senha_temporaria):
-    """Envia email de verificação para o usuário usando Celery"""
+    """Envia email de verificação para o usuário de forma mais robusta"""
     import logging
     logger = logging.getLogger('usuarios.views')
     
     try:
-        logger.info(f"Iniciando envio de email de verificação via Celery para {usuario.email}")
+        logger.info(f"=== INICIANDO ENVIO DE EMAIL para {usuario.email} ===")
         
-        # Importar a tarefa do Celery
-        from .tasks import enviar_email_verificacao_task
-        
-        # Executar a tarefa em background
-        task = enviar_email_verificacao_task.delay(usuario.id, senha_temporaria)
-        
-        logger.info(f"Tarefa Celery criada com ID: {task.id} para usuário {usuario.email}")
-        logger.debug(f"Email será enviado em background para: {usuario.email}")
-        
-        return True
+        # MÉTODO 1: Tentar com Celery se disponível
+        try:
+            from .tasks import enviar_email_verificacao_task
+            logger.info("Tentando enviar via Celery...")
+            
+            # Como CELERY_TASK_ALWAYS_EAGER=True, isso executará sincronamente
+            result = enviar_email_verificacao_task.apply(args=[usuario.id, senha_temporaria])
+            
+            logger.info(f"Celery task executada com resultado: {result}")
+            return True
+            
+        except Exception as celery_error:
+            logger.warning(f"Falha no Celery: {celery_error}")
+            
+            # MÉTODO 2: Fallback - envio direto
+            logger.info("Fallback: Enviando email diretamente...")
+            
+            from django.core.mail import send_mail
+            from django.conf import settings
+            
+            assunto = 'Verificação de Email - Dojô Uemura'
+            mensagem = f"""
+            Olá {usuario.first_name}!
+            
+            Sua conta foi criada com sucesso!
+            Sua senha temporária é: {senha_temporaria}
+            
+            Por favor, faça login e altere sua senha.
+            
+            Atenciosamente,
+            Equipe Dojô Uemura
+            """
+            
+            send_mail(
+                assunto,
+                mensagem,
+                settings.DEFAULT_FROM_EMAIL,
+                [usuario.email],
+                fail_silently=False,
+            )
+            
+            logger.info(f"Email enviado diretamente para {usuario.email}")
+            return True
         
     except Exception as e:
-        logger.error(f"Falha ao criar tarefa Celery para usuário {usuario.email}: {e}", exc_info=True)
+        logger.error(f"ERRO FATAL ao enviar email para {usuario.email}: {e}", exc_info=True)
         return False
 
 
@@ -281,6 +385,7 @@ def verificar_email(request, uidb64, token):
         usuario = None
     
     if usuario is not None and default_token_generator.check_token(usuario, token):
+        # ATIVAR A CONTA COMPLETAMENTE
         usuario.is_active = True
         usuario.email_verificado = True
         usuario.save()
@@ -289,6 +394,7 @@ def verificar_email(request, uidb64, token):
         login(request, usuario)
         
         messages.success(request, 'Email verificado com sucesso! Bem-vindo ao seu portal.')
+        logger.info(f"Conta ativada via verificação de email para {usuario.email} - is_active=True, email_verificado=True")
         return redirect('usuarios:dashboard')
     else:
         messages.error(request, 'Link de verificação inválido ou expirado.')
@@ -310,13 +416,13 @@ def cadastrar_atleta(request):
                 if escola_outra:
                     atleta.escola = escola_outra
             
-            # Buscar dados do CEP
+            # Buscar dados do CEP e mapear para os campos do modelo
             cep_data = buscar_cep(atleta.cep.replace('-', ''))
             if cep_data:
-                atleta.logradouro = cep_data.get('logradouro', atleta.logradouro)
+                atleta.endereco = cep_data.get('logradouro', atleta.endereco)
                 atleta.bairro = cep_data.get('bairro', atleta.bairro)
                 atleta.cidade = cep_data.get('localidade', atleta.cidade)
-                atleta.uf = cep_data.get('uf', atleta.uf)
+                atleta.estado = cep_data.get('uf', atleta.estado)
             
             atleta.save()
             messages.success(request, 'Atleta cadastrado com sucesso!')
@@ -346,10 +452,10 @@ def editar_atleta(request, atleta_id):
             # Buscar dados do CEP se foi alterado
             cep_data = buscar_cep(atleta.cep.replace('-', ''))
             if cep_data:
-                atleta.logradouro = cep_data.get('logradouro', atleta.logradouro)
+                atleta.endereco = cep_data.get('logradouro', atleta.endereco)
                 atleta.bairro = cep_data.get('bairro', atleta.bairro)
                 atleta.cidade = cep_data.get('localidade', atleta.cidade)
-                atleta.uf = cep_data.get('uf', atleta.uf)
+                atleta.estado = cep_data.get('uf', atleta.estado)
             
             atleta.save()
             messages.success(request, 'Atleta atualizado com sucesso!')
@@ -388,6 +494,24 @@ def buscar_cep_ajax(request):
 def galeria_completa(request):
     """View para a página completa da galeria"""
     return render(request, 'usuarios/galeria_completa.html')
+
+
+@login_required
+def cartao_atleta(request, atleta_id):
+    """Exibe o cartão do atleta em modo paisagem com QR Code e dados essenciais"""
+    # Apenas staff/superuser podem acessar a emissão do cartão
+    if not (request.user.is_staff or request.user.is_superuser):
+        messages.warning(request, 'Solicite a emissão/2ª via na secretaria.')
+        return redirect('usuarios:dashboard')
+
+    atleta = get_object_or_404(Atleta, id=atleta_id)
+    # Garante que o QR Code exista
+    if not atleta.qr_code_imagem:
+        atleta.gerar_qr_code(force=True)
+        atleta.save(update_fields=['qr_code_imagem'])
+    return render(request, 'usuarios/usuario/cartao_atleta.html', {
+        'atleta': atleta
+    })
 
 
 @login_required

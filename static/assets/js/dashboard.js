@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const deleteButtons = document.querySelectorAll('.btn-delete');
     deleteButtons.forEach(button => {
         button.addEventListener('click', function(e) {
-            if (!confirm('Tem certeza que deseja excluir este dependente? Esta ação não pode ser desfeita.')) {
+            if (!confirm('Tem certeza que deseja excluir este atleta? Esta ação não pode ser desfeita.')) {
                 e.preventDefault();
             }
         });
@@ -38,7 +38,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
     
     // ===== FILTROS DE TABELA =====
-    const searchInput = document.getElementById('search-dependentes');
+    const searchInput = document.getElementById('search-atletas');
     if (searchInput) {
         searchInput.addEventListener('input', function() {
             const searchTerm = this.value.toLowerCase();
@@ -177,7 +177,7 @@ document.addEventListener('DOMContentLoaded', function() {
     exportButtons.forEach(button => {
         button.addEventListener('click', function(e) {
             const format = this.dataset.format || 'csv';
-            const tableId = this.dataset.table || 'dependentes-table';
+            const tableId = this.dataset.table || 'atletas-table';
             
             if (format === 'csv') {
                 exportToCSV(tableId);
@@ -208,7 +208,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
         const link = document.createElement('a');
         link.href = URL.createObjectURL(blob);
-        link.download = 'dependentes.csv';
+        link.download = 'atletas.csv';
         link.click();
     }
     

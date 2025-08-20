@@ -21,7 +21,7 @@
                     <p class="text-muted small">{{ usuario.email }}</p>
                     <hr>
                     <div class="d-grid gap-2">
-                        <a href="{% url 'usuarios:cadastrar_dependente' %}" class="btn btn-primary btn-sm">
+                        <a href="{% url 'usuarios:cadastrar_atleta' %}" class="btn btn-primary btn-sm">
                             <i class="bi bi-person-plus"></i> Novo Atleta
                         </a>
                     </div>
@@ -43,16 +43,16 @@
                 </div>
             </div>
 
-            <!-- Atletas/Dependentes -->
+            <!-- Atletas -->
             <div class="row">
-                {% if dependentes %}
-                    {% for dependente in dependentes %}
+                {% if atletas %}
+                    {% for atleta in atletas %}
                     <div class="col-md-6 col-lg-4 mb-4">
                         <div class="card border-0 shadow-sm h-100">
                             <div class="card-body">
                                 <div class="d-flex align-items-center mb-3">
-                                    {% if dependente.foto %}
-                                        <img src="{{ dependente.foto.url }}" alt="{{ dependente.nome }}" 
+                                    {% if atleta.foto %}
+                                        <img src="{{ atleta.foto.url }}" alt="{{ atleta.nome }}" 
                                              class="rounded-circle me-3" style="width: 50px; height: 50px; object-fit: cover;">
                                     {% else %}
                                         <div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center me-3" 
@@ -61,24 +61,24 @@
                                         </div>
                                     {% endif %}
                                     <div>
-                                        <h6 class="mb-0 fw-bold">{{ dependente.nome }}</h6>
-                                        <small class="text-muted">{{ dependente.parentesco }}</small>
+                                        <h6 class="mb-0 fw-bold">{{ atleta.nome }}</h6>
+                                        <small class="text-muted">{{ atleta.parentesco }}</small>
                                     </div>
                                 </div>
                                 
                                 <div class="mb-3">
                                     <small class="text-muted">
-                                        <i class="bi bi-calendar"></i> {{ dependente.data_nascimento|date:"d/m/Y" }}<br>
-                                        <i class="bi bi-mortarboard"></i> {{ dependente.get_escolaridade_display }}<br>
-                                        <i class="bi bi-building"></i> {{ dependente.escola }}
+                                        <i class="bi bi-calendar"></i> {{ atleta.data_nascimento|date:"d/m/Y" }}<br>
+                                        <i class="bi bi-mortarboard"></i> {{ atleta.get_escolaridade_display }}<br>
+                                        <i class="bi bi-building"></i> {{ atleta.escola }}
                                     </small>
                                 </div>
 
                                 <!-- Matrículas -->
-                                {% if dependente.matriculas.all %}
+                                {% if atleta.matriculas.all %}
                                 <div class="mb-3">
                                     <h6 class="fw-bold text-primary mb-2">Modalidades Ativas:</h6>
-                                    {% for matricula in dependente.matriculas.all %}
+                                    {% for matricula in atleta.matriculas.all %}
                                         {% if matricula.ativa %}
                                         <span class="badge bg-success me-1 mb-1">
                                             {{ matricula.modalidade.nome }}
@@ -89,15 +89,25 @@
                                 {% endif %}
 
                                 <div class="d-flex gap-2">
-                                    <a href="{% url 'usuarios:editar_dependente' dependente.id %}" 
+                                    <a href="{% url 'usuarios:editar_atleta' atleta.id %}" 
                                        class="btn btn-outline-primary btn-sm flex-fill">
                                         <i class="bi bi-pencil"></i> Editar
                                     </a>
-                                    <a href="{% url 'usuarios:excluir_dependente' dependente.id %}" 
+                                    <a href="{% url 'usuarios:excluir_atleta' atleta.id %}" 
                                        class="btn btn-outline-danger btn-sm flex-fill"
                                        onclick="return confirm('Tem certeza que deseja excluir este atleta?')">
                                         <i class="bi bi-trash"></i> Excluir
                                     </a>
+                                    {% if user.is_staff or user.is_superuser %}
+                                    <a href="{% url 'usuarios:cartao_atleta' atleta.id %}"
+                                       class="btn btn-outline-secondary btn-sm flex-fill">
+                                        <i class="bi bi-qr-code"></i> Cartão/QR
+                                    </a>
+                                    {% else %}
+                                    <button type="button" class="btn btn-outline-secondary btn-sm flex-fill" disabled title="Solicite a 2ª via na secretaria">
+                                        <i class="bi bi-qr-code"></i> Cartão/QR
+                                    </button>
+                                    {% endif %}
                                 </div>
                             </div>
                         </div>
@@ -110,7 +120,7 @@
                                 <i class="bi bi-person-plus text-muted" style="font-size: 3rem;"></i>
                                 <h5 class="mt-3 text-muted">Nenhum atleta cadastrado</h5>
                                 <p class="text-muted">Comece cadastrando seu primeiro atleta para acompanhar seu progresso.</p>
-                                <a href="{% url 'usuarios:cadastrar_dependente' %}" class="btn btn-primary">
+                                <a href="{% url 'usuarios:cadastrar_atleta' %}" class="btn btn-primary">
                                     <i class="bi bi-person-plus"></i> Cadastrar Primeiro Atleta
                                 </a>
                             </div>
@@ -120,7 +130,7 @@
             </div>
 
             <!-- Ações Rápidas -->
-            {% if dependentes %}
+            {% if atletas %}
             <div class="row mt-4">
                 <div class="col-12">
                     <div class="card border-0 shadow-sm">

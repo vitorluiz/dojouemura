@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 """
-Script para verificar dependentes/atletas no sistema
+Script para verificar atletas/atletas no sistema
 """
 import os
 import sys
@@ -13,12 +13,12 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'cadastro_pessoas.settings')
 django.setup()
 
-from usuarios.models import Usuario, Dependente
+from usuarios.models import Usuario, Atleta
 
-def verificar_dependentes():
-    """Verifica se existem dependentes no sistema"""
+def verificar_atletas():
+    """Verifica se existem atletas no sistema"""
     print("\n" + "="*60)
-    print("VERIFICAÇÃO DE DEPENDENTES/ATLETAS NO SISTEMA")
+    print("VERIFICAÇÃO DE ATLETAS NO SISTEMA")
     print("="*60)
     
     usuarios = Usuario.objects.all()
@@ -30,29 +30,29 @@ def verificar_dependentes():
         print(f"  Verificado: {usuario.email_verificado}")
         print(f"  Ativo: {usuario.is_active}")
         
-        dependentes = Dependente.objects.filter(usuario=usuario)
-        print(f"  Total de atletas: {dependentes.count()}")
+        atletas = Atleta.objects.filter(usuario=usuario)
+        print(f"  Total de atletas: {atletas.count()}")
         
-        if dependentes.exists():
-            for dependente in dependentes:
-                print(f"    - Atleta: {dependente.nome}")
-                print(f"      CPF: {dependente.cpf}")
-                print(f"      Parentesco: {dependente.get_parentesco_display()}")
-                print(f"      Data Nascimento: {dependente.data_nascimento}")
-                print(f"      Escola: {dependente.escola}")
-                print(f"      Escolaridade: {dependente.get_escolaridade_display()}")
-                print(f"      Turno: {dependente.get_turno_display()}")
-                print(f"      Termos aceitos: Responsabilidade={dependente.termo_responsabilidade}, Imagem={dependente.termo_uso_imagem}")
+        if atletas.exists():
+            for atleta in atletas:
+                print(f"    - Atleta: {atleta.nome}")
+                print(f"      CPF: {atleta.cpf}")
+                print(f"      Parentesco: {atleta.get_parentesco_display()}")
+                print(f"      Data Nascimento: {atleta.data_nascimento}")
+                print(f"      Escola: {atleta.escola}")
+                print(f"      Escolaridade: {atleta.get_escolaridade_display()}")
+                print(f"      Turno: {atleta.get_turno_display()}")
+                print(f"      Termos aceitos: Responsabilidade={atleta.termo_responsabilidade}, Imagem={atleta.termo_uso_imagem}")
         else:
             print("    - Nenhum atleta cadastrado")
 
 def main():
     """Função principal"""
-    print("INICIANDO VERIFICAÇÃO DE DEPENDENTES")
+    print("INICIANDO VERIFICAÇÃO DE ATLETAS")
     print("="*60)
     
     try:
-        verificar_dependentes()
+        verificar_atletas()
         
         print("\n" + "="*60)
         print("VERIFICAÇÃO CONCLUÍDA!")

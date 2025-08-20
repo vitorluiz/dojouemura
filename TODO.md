@@ -11,7 +11,7 @@ Sistema completo de gestão para Dojô Uemura, incluindo matrículas, controle d
 - [x] Configuração inicial do projeto Django
 - [x] Apps `usuarios`, `publico`, `empresa` configurados
 - [x] Modelo `Usuario` customizado com `AbstractUser`
-- [x] Modelo `Atleta` (renomeado de Dependente) implementado
+- [x] Modelo `Atleta` (renomeado de atleta) implementado
 - [x] Sistema de tipos de conta (RESPONSAVEL, PROFESSOR, GESTOR, FUNCIONARIO)
 - [x] Validações centralizadas em `utils/validacoes.py`
 
@@ -59,6 +59,10 @@ Sistema completo de gestão para Dojô Uemura, incluindo matrículas, controle d
 - [x] **Implementação do Celery** - Sistema de workers para processamento de emails em background ✅
 - [x] **Sistema de logging** - Logs estruturados para Celery, tarefas e views ✅
 - [x] **Limpeza de prints** - Todos os prints convertidos para logging estruturado ✅
+- [x] **Correção do formulário de registro** - JavaScript corrigido, formulário enviando corretamente ✅
+- [x] **Teste completo de cadastro** - Usuário criado com sucesso, email enviado via Celery ✅
+- [x] **Correção de encoding no logging** - Emojis substituídos por texto compatível com Windows ✅
+- [x] **Correção da função "esqueci a senha"** - Reenvio de verificação agora envia link de ativação ✅
 
 ### **⚡ Sistema de Frequência (PRIORIDADE MÁXIMA)**
 - [x] **Criar app `frequencia`** - Estrutura base para controle de frequência ✅
@@ -144,7 +148,7 @@ Sistema completo de gestão para Dojô Uemura, incluindo matrículas, controle d
 
 ### **🔧 Correções Urgentes**
 - [ ] **Corrigir relacionamento no modelo `Matricula`** - Campo `atleta` está referenciando 'atleta' (string) em vez de `Atleta` (modelo)
-- [ ] **Verificar migrações** - Após renomeação de Dependente para Atleta, pode haver problemas
+- [ ] **Verificar migrações** - Após renomeação de atleta para Atleta, pode haver problemas
 - [ ] **Testar fluxo completo** - Cadastro de atleta → Matrícula → Frequência
 
 ### **⚠️ Melhorias Necessárias**

@@ -89,7 +89,7 @@ document.addEventListener('DOMContentLoaded', function() {
             if (this.closest('form').action.includes('projeto-social')) {
                 if (idade < 6 || idade > 18) {
                     this.classList.add('is-invalid');
-                    alert('Para o projeto social, o dependente deve ter entre 6 e 18 anos.');
+                    alert('Para o projeto social, o atleta deve ter entre 6 e 18 anos.');
                     this.value = '';
                 } else {
                     this.classList.add('is-valid');
@@ -98,7 +98,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 // Para modalidade paga, mínimo 6 anos
                 if (idade < 6) {
                     this.classList.add('is-invalid');
-                    alert('O dependente deve ter pelo menos 6 anos.');
+                    alert('O atleta deve ter pelo menos 6 anos.');
                     this.value = '';
                 } else {
                     this.classList.add('is-valid');
