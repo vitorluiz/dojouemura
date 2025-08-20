@@ -4,6 +4,9 @@ from decouple import config, Csv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+# Diretório de logs e criação automática para evitar falhas de handler
+LOG_DIR = BASE_DIR / 'logs'
+os.makedirs(LOG_DIR, exist_ok=True)
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
@@ -146,7 +149,7 @@ CELERY_RESULT_BACKEND = None  # Sem backend para desenvolvimento simples
 CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
-CELERY_TIMEZONE = 'America/Sao_Paulo'
+CELERY_TIMEZONE = 'America/Cuiaba'
 
 # Configurações específicas para tarefas de email
 CELERY_TASK_ROUTES = {
@@ -199,17 +202,17 @@ LOGGING = {
         },
         'file': {
             'class': 'logging.FileHandler',
-            'filename': 'logs/django.log',
+            'filename': str(LOG_DIR / 'django.log'),
             'formatter': 'verbose',
         },
         'celery_file': {
             'class': 'logging.FileHandler',
-            'filename': 'logs/celery.log',
+            'filename': str(LOG_DIR / 'celery.log'),
             'formatter': 'celery',
         },
         'email_file': {
             'class': 'logging.FileHandler',
-            'filename': 'logs/email.log',
+            'filename': str(LOG_DIR / 'email.log'),
             'formatter': 'email',
         },
     },
