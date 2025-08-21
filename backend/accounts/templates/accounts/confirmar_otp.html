@@ -1,0 +1,8 @@
+<form method="post">
+  {% csrf_token %}
+  <input name="email" type="email" placeholder="Email" required />
+  <input name="code" placeholder="Código OTP" required />
+  <button type="submit">Confirmar OTP</button>
+</form>
+
+

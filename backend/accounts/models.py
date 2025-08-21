@@ -1,3 +1,35 @@
 from django.db import models
+from django.contrib.auth.models import AbstractUser
+from django.utils import timezone
 
-# Create your models here.
+
+class Usuario(AbstractUser):
+    email = models.EmailField(unique=True)
+    must_change_password = models.BooleanField(default=True)
+
+    username = None
+
+    USERNAME_FIELD = "email"
+    REQUIRED_FIELDS = ["first_name", "last_name"]
+
+
+class OTP(models.Model):
+    class OTPType(models.TextChoices):
+        REGISTRO = "registro", "Registro"
+
+    user = models.ForeignKey("accounts.Usuario", on_delete=models.CASCADE, related_name="otps")
+    code = models.CharField(max_length=10)
+    tipo = models.CharField(max_length=32, choices=OTPType.choices)
+    expira_em = models.DateTimeField()
+    usado = models.BooleanField(default=False)
+    criado_em = models.DateTimeField(auto_now_add=True)
+
+    def esta_valido(self) -> bool:
+        if self.usado:
+            return False
+        return timezone.now() <= self.expira_em
+
+    def marcar_usado(self) -> None:
+        self.usado = True
+        self.save(update_fields=["usado"])
+

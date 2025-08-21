@@ -1,0 +1,8 @@
+<form method="post">
+  {% csrf_token %}
+  <input name="email" type="email" placeholder="Email" required />
+  <input name="senha" type="password" placeholder="Nova senha" required />
+  <button type="submit">Definir senha</button>
+</form>
+
+
