@@ -1,9 +1,11 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.utils import timezone
+from utils.validacoes.uuid7 import uuid7
 
 
 class Usuario(AbstractUser):
+    id = models.UUIDField(primary_key=True, default=uuid7, editable=False)
     email = models.EmailField(unique=True)
     must_change_password = models.BooleanField(default=True)
 

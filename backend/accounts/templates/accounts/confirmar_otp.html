@@ -1,8 +1,12 @@
 <form method="post">
   {% csrf_token %}
-  <input name="email" type="email" placeholder="Email" required />
   <input name="code" placeholder="Código OTP" required />
-  <button type="submit">Confirmar OTP</button>
+  <button type="submit">Validar</button>
+</form>
+
+<form method="post" action="{% url 'accounts:reenviar_otp' %}">
+  {% csrf_token %}
+  <button type="submit">Obter novo código</button>
 </form>
 
 

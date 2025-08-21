@@ -1,0 +1,9 @@
+<form method="post">
+  {% csrf_token %}
+  {{ form.non_field_errors }}
+  <input name="username" type="email" placeholder="Email" value="{{ form.data.username }}" />
+  <input name="password" type="password" placeholder="Senha" />
+  <button type="submit">Entrar</button>
+</form>
+
+
