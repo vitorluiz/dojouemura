@@ -1,6 +1,7 @@
 from datetime import timedelta
 import time
 from django.shortcuts import render, redirect
+import logging
 from django.http import HttpRequest, HttpResponse
 from django.urls import reverse
 from django.utils import timezone
@@ -12,6 +13,8 @@ from django.core.mail import send_mail
 from django.contrib.auth.forms import AuthenticationForm
 
 from .models import Usuario, OTP
+
+logger = logging.getLogger("accounts")
 
 
 def registro_view(request: HttpRequest) -> HttpResponse:
@@ -33,6 +36,9 @@ def registro_view(request: HttpRequest) -> HttpResponse:
                 email=email,
                 is_active=False,
             )
+            logger.info("Usuário criado inativo para registro: %s", user.email)
+        else:
+            logger.info("Registro solicitado para email já existente (inativo ou ativo): %s", user.email)
 
         # Invalida OTPs anteriores e cria um novo
         OTP.objects.filter(user=user, tipo=OTP.OTPType.REGISTRO, usado=False).update(usado=True)
@@ -51,6 +57,7 @@ def registro_view(request: HttpRequest) -> HttpResponse:
             recipient_list=[email],
             fail_silently=True,
         )
+        logger.info("OTP gerado e enviado para %s | otp_id=%s expira_em=%s", user.email, otp.id, otp.expira_em)
         # Guarda email na sessão para confirmação do OTP
         request.session["pending_email"] = email
         # Metadados de sessão para rate-limit/expiração do fluxo
@@ -67,6 +74,7 @@ def confirmar_otp_view(request: HttpRequest) -> HttpResponse:
     pending_email = request.session.get("pending_email")
     if not pending_email:
         messages.error(request, "Sessão expirada. Faça o registro novamente.")
+        logger.warning("Sessão expirada em confirmar_otp sem pending_email")
         return redirect(reverse("accounts:registro"))
 
     # Expira sessão após 30 minutos
@@ -96,6 +104,7 @@ def confirmar_otp_view(request: HttpRequest) -> HttpResponse:
             user = Usuario.objects.get(email=pending_email)
         except Usuario.DoesNotExist:
             messages.error(request, "Usuário não encontrado.")
+            logger.warning("Usuário não encontrado ao confirmar OTP: %s", pending_email)
             return render(request, "accounts/confirmar_otp.html")
 
         otp = (
@@ -108,11 +117,13 @@ def confirmar_otp_view(request: HttpRequest) -> HttpResponse:
             request.session["otp_attempts"] = attempts
             request.session["otp_window_started_at"] = win_start
             messages.error(request, "OTP inválido ou expirado. Você pode solicitar um novo código.")
+            logger.warning("OTP inválido/expirado | email=%s tentativas=%s", user.email, attempts)
             return render(request, "accounts/confirmar_otp.html")
 
         otp.marcar_usado()
         user.is_active = True
         user.save(update_fields=["is_active"])
+        logger.info("Usuário ativado via OTP: %s", user.email)
         # Reseta contadores após sucesso
         request.session.pop("otp_attempts", None)
         request.session.pop("otp_window_started_at", None)
@@ -200,18 +211,21 @@ def reenviar_otp_view(request: HttpRequest) -> HttpResponse:
     pending_email = request.session.get("pending_email")
     if not pending_email:
         messages.error(request, "Sessão expirada. Faça o registro novamente.")
+        logger.warning("Sessão expirada em reenviar_otp sem pending_email")
         return redirect(reverse("accounts:registro"))
 
     try:
         user = Usuario.objects.get(email=pending_email)
     except Usuario.DoesNotExist:
         messages.error(request, "Usuário não encontrado.")
+        logger.warning("Usuário não encontrado ao reenviar OTP: %s", pending_email)
         return redirect(reverse("accounts:registro"))
 
     ultimo = OTP.objects.filter(user=user, tipo=OTP.OTPType.REGISTRO).order_by("-criado_em").first()
     if ultimo and (timezone.now() - ultimo.criado_em) < timedelta(seconds=60):
         restante = 60 - int((timezone.now() - ultimo.criado_em).total_seconds())
         messages.error(request, f"Aguarde {restante}s para solicitar um novo código.")
+        logger.info("Reenvio bloqueado por janela de 60s | email=%s restante=%ss", user.email, restante)
         return redirect(reverse("accounts:confirmar_otp"))
 
     # Invalida anteriores e cria novo
@@ -230,6 +244,7 @@ def reenviar_otp_view(request: HttpRequest) -> HttpResponse:
         fail_silently=True,
     )
     messages.success(request, "Novo OTP enviado ao seu email.")
+    logger.info("Novo OTP enviado | email=%s otp_id=%s expira_em=%s", user.email, otp.id, otp.expira_em)
     return redirect(reverse("accounts:confirmar_otp"))
 
 
